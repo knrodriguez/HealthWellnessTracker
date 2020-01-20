@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="HealthWellnessTrackerFactory">
+		<class>com.HealthWellnessTracker.models.Login</class>
+		<class>com.HealthWellnessTracker.models.UserProfile</class>
+		<class>com.HealthWellnessTracker.models.Event</class>
+		<properties>
+		   <!-- Database URL -->
+		   <property name="javax.persistence.jdbc.url" value = "jdbc:mariadb://localhost:3306/hwt?useSSL=false"/>
+		   <!-- Database Driver -->
+		   <property name="javax.persistence.jdbc.driver" value = "org.mariadb.jdbc.Driver"/>
+		   <!-- Database Username -->
+		   <property name="javax.persistence.jdbc.user" value = "hwt_admin"/>
+		   <!-- Database Password -->
+		   <property name="javax.persistence.jdbc.password" value="123admin123"/>
+		   <!-- Create Tables from Java -->
+		   <property name="eclipselink.ddl-generation" value = "create-tables"/>
+		   <!-- How are we talking -->
+		   <property name="eclipselink.target-database" value = "MYSQL"/>
+		   <!-- Generate a log -->
+		   <property name="eclipselink.logging.level" value = "FINE"/>  
+		   <property name="javax.persistence.validation.mode" value="AUTO" />
+		 </properties>
+	</persistence-unit>	
+</persistence>
