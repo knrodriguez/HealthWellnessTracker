@@ -1,6 +1,5 @@
 package com.HealthWellnessTracker.DAOs;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,8 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import com.HealthWellnessTracker.models.Event;
 import com.HealthWellnessTracker.models.UserProfile;
@@ -21,6 +18,7 @@ public class EventDAO {
 	//create
 	public boolean insertEvent(Event newEvent) {
 		EntityManager em = emf.createEntityManager();
+		//Event newEvent = new Event(event);
 		boolean flag = false;
 		try{
 			em.getTransaction().begin();

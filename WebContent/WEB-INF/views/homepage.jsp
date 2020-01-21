@@ -12,7 +12,7 @@
 		<br>
 		<h3><a href = "login">Login</a> 	|	
 		<a href = "signup">Sign Up</a>		|
-		<a href = "createUserProfile">User Profile</a>
+		<a href = "viewUserProfile">User Profile</a>
 		</h3>
 	</div>
 </body>

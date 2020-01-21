@@ -49,6 +49,14 @@ public class Event implements Serializable{
 		super();
 		this.userProfile = userProfile;
 	}
+	
+	public Event(Event event) {
+		this.eventId = event.getEventId();
+		this.eventCategory = event.getEventCategory();
+		this.eventDescription = event.getEventDescription();
+		this.eventName = event.getEventName();
+		this.userProfile = event.getUserProfile();
+	}
 
 	public UserProfile getUserProfile() {
 		return userProfile;

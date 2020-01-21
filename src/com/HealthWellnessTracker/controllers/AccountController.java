@@ -1,9 +1,7 @@
 package com.HealthWellnessTracker.controllers;
 
-import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,10 +55,12 @@ public class AccountController {
 	public String logout (@ModelAttribute("userLogin") Login userLogin, SessionStatus session) {
 		userLogin = new Login();
 		session.setComplete();
-		return "login";
+		return "redirect:/";
 	}
 	
 //-----------------------------------User Profile-----------------------------------------
+	
+	
 	@RequestMapping(value = {"/showUserProfileForm","/createUserProfile"}, method = RequestMethod.GET)
 	public ModelAndView showUserProfileForm(@ModelAttribute("userProfile") UserProfile newUserProfile, 
 			@ModelAttribute("userLogin") Login userLogin) {
@@ -90,10 +90,12 @@ public class AccountController {
 			@ModelAttribute("newLogin") Login newLogin,
 			@RequestParam("password2") String password2) {
 		LoginError loginError = loginService.createLogin(newLogin, password2);
-		if (loginError == null)
-			return new ModelAndView("/viewUserProfile","message","Welcome, " + newLogin.getUsername());			
-		else
-			return new ModelAndView("/signup","message","ERROR " + loginError.getCode() + ": " + loginError.getDescription());	
+		if (loginError != null) {
+			return new ModelAndView("/homepage","message","ERROR " + loginError.getCode() + ": " + loginError.getDescription());			
+		}
+		else {
+			return new ModelAndView("redirect:/login");	
+		}
 	}
 	
 	

@@ -10,7 +10,6 @@ import javax.persistence.Query;
 
 import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
-import com.HealthWellnessTracker.services.UserProfileService;
 
 public class LoginDAO implements LoginDAOI{
 	
