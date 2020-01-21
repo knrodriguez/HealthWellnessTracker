@@ -1,33 +1,41 @@
 package com.HealthWellnessTracker.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//import javax.persistence.OneToOne;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "events")
-public class Event {
+@Table(name = "events", 
+		indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
+public class Event implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column (name = "EventId")
 	private long eventId;
-	//Is a one to one relationship from events pov
-	//one eventId can have only one userId
-//	@OneToOne
-//	//@JoinColumn(name = "")
-//	private long userId;	
-//	@Basic
-//	@Column
-//	private long userId; 
-	@Column
+	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "UserId")
+	private UserProfile userProfile; 
+	
+	@Column (name = "EventCategory")
+	
 	private String eventCategory;
-	@Column
+	
+	@Column (name = "EventName")
 	private String eventName;
-	@Column
+	
+	@Column (name = "EventDescription")
 	private String eventDescription;
 
 	public Event() {
@@ -37,6 +45,19 @@ public class Event {
 		this.eventDescription = "";
 	}
 	
+	public Event(UserProfile userProfile) {
+		super();
+		this.userProfile = userProfile;
+	}
+
+	public UserProfile getUserProfile() {
+		return userProfile;
+	}
+
+	public void setUserProfile(UserProfile userProfile) {
+		this.userProfile = userProfile;
+	}
+
 	public Long getEventId() {
 		return eventId;
 	}
@@ -60,6 +81,12 @@ public class Event {
 	}
 	public void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "Event [eventId=" + eventId + ", userProfile=" + userProfile + ", eventCategory=" + eventCategory
+				+ ", eventName=" + eventName + ", eventDescription=" + eventDescription + "]";
 	}
 	
 	

@@ -5,9 +5,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import com.HealthWellnessTracker.models.Login;
+import com.HealthWellnessTracker.models.UserProfile;
+import com.HealthWellnessTracker.services.UserProfileService;
 
 public class LoginDAO implements LoginDAOI{
 	
@@ -18,9 +21,17 @@ public class LoginDAO implements LoginDAOI{
 	public void insertLogin(Login login) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		em.persist(login);
-		em.getTransaction().commit();
+		try {
+			em.getTransaction().begin();
+			em.persist(login);
+			em.getTransaction().commit();			
+			UserProfile newUserProfile = new UserProfile(login);
+			UserProfileDAO userProfileDAO = new UserProfileDAO();
+			userProfileDAO.insertUserProfile(newUserProfile);	
+		} catch(PersistenceException e) {
+			System.out.println("!!!!!!!!!!!ERROR!!!!!!!!!");
+			e.printStackTrace();
+		}
 		em.close();
 		emf.close();
 	}
@@ -34,17 +45,13 @@ public class LoginDAO implements LoginDAOI{
 		Query query = em.createQuery("SELECT e FROM Login e WHERE e.username = :username");
 		query.setParameter("username", username);
 		@SuppressWarnings("unchecked")
-		List<Login> loginList = query.getResultList();		
+		List<Login> loginList = query.getResultList();
+		//em.getTransaction().commit();
 		em.close();
 		emf.close();
 		if (loginList.isEmpty()) return null; //return null as no user exists with argument username
 		else if (loginList.size() > 1) return null; //NEED TO UPDATE! return null as error that more than 1 username exists in DB 
 		else return loginList.get(0); //return first element of resultset (should only be 1)
-	}
-	
-	//test if login exists in database
-	public boolean exists(Login login) {
-		return (selectLoginByUsername(login.getUsername()) == null ? false:true);
 	}
 	
 	//SHOULD THIS BE BOOLEAN??
@@ -58,6 +65,7 @@ public class LoginDAO implements LoginDAOI{
 		query.setParameter("password", login.getPassword());
 		query.setParameter("userId", login.getUserId());
 		int success = query.executeUpdate(); //returns the # of entities updated
+		em.getTransaction().commit();
 		em.close();
 		if(success == 1) return 1;
 		else return 0;
@@ -71,6 +79,7 @@ public class LoginDAO implements LoginDAOI{
 		Query query = em.createQuery("DELETE FROM Login WHERE userId = :userId");
 		query.setParameter("userId", login.getUserId());
 		int success = query.executeUpdate(); //returns the # of entities updated
+		em.getTransaction().commit();
 		em.close();
 		if(success == 1) return 1;
 		else return 0;

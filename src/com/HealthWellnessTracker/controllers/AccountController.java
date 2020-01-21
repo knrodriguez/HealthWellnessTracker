@@ -74,7 +74,7 @@ public class AccountController {
 		System.out.println("UserId: " + userLogin.getUserId());
 		UserProfileService userProfileService = new UserProfileService();
 		newUserProfile.setUserId(userLogin.getUserId());
-		boolean success = userProfileService.createNewUser(newUserProfile);
+		boolean success = userProfileService.createNewUserProfile(newUserProfile);
 		if(!success) return new ModelAndView("createUserProfile");
 		else return new ModelAndView("redirect://"); 
 	}
@@ -87,14 +87,13 @@ public class AccountController {
 	
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ModelAndView submitSignupForm(
-			@Valid @ModelAttribute("inputLogin") Login inputLogin,
-			@RequestParam("password2") String password2,
-			BindingResult bindingResult) {
-		LoginError loginError = loginService.createLogin(inputLogin, password2);
-		if (loginError == null && !bindingResult.hasErrors())
-			return new ModelAndView("viewUserProfile","message","Welcome, " + inputLogin.getUsername());			
+			@ModelAttribute("newLogin") Login newLogin,
+			@RequestParam("password2") String password2) {
+		LoginError loginError = loginService.createLogin(newLogin, password2);
+		if (loginError == null)
+			return new ModelAndView("/viewUserProfile","message","Welcome, " + newLogin.getUsername());			
 		else
-			return new ModelAndView("signup","message","ERROR " + loginError.getCode() + ": " + loginError.getDescription());	
+			return new ModelAndView("/signup","message","ERROR " + loginError.getCode() + ": " + loginError.getDescription());	
 	}
 	
 	

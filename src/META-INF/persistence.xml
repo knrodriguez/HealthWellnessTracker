@@ -4,6 +4,7 @@
 		<class>com.HealthWellnessTracker.models.Login</class>
 		<class>com.HealthWellnessTracker.models.UserProfile</class>
 		<class>com.HealthWellnessTracker.models.Event</class>
+		<class>com.HealthWellnessTracker.models.UserRecord</class>
 		<properties>
 		   <!-- Database URL -->
 		   <property name="javax.persistence.jdbc.url" value = "jdbc:mariadb://localhost:3306/hwt?useSSL=false"/>

@@ -2,6 +2,8 @@ package com.HealthWellnessTracker.models;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -9,14 +11,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 
 @Entity
-@Table (name = "user_profile")
+@Table (name = "profiles")
 public class UserProfile implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -25,9 +27,15 @@ public class UserProfile implements Serializable{
 	@Column(name = "UserId")
 	private long userId;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@PrimaryKeyJoinColumn(name = "UserId")
 	private Login userLogin;
+	
+	@OneToMany(mappedBy = "userProfile")
+	private List<Event> eventList = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "userProfile")
+	private List<UserRecord> recordList = new ArrayList<>();
 	
 	@Basic
 	@Column(name = "Name")
@@ -38,15 +46,15 @@ public class UserProfile implements Serializable{
 	private byte age;
 	
 	@Basic
-	@Column(name = "Birthdate")
+	@Column (name = "Birthdate")
 	private Date birthdate;
 	
 	@Basic
-	@Column(name = "Country")
+	@Column (name = "Country")
 	private String country;
 	
 	@Basic
-	@Column (name = "Email_Address")
+	@Column (name = "EmailAddress")
 	private String emailAddress;
 
 	public UserProfile() {}
@@ -59,6 +67,22 @@ public class UserProfile implements Serializable{
 		this.birthdate = null;
 		this.country = "";
 	}
+
+	public Login getUserLogin() {
+		return userLogin;
+	}
+
+	public void setUserLogin(Login userLogin) {
+		this.userLogin = userLogin;
+	}
+
+//	public List<Event> getEventList() {
+//		return eventList;
+//	}
+//
+//	public void setEventList(List<Event> eventList) {
+//		this.eventList = eventList;
+//	}
 
 	public String getName() {
 		return name;
@@ -91,14 +115,6 @@ public class UserProfile implements Serializable{
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
-//	public Login getUserLogin() {
-//		return userLogin;
-//	}
-//
-//	public void setUserLogin(Login userLogin) {
-//		this.userLogin = userLogin;
-//	}
 
 	public long getUserId() {
 		return userId;

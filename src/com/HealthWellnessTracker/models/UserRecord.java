@@ -2,22 +2,45 @@ package com.HealthWellnessTracker.models;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "records")
 public class UserRecord {
 
+	@Id
+	@Column(name = "RecordId")
 	private long recordID;
-	private long userID;
+	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "UserId")
+	private UserProfile userProfile;
+	
+	@Column(name = "StartDate", nullable = false)
 	private Timestamp startDate;
+	
+	@Column(name = "EndDate")
 	private Timestamp endDate;
-	private String recordType;
+	
+	@Column (name = "RecordName", nullable = false)
+	private String recordName;
+	
+	@Column
 	private long recordTypeID;
+	
+	@Column (name = "RecordNotes", nullable = true)
 	private String recordNotes;
 	
 	public UserRecord() {
 		recordID = 0;
-		userID = 0;
 		startDate = new Timestamp(System.currentTimeMillis());
 		endDate = null;
-		recordType = "";
+		recordName = "";
 		recordTypeID = 0;
 		recordNotes = "";
 	}
@@ -30,12 +53,12 @@ public class UserRecord {
 		this.recordID = recordID;
 	}
 
-	public long getUserID() {
-		return userID;
+	public UserProfile getUserProfile() {
+		return userProfile;
 	}
 
-	public void setUserID(long userID) {
-		this.userID = userID;
+	public void setUserProfile(UserProfile userProfile) {
+		this.userProfile = userProfile;
 	}
 
 	public Timestamp getStartDate() {
@@ -54,12 +77,12 @@ public class UserRecord {
 		this.endDate = endDate;
 	}
 
-	public String getRecordType() {
-		return recordType;
+	public String getRecordName() {
+		return recordName;
 	}
 
-	public void setRecordType(String recordType) {
-		this.recordType = recordType;
+	public void setRecordName(String recordName) {
+		this.recordName = recordName;
 	}
 
 	public long getRecordTypeID() {
@@ -78,4 +101,12 @@ public class UserRecord {
 		this.recordNotes = recordNotes;
 	}
 
+	@Override
+	public String toString() {
+		return "UserRecord [recordID=" + recordID + ", userProfile=" + userProfile + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordTypeID=" + recordTypeID
+				+ ", recordNotes=" + recordNotes + "]";
+	}
+
+	
 }

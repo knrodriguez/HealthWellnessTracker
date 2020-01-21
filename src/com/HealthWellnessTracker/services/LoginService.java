@@ -42,7 +42,7 @@ public class LoginService {
 		Login newLogin = new Login(login.getUsername(), login.getPassword());
 		LoginError error = null;
 		//check if username exists
-		if (loginDAO.exists(newLogin)) 
+		if (exists(newLogin)) 
 			error = LoginError.USERNAME_ALREADY_EXISTS;
 		//check if passwords match
 		else if(!password2.equals(login.getPassword()))
@@ -55,10 +55,10 @@ public class LoginService {
 	
 	//log onto account
 	public Login logOn(Login inputLogin) {
-		return loginDAO.selectLoginByUsername(inputLogin.getUsername());
-//		if(loginFromDatabase != null && loginFromDatabase.getPassword().equals(inputLogin.getPassword()))		
-//			return loginFromDatabase;
-//		return null;
+		Login loginFromDatabase = loginDAO.selectLoginByUsername(inputLogin.getUsername());
+		if(loginFromDatabase != null && loginFromDatabase.getPassword().equals(inputLogin.getPassword()))		
+			return loginFromDatabase;
+		return null;
 	}
 
 	//change username INCOMPLETE
@@ -84,6 +84,9 @@ public class LoginService {
 		return loginDAO.selectLoginByUsername(username);
 	}
 	
-	
+	//test if login exists in database
+	public boolean exists(Login login) {
+		return (loginDAO.selectLoginByUsername(login.getUsername()) == null ? false:true);
+	}
 	
 }

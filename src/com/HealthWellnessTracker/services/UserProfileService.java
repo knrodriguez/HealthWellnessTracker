@@ -9,11 +9,11 @@ public class UserProfileService {
 	private UserProfileDAO userProfileDAO = new UserProfileDAO();
 	
 	//createNewUser
-	public boolean createNewUser(UserProfile userProfile) {
-		return userProfileDAO.createUserProfile(userProfile);
+	public boolean createNewUserProfile(UserProfile userProfile) {
+		return userProfileDAO.insertUserProfile(userProfile);
 	}
 	
-	public int updateUserProfile(UserProfile userProfile) {
+	public int editUserProfile(UserProfile userProfile) {
 		userProfileDAO = new UserProfileDAO();
 		//if(userProfileDAO.updateUserProfile(userProfile)) return 1;
 		//else return 0;

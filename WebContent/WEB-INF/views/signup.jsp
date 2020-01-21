@@ -25,8 +25,7 @@
 				<td><input type="password" name="password2" /></td>
 			</tr>
 			<tr>
-				<td><form:errors path="pass" cssClass="error"/><br><br>  </td>
-				<td><input type="submit" name="submitNewLogin" value="Submit"></td>
+				<td><input type="submit" value="Submit"></td>
 			</tr>
 		</table>
 	</form:form>

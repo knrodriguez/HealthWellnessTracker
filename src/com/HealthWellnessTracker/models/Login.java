@@ -15,7 +15,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Pattern;
 
 @Entity
-@Table(name = "user_logins")
+@Table(name = "logins")
 public class Login implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class Login implements Serializable{
 	private String username;
 	
 	@Basic
-	@Column(name = "Password")
+	@Column(name = "Password", nullable = false)
 	@Pattern(regexp="#(?=.*[a-z])(?=.*[A-Z])(?=.*[!@$#%*_-&]).{8-16}$", 
 			message = "Passwords must contain:\n one (1) lowercase letter,\n"
 					+ "one (1) Uppercase letter,\n"
