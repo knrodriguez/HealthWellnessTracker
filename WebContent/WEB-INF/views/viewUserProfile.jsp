@@ -13,13 +13,14 @@
 	<div class="vertical-menu">
 		<a href="homepage" class="active">Home</a> |
 		<a href="userProfile">Your Profile</a> |
-		<a href="logout">Log Out</a><br>
+		<a href="logout">Log Out</a><br>|
+		<a href="newEvent">Create New Event</a><br>
 	</div>
 	<a href="createUserProfile">Create Profile</a>
 	<h2>Name:</h2><br>
 	
 	
-	<jsp:include page = "login.jsp"></jsp:include>
+	<!--<jsp:include page = "login.jsp"></jsp:include>-->
 	
 </body>
 </html>

@@ -76,13 +76,13 @@ public class UserProfile implements Serializable{
 		this.userLogin = userLogin;
 	}
 
-//	public List<Event> getEventList() {
-//		return eventList;
-//	}
-//
-//	public void setEventList(List<Event> eventList) {
-//		this.eventList = eventList;
-//	}
+	public List<Event> getEventList() {
+		return eventList;
+	}
+
+	public void setEventList(List<Event> eventList) {
+		this.eventList = eventList;
+	}
 
 	public String getName() {
 		return name;

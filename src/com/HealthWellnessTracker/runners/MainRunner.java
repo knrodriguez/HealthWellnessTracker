@@ -34,7 +34,7 @@ public class MainRunner {
 		newEvent.setEventDescription("Testing is the FK links to userID properly. This is a HABIT entry.");
 		newEvent.setEventName("Test HABIT ");
 		EventService eventService = new EventService();
-		String message = eventService.createEvent(newEvent);
+		String message = eventService.createEvent(newEvent, user);
 //		System.out.println(message);
 	}
 	

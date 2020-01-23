@@ -1,6 +1,5 @@
 package com.HealthWellnessTracker.controllers;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,8 +58,6 @@ public class AccountController {
 	}
 	
 //-----------------------------------User Profile-----------------------------------------
-	
-	
 	@RequestMapping(value = {"/showUserProfileForm","/createUserProfile"}, method = RequestMethod.GET)
 	public ModelAndView showUserProfileForm(@ModelAttribute("userProfile") UserProfile newUserProfile, 
 			@ModelAttribute("userLogin") Login userLogin) {
