@@ -14,6 +14,7 @@ public class MainController {
 		return "homepage";
 	}
 
+
 //	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
 //	public ModelAndView submitLoginForm(@ModelAttribute("userLogin") Login userLogin, HttpSession session) {
 //		LoginService loginService = new LoginService();
