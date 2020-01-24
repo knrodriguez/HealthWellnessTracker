@@ -16,7 +16,7 @@ public class UserRecordService {
 	}
 	
 	public List<UserRecord> findUserRecord(String eventName) {
-		List<UserRecord> recordsList = userRecordDAO.selectRecordByEventName(eventName);
+		List<UserRecord> recordsList = userRecordDAO.selectRecordsByEventName(eventName);
 		return recordsList;
 	}
 	

@@ -34,7 +34,7 @@ public class UserRecordDAO {
 	}
 	
 	//read
-	public List<UserRecord> selectRecordByEventName(String eventName) {
+	public List<UserRecord> selectRecordsByEventName(String eventName) {
 		EntityManager em = emf.createEntityManager();
 		List<UserRecord> recordList = null;
 		try {
@@ -52,7 +52,7 @@ public class UserRecordDAO {
 	}
 	
 	//read
-	public List<UserRecord> selectRecordByUserId(UserProfile userProfile) {
+	public List<UserRecord> selectRecordsByUserId(UserProfile userProfile) {
 		EntityManager em = emf.createEntityManager();
 		List<UserRecord> recordList = null;
 		try {

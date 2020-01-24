@@ -45,7 +45,7 @@ public class AccountController {
 			userLogin.setUserId(tempLogin.getUserId());
 			userLogin.setUsername(tempLogin.getUsername());
 			userLogin.setPassword(tempLogin.getPassword());
-			return new ModelAndView("viewUserProfile","message","Welcome!");
+			return new ModelAndView("redirect:/userProfile");
 		}			
 	}
 
@@ -76,6 +76,11 @@ public class AccountController {
 		else return new ModelAndView("redirect://"); 
 	}
 
+	@RequestMapping(value = "/userProfile", method = RequestMethod.GET)
+	public String showUserProfile(@ModelAttribute("userLogin") Login userLogin) {
+		return "viewUserProfile";
+	}
+	
 //-----------------------------------Sign Up-----------------------------------------
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String showSignupPage(@ModelAttribute("newLogin") Login newLogin) {

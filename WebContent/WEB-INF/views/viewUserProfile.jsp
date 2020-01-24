@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h2>${userId}</h2>
-	<h2>${message}</h2>
+	<h2>Welcome, ${userLogin.username}.</h2>
 	<h2>Here is your profile, ${userLogin.username}</h2>
 	<div class="vertical-menu">
 		<a href="homepage" class="active">Home</a> |
@@ -17,10 +17,6 @@
 		<a href="newEvent">Create New Event</a><br>
 	</div>
 	<a href="createUserProfile">Create Profile</a>
-	<h2>Name:</h2><br>
-	
-	
-	<!--<jsp:include page = "login.jsp"></jsp:include>-->
 	
 </body>
 </html>

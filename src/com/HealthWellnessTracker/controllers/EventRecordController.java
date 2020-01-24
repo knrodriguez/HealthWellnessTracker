@@ -49,5 +49,10 @@ public class EventRecordController {
 		
 		return new ModelAndView("redirect:monthlyView");
 	}
-	
+
+//---------------------------------Show Calendar--------------------------------------------
+	@RequestMapping(value = "/monthlyView", method = RequestMethod.GET)
+	public String showMonthlyView(@ModelAttribute("user") UserProfile user) {
+		return "monthlyView";
+	}
 }
