@@ -8,25 +8,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calendar View</title>
+<link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+<link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
 
+<link href='fullcalendar/bootstrap/main.css' rel='stylesheet' />
 <link href='fullcalendar/core/main.css' rel='stylesheet' />
 <link href='fullcalendar/daygrid/main.css' rel='stylesheet' />
 <link href='fullcalendar/timegrid/main.css' rel='stylesheet' />
 <style>
 html, body {
-	overflow: hidden; /* don't do scrollbars */
+	overflow: visible; /* don't do scrollbars */
 /* 	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 	font-size: 14px; */
-}
-
-#page {
-	height: 100vh;
 }
 
 #calendar-container {
 	position: absolute;
 	width: 100vw;
-	height: 90vh;
+	z-index: 1;
+	max-height: 90vh;
 }
 
 .fc-header-toolbar {
@@ -39,22 +39,28 @@ html, body {
   padding-right: 1em;
 }
 
+.fc {
+	margin-left: 1%;
+	margin-right: 1%;
+}
+
 #header-container {
-	position: absolute;
-	height: 5vh;
+	position: relative;
 	width: 100vw;
 	top: 0;
 	left: 0;
 	text-align: center;
+	z-index: 1;
+	height: 5%;
 }
 
 #footer-container {
-	position: absolute;
+	position: relative;
 	bottom: 0;
 	left: 0;
 	text-align: center;
 	width: 100vw;
-	height: 5vh;
+	z-index: 1;
 }
 
 #newRecordContainer {
@@ -84,6 +90,7 @@ input:focus, input:active {
 <script src='fullcalendar/timegrid/main.js'></script>
 <script src='fullcalendar/interaction/main.js'></script>
 <script src='/js/testingTimeGridView.js'></script>
+<script src='fullcalendar/bootstrap/main.js'></script>
 <script>
 	function openNewRecordForm(){
 		document.getElementById("newRecordContainer").style.display = "flex";
@@ -100,8 +107,10 @@ input:focus, input:active {
 		var calendarEl = document.getElementById('calendar');
 		//create JS variable of loaded Calendar module
 		var calendar = new FullCalendar.Calendar(calendarEl, {
-			//height: 'parent',
-			plugins : [ 'interaction', 'dayGrid', 'timeGrid' ],
+			height: 'auto',
+			contentHeight: 'auto',
+			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid' ],
+			themeSystem: 'bootstrap',
 			selectable : true,
 			editable : true,
 			header : {
@@ -160,7 +169,7 @@ input:focus, input:active {
 				var recordContainer = document.getElementById("newRecordContainer");
 				var recordContainerSize = 250;
 				//set startDate to calendar date clicked
-				document.getElementById("startDate").value = new Date(info.date);
+				document.getElementById("startDate").valueAsDate = new Date(info.date);
 				
 				//determine and set left coordinates of popup record form
 				if((info.jsEvent.clientX + recordContainerSize)> window.innerWidth){
@@ -183,12 +192,15 @@ input:focus, input:active {
 </script>
 </head>
 <body>
-<!-- <div id='header-container'> 
+
+	<div id='header-container'> 
 		<h3>Header</h3>
-	</div>-->
+	</div>
+	
 	<div id='calendar-container'>
 		<div id='calendar'></div>
 	</div>
+	
 	<div id='newRecordContainer' class='newRecord'>
 		<form:form id='newRecordForm' class='newRecord' action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
 			<table>
@@ -217,9 +229,10 @@ input:focus, input:active {
 			</table>
 		</form:form>
 	</div>
-<!-- 	<div id='footer-container'>
+	
+	<div id='footer-container'>
 		<h3><a href='homepage'>Home</a></h3>
 	</div>
- -->
+
 </body>
 </html>
