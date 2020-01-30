@@ -10,33 +10,33 @@ import javax.persistence.Query;
 
 import com.HealthWellnessTracker.models.Event;
 import com.HealthWellnessTracker.models.UserProfile;
-import com.HealthWellnessTracker.models.UserRecord;
+import com.HealthWellnessTracker.models.Record;
 
-public class UserRecordDAO {
+public class RecordDAO {
 
 	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
 	
 	//create
-	public boolean insertUserRecord(UserRecord record) {
+	public boolean insertRecord(Record record) {
 		EntityManager em = emf.createEntityManager();
 		boolean flag = false;
 		try{
 			em.getTransaction().begin();
 			em.persist(record);
-			em.getTransaction().commit();
-			flag = true;
+			em.getTransaction().commit();	
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
 			System.out.println("Error creating new Record, invalid parametes inputted");
+			flag = true;
 		}
 		em.close();
 		return flag;
 	}
 	
 	//read
-	public List<UserRecord> selectRecordsByEventName(String eventName) {
+	public List<Record> selectRecordsByEventName(String eventName) {
 		EntityManager em = emf.createEntityManager();
-		List<UserRecord> recordList = null;
+		List<Record> recordList = null;
 		try {
 			em.getTransaction().begin();
 			Query query = em.createQuery("SELECT ur from UserRecord ur "
@@ -52,9 +52,9 @@ public class UserRecordDAO {
 	}
 	
 	//read
-	public List<UserRecord> selectRecordsByUserId(UserProfile userProfile) {
+	public List<Record> selectRecordsByUserId(UserProfile userProfile) {
 		EntityManager em = emf.createEntityManager();
-		List<UserRecord> recordList = null;
+		List<Record> recordList = null;
 		try {
 			em.getTransaction().begin();
 			Query query = em.createQuery("SELECT e from UserRecord e WHERE e.userId = :userId;");
@@ -68,7 +68,7 @@ public class UserRecordDAO {
 	}
 	
 	//update
-	public int updateRecord(UserRecord updatedRecord) {
+	public int updateRecord(Record updatedRecord) {
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedRecords = 0;
 		try {
@@ -94,7 +94,7 @@ public class UserRecordDAO {
 	}
 	
 	//delete
-	public int deleteRecord(UserRecord deletedRecord) {
+	public int deleteRecord(Record deletedRecord) {
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedRecords = 0;
 		try {

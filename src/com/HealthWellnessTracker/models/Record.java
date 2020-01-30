@@ -1,7 +1,7 @@
 package com.HealthWellnessTracker.models;
 
-import java.sql.Timestamp;
-
+import java.sql.Date;
+import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "records")
-public class UserRecord {
+public class Record {
 
 	@Id
 	@Column(name = "RecordId")
@@ -21,27 +21,37 @@ public class UserRecord {
 	@JoinColumn(name = "UserId")
 	private UserProfile userProfile;
 	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "EventId")
+	private Event event;
+	
 	@Column(name = "StartDate", nullable = false)
-	private Timestamp startDate;
+	private Date startDate;
+	
+	@Column(name = "StartTime")
+	private Time startTime;
 	
 	@Column(name = "EndDate")
-	private Timestamp endDate;
+	private Date endDate;
+	
+	@Column(name = "EndTime")
+	private Time endTime;
 	
 	@Column (name = "RecordName", nullable = false)
 	private String recordName;
 	
 	@Column
-	private long recordTypeID;
+	private long recordTypeId;
 	
 	@Column (name = "RecordNotes", nullable = true)
 	private String recordNotes;
 	
-	public UserRecord() {
+	public Record() {
 		recordID = 0;
-		startDate = new Timestamp(System.currentTimeMillis());
+		startDate = null;
 		endDate = null;
 		recordName = "";
-		recordTypeID = 0;
+		recordTypeId = 0;
 		recordNotes = "";
 	}
 
@@ -61,19 +71,43 @@ public class UserRecord {
 		this.userProfile = userProfile;
 	}
 
-	public Timestamp getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Timestamp startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public Timestamp getEndDate() {
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
+	public Time getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
+	}
+
+	public Date getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Timestamp endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
@@ -86,11 +120,11 @@ public class UserRecord {
 	}
 
 	public long getRecordTypeID() {
-		return recordTypeID;
+		return recordTypeId;
 	}
 
 	public void setRecordTypeID(long recordTypeID) {
-		this.recordTypeID = recordTypeID;
+		this.recordTypeId = recordTypeID;
 	}
 
 	public String getRecordNotes() {
@@ -104,7 +138,7 @@ public class UserRecord {
 	@Override
 	public String toString() {
 		return "UserRecord [recordID=" + recordID + ", userProfile=" + userProfile + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordTypeID=" + recordTypeID
+				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordTypeID=" + recordTypeId
 				+ ", recordNotes=" + recordNotes + "]";
 	}
 

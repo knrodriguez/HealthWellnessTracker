@@ -12,8 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.HealthWellnessTracker.models.Event;
 import com.HealthWellnessTracker.models.Login;
+import com.HealthWellnessTracker.models.Record;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.EventService;
+import com.HealthWellnessTracker.services.RecordService;
 
 @Controller
 @SessionAttributes(value= {"userLogin","user"})
@@ -49,10 +51,28 @@ public class EventRecordController {
 		
 		return new ModelAndView("redirect:monthlyView");
 	}
-
+//------------------------------------Records------------------------------------------------
+	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
+	public ModelAndView submitNewRecordForm(@ModelAttribute("user") UserProfile user,
+			@ModelAttribute("newRecord") Record newRecord) {
+		RecordService recordService = new RecordService();
+		newRecord.setEndDate(null);
+		
+		boolean error = recordService.createRecord(newRecord);
+		if(error) {
+			System.out.println("ERROR: could not create new record");
+		}
+		return new ModelAndView("redirect:weeklyView");
+	}
 //---------------------------------Show Calendar--------------------------------------------
 	@RequestMapping(value = "/monthlyView", method = RequestMethod.GET)
 	public String showMonthlyView(@ModelAttribute("user") UserProfile user) {
 		return "monthlyView";
+	}
+	
+	@RequestMapping(value = "/weeklyView", method = RequestMethod.GET)
+	public String showWeeklyView(@ModelAttribute("user") UserProfile user, 
+			@ModelAttribute("newRecord") Record newRecord) {
+		return "weeklyView";
 	}
 }

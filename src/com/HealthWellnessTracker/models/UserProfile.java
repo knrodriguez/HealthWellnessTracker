@@ -35,7 +35,7 @@ public class UserProfile implements Serializable{
 	private List<Event> eventList = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "userProfile")
-	private List<UserRecord> recordList = new ArrayList<>();
+	private List<Record> recordList = new ArrayList<>();
 	
 	@Basic
 	@Column(name = "Name")
