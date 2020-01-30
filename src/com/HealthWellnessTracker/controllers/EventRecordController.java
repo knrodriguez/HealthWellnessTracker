@@ -57,7 +57,7 @@ public class EventRecordController {
 			@ModelAttribute("newRecord") Record newRecord) {
 		RecordService recordService = new RecordService();
 		newRecord.setEndDate(null);
-		
+		newRecord.setUserProfile(user);
 		boolean error = recordService.createRecord(newRecord);
 		if(error) {
 			System.out.println("ERROR: could not create new record");

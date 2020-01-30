@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,6 +17,7 @@ public class Record {
 
 	@Id
 	@Column(name = "RecordId")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long recordID;
 	
 	@ManyToOne(optional = false)
@@ -47,12 +50,7 @@ public class Record {
 	private String recordNotes;
 	
 	public Record() {
-		recordID = 0;
-		startDate = null;
-		endDate = null;
-		recordName = "";
-		recordTypeId = 0;
-		recordNotes = "";
+		super();
 	}
 
 	public long getRecordID() {

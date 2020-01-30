@@ -15,6 +15,7 @@
 		<a href="userProfile">Your Profile</a> |
 		<a href="logout">Log Out</a><br>|
 		<a href="newEvent">Create New Event</a><br>
+		<h3><a href="weeklyView">View My Calendar</a></h3><br>
 	</div>
 	<a href="createUserProfile">Create Profile</a>
 	
