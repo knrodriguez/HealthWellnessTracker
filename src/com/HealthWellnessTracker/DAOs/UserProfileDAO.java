@@ -72,20 +72,20 @@ public class UserProfileDAO {
 		return updatedUserProfiles;
 	}
 	
-	public int deleteUserProfile(UserProfile userProfile) {
-		EntityManager em = emf.createEntityManager();
-		int deletedUserProfiles = 0;
-		try {
-			em.getTransaction().begin();
-			Query query = em.createQuery("DELETE FROM UserProfile up"
-					+ "WHERE up.userId = :userId");
-			query.setParameter("userId",userProfile.getUserId());
-			deletedUserProfiles = query.executeUpdate();
-			em.getTransaction().commit();
-		}catch(PersistenceException e) {
-			e.printStackTrace();
-		}
-		em.close();
-		return deletedUserProfiles;
-	}
+//	public int deleteUserProfile(UserProfile userProfile) {
+//		EntityManager em = emf.createEntityManager();
+//		int deletedUserProfiles = 0;
+//		try {
+//			em.getTransaction().begin();
+//			Query query = em.createQuery("DELETE FROM UserProfile up"
+//					+ "WHERE up.userId = :userId");
+//			query.setParameter("userId",userProfile.getUserId());
+//			deletedUserProfiles = query.executeUpdate();
+//			em.getTransaction().commit();
+//		}catch(PersistenceException e) {
+//			e.printStackTrace();
+//		}
+//		em.close();
+//		return deletedUserProfiles;
+//	}
 }

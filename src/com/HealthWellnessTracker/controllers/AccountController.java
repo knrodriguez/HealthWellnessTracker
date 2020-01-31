@@ -1,10 +1,13 @@
 package com.HealthWellnessTracker.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,20 +16,21 @@ import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.LoginService;
 import com.HealthWellnessTracker.services.LoginService.LoginError;
-import com.HealthWellnessTracker.services.UserProfileService;
 
 @Controller
-@SessionAttributes("userLogin")
+@SessionAttributes(value = {"user"})
 public class AccountController {
 
 	private LoginService loginService = new LoginService();
 	
-	//create instance of Session Attribute "userLogin"
-	@ModelAttribute("userLogin")
-	public Login instantiateUserLogin() {
-		return new Login();
-	}	
-
+	@ModelAttribute("user")
+	public UserProfile user(HttpServletRequest request) {
+		UserProfile user = (UserProfile) request.getSession().getAttribute("user");
+		if(user == null) {
+			user = new UserProfile();
+		}
+		return user;
+	}
 //-----------------------------------Login-----------------------------------------
 	@RequestMapping(value= {"/login"}, method = RequestMethod.GET)
 	public String showLoginForm(@ModelAttribute("inputLogin") Login inputLogin) {
@@ -35,21 +39,18 @@ public class AccountController {
 		
 	@RequestMapping(value = {"/login"}, method = RequestMethod.POST)
 	public ModelAndView submitLoginForm(@ModelAttribute("inputLogin") Login inputLogin,
-			@ModelAttribute("userLogin") Login userLogin) {
-		//System.out.println("userID: " + userLogin.getUserId() + " username: " + userLogin.getUsername());
+			@SessionAttribute("user") UserProfile user, Login userLogin) {
 		Login tempLogin = loginService.logOn(inputLogin);	
 		if(tempLogin == null) {
 			return new ModelAndView("login","message",LoginError.INCORRECT_PASSWORD.toString());
-		}		
-		else {
-			userLogin.setUserId(tempLogin.getUserId());
-			userLogin.setUsername(tempLogin.getUsername());
-			userLogin.setPassword(tempLogin.getPassword());
-			return new ModelAndView("redirect:/userProfile");
+		} else {
+			user.setUserLogin(tempLogin);
+			return new ModelAndView("redirect:/myCalendar");
 		}			
 	}
-
+	
 //-----------------------------------Logout----------------------------------------------
+	//MUST CHANGE TO USER!!!!!!!!!!!!!!!!!!!!!!!
 	@RequestMapping("/logout")
 	public String logout (@ModelAttribute("userLogin") Login userLogin, SessionStatus session) {
 		userLogin = new Login();
@@ -58,28 +59,30 @@ public class AccountController {
 	}
 	
 //-----------------------------------User Profile-----------------------------------------
-	@RequestMapping(value = {"/showUserProfileForm","/createUserProfile"}, method = RequestMethod.GET)
-	public ModelAndView showUserProfileForm(@ModelAttribute("userProfile") UserProfile newUserProfile, 
-			@ModelAttribute("userLogin") Login userLogin) {
-		newUserProfile = new UserProfile(userLogin);
-		return new ModelAndView("createUserProfile", "newUserProfile", newUserProfile); 
-	}
+	//MUST REDO ALL IN USERPROFILE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
-	@RequestMapping(value = "/saveUserProfile", method = RequestMethod.POST)
-	public ModelAndView submitUserProfileForm(@ModelAttribute("userLogin") Login userLogin,
-			@ModelAttribute("userProfile") UserProfile newUserProfile) {
-		System.out.println("UserId: " + userLogin.getUserId());
-		UserProfileService userProfileService = new UserProfileService();
-		newUserProfile.setUserId(userLogin.getUserId());
-		boolean success = userProfileService.createNewUserProfile(newUserProfile);
-		if(!success) return new ModelAndView("createUserProfile");
-		else return new ModelAndView("redirect://"); 
-	}
-
-	@RequestMapping(value = "/userProfile", method = RequestMethod.GET)
-	public String showUserProfile(@ModelAttribute("userLogin") Login userLogin) {
-		return "viewUserProfile";
-	}
+//	@RequestMapping(value = {"/showUserProfileForm","/createUserProfile"}, method = RequestMethod.GET)
+//	public ModelAndView showUserProfileForm(@ModelAttribute("userProfile") UserProfile newUserProfile, 
+//			@ModelAttribute("userLogin") Login userLogin) {
+//		newUserProfile = new UserProfile(userLogin);
+//		return new ModelAndView("createUserProfile", "newUserProfile", newUserProfile); 
+//	}
+//	
+//	@RequestMapping(value = "/saveUserProfile", method = RequestMethod.POST)
+//	public ModelAndView submitUserProfileForm(@ModelAttribute("userLogin") Login userLogin,
+//			@ModelAttribute("userProfile") UserProfile newUserProfile) {
+//		System.out.println("UserId: " + userLogin.getUserId());
+//		UserProfileService userProfileService = new UserProfileService();
+//		newUserProfile.setUserId(userLogin.getUserId());
+//		boolean success = userProfileService.createNewUserProfile(newUserProfile);
+//		if(!success) return new ModelAndView("createUserProfile");
+//		else return new ModelAndView("redirect://"); 
+//	}
+//
+//	@RequestMapping(value = "/userProfile", method = RequestMethod.GET)
+//	public String showUserProfile(@ModelAttribute("userLogin") Login userLogin) {
+//		return "viewUserProfile";
+//	}
 	
 //-----------------------------------Sign Up-----------------------------------------
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)

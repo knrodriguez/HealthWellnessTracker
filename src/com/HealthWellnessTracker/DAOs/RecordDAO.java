@@ -51,21 +51,21 @@ public class RecordDAO {
 		return recordList;		
 	}
 	
-	//read
-	public List<Record> selectRecordsByUserId(UserProfile userProfile) {
-		EntityManager em = emf.createEntityManager();
-		List<Record> recordList = null;
-		try {
-			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT e from UserRecord e WHERE e.userId = :userId;");
-			query.setParameter("userId", userProfile.getUserId());
-			recordList = query.getResultList();
-		} catch(PersistenceException e) {
-			e.printStackTrace();
-		}
-		em.close();
-		return recordList;		
-	}
+//	//read
+//	public List<Record> selectRecordsByUserId(UserProfile userProfile) {
+//		EntityManager em = emf.createEntityManager();
+//		List<Record> recordList = null;
+//		try {
+//			em.getTransaction().begin();
+//			Query query = em.createQuery("SELECT e from UserRecord e WHERE e.userId = :userId;");
+//			query.setParameter("userId", userProfile.getUserId());
+//			recordList = query.getResultList();
+//		} catch(PersistenceException e) {
+//			e.printStackTrace();
+//		}
+//		em.close();
+//		return recordList;		
+//	}
 	
 	//update
 	public int updateRecord(Record updatedRecord) {

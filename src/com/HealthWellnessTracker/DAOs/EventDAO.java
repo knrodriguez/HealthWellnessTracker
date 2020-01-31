@@ -59,8 +59,8 @@ public class EventDAO {
 		List<Event> eventList = null;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT e from Event e WHERE e.userId = :userId");
-			query.setParameter("userId", userProfile.getUserId());
+			Query query = em.createQuery("SELECT e from Event e WHERE e.userProfile = :userProfile");
+			query.setParameter("userProfile", userProfile);
 			eventList = query.getResultList();
 		} catch(PersistenceException e) {
 			e.printStackTrace();

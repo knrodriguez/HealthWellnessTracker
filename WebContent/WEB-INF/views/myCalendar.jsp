@@ -92,14 +92,17 @@ input:focus, input:active {
 <script src='/js/testingTimeGridView.js'></script>
 <script src='fullcalendar/bootstrap/main.js'></script>
 <script>
+	var formOpened = false;
 	function openNewRecordForm(){
 		document.getElementById("newRecordContainer").style.display = "flex";
+		formOpened = true;
 	};
 	
 	function closeNewRecordForm(){
 		document.getElementById("startDate").valueAsDate = null;
 		document.getElementById('newRecordForm').reset();
-		document.getElementById("newRecordContainer").style.display = "none";	
+		document.getElementById("newRecordContainer").style.display = "none";
+		formOpened = false;
 	};
 
 	document.addEventListener('DOMContentLoaded', function() {
@@ -168,19 +171,24 @@ input:focus, input:active {
 			dateClick : function(info){
 				var recordContainer = document.getElementById("newRecordContainer");
 				var recordContainerSize = 250;
-				//set startDate to calendar date clicked
-				document.getElementById("startDate").valueAsDate = new Date(info.date);
 				
-				//determine and set left coordinates of popup record form
-				if((info.jsEvent.clientX + recordContainerSize)> window.innerWidth){
-					recordContainer.style.left = info.jsEvent.clientX-recordContainerSize+'px';		
-				} else {recordContainer.style.left = info.jsEvent.clientX+'px';}
-				
-				//determine and set top coordinates of popup record form
-				if ((info.jsEvent.clientY + recordContainerSize) > calendar.innerHeight){
-					recordContainer.style.top = info.jsEvent.clientY-recordContainerSize+'px';				
-				} else {recordContainer.style.top = info.jsEvent.clientY+'px';}
-				openNewRecordForm();	
+				if(formOpened === true){
+					closeNewRecordForm();
+				}
+				else{
+					//set startDate to calendar date clicked
+					document.getElementById("startDate").valueAsDate = new Date(info.date);
+					//determine and set left coordinates of popup record form
+					if((info.jsEvent.clientX + recordContainerSize)> window.innerWidth){
+						recordContainer.style.left = info.jsEvent.clientX-recordContainerSize+'px';		
+					} else {recordContainer.style.left = info.jsEvent.clientX+'px';}
+					
+					//determine and set top coordinates of popup record form
+					if ((info.jsEvent.clientY + recordContainerSize) > window.innerHeight){
+						recordContainer.style.top = info.jsEvent.clientY-recordContainerSize+'px';				
+					} else {recordContainer.style.top = info.jsEvent.clientY+'px';}
+					openNewRecordForm();
+				}
 			}
 		});
 		//render Calendar
@@ -194,7 +202,17 @@ input:focus, input:active {
 <body>
 
 	<div id='header-container'> 
-		<h3>Header</h3>
+		<table>
+			<tr>
+				<td><h3>Header</h3></td>
+				<td style="text-align: right;"><h3><a href="newEvent">Create New Event</a></h3></td>
+				<!-- <td><h4>${user.getUserLogin().getUserId()}</h4></td>
+				<td><h4>${user.getUserLogin().getUsername()}</h4></td> -->
+			</tr>
+		</table>
+		
+		
+
 	</div>
 	
 	<div id='calendar-container'>
@@ -211,16 +229,27 @@ input:focus, input:active {
 					<td>Event: <form:input id="dropdownEvent" path="recordTypeId"/></td>
 				</tr> --%>
 				<tr>
-					<td>Start Date:<form:input type="date" id="startDate" path="startDate"/></td>
+					<td>Start Date:<br>
+						<form:input type="date" id="startDate" path="startDate"/>
+					</td>
 				</tr>
-<%-- 				<tr>
-					<td>End Date: <form:input id="endDate" path="endDate" value="null"/></td>
-				</tr> --%>
-<%-- 				<tr>
-					<td>Event Id: <form:input id="textinput" path="event"/></td>
-				</tr> --%>
 				<tr>
-					<td>Record Notes: <form:input id="textinput" path="recordNotes"/></td>
+					<td>Event:<br>
+						<form:select path="event">
+							<form:option value='null' label="--Options--"/>
+							<form:options items="${eventList}" itemValue="${event}" itemLabel="${event.eventName}"/>
+						</form:select>
+				<!-- 		<select id="event" name="event">
+							<c:forEach items="${eventList}" var="event">
+								<option value="${event.eventId}">${event.eventName}</option>
+							</c:forEach>
+						</select> -->
+					</td>
+				</tr>				
+				<tr>
+					<td>Record Notes:<br> 
+						<form:input id="textinput" path="recordNotes"/>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="submit" id="submit-button" value="submit"></td>

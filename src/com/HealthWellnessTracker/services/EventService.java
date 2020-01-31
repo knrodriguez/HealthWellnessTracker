@@ -17,6 +17,7 @@ public class EventService {
 				return "Unable to Create Event: Event with that name already exists.";
 			}
 		}
+		newEvent.setUserProfile(user);
 		boolean success = eventDAO.insertEvent(newEvent);
 		if(!success) return "Unable to Create Event :( Transaction did not persist.";
 		else return "Event Created! :)";
@@ -36,6 +37,11 @@ public class EventService {
 	
 	public List<Event> findEventByName(UserProfile user, String eventName) {
 		 List<Event> foundEvent = eventDAO.selectEventByEventName(user,"%"+eventName+"%");
+		 return foundEvent;
+	}
+	
+	public List<Event> findEventByUser(UserProfile user) {
+		 List<Event> foundEvent = eventDAO.selectEventByUserId(user);
 		 return foundEvent;
 	}
 	
