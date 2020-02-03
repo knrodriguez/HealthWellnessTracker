@@ -22,7 +22,7 @@
 <style>
 html, body {
 	overflow: visible; /* scrollbars */
-	height:100%;
+	height: 100%;
 	width: 100%;
 }
 
@@ -30,7 +30,7 @@ html, body {
 	position: static;
 	width: 100vw;
 	z-index: 1;
-	height:90%;
+	height: 90%;
 }
 
 .fc {
@@ -50,16 +50,14 @@ html, body {
 }
 
 .fc-toolbar h2 {
-  font-size: 1.75em;
-  margin: 0;
-  text-align: right;
-  
+	font-size: 1.75em;
+	margin: 0;
+	text-align: right;
 }
 
 .fc-toolbar .fc-left:before .fc-left:after {
-    float: right;
-    content: url("images/logo.png");
-    
+	float: right;
+	content: url("images/logo.png");
 }
 
 #newRecordContainer {
@@ -72,15 +70,17 @@ html, body {
 	height: auto;
 	width: auto;
 	background-color: white;
+	top: 0;
+	left: 0;
 }
 /*works for input, not for class or id*/
-	input {
-		border-color: transparent;
-	}
-	
-	input:focus, input:active, input:hover{
-		background-color: #EEEEEE;
-	}
+input {
+	border-color: transparent;
+}
+
+input:focus, input:active, input:hover {
+	background-color: #EEEEEE;
+}
 </style>
 <script src='fullcalendar/core/main.js'></script>
 <script src='fullcalendar/daygrid/main.js'></script>
@@ -89,7 +89,15 @@ html, body {
 <script src='/js/testingTimeGridView.js'></script>
 <script src='fullcalendar/bootstrap/main.js'></script>
 <script src='fullcalendar/list/main.js'></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("div").click(function() {alert("Hello, World!");});
+    
+ });
+</script>
 <script>
+	
 	var formOpened = false;
 	function openNewRecordForm(){
 		document.getElementById("newRecordContainer").style.visibility = "visible";
@@ -102,8 +110,21 @@ html, body {
 		document.getElementById("newRecordContainer").style.visibility = "hidden"; 
 		formOpened = false;
 	};
+	
+ 	function createEventsArray(){
+		var events = new Array();
+		var event = new Object();
+		var helpme = '${recordnames}';
+		window.alert('${recordnames}');
+		event.title = 'Test1';
+		event.start = '2020-02-02';
+		event.allDay = false;
+		events.push(event);			
+		return events;
+	}; 
 
 	document.addEventListener('DOMContentLoaded', function() {
+		
 		//create JS variable for HTML Calendar element
 		var calendarEl = document.getElementById('calendar');
 		//create JS variable of loaded Calendar module
@@ -122,59 +143,11 @@ html, body {
 				center : 'title',
 				right : 'prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 			},
-			events : [ {
-				title : 'All Day Event',
-				description : 'description for All Day Event',
-				start : '2020-01-01'
-			}, {
-				title : 'Long Event',
-				description : 'description for Long Event',
-				start : '2020-01-07',
-				end : '2020-01-10'
-			}, {
-				groupId : '999',
-				title : 'Repeating Event',
-				description : 'description for Repeating Event',
-				start : '2020-01-09T16:00:00'
-			}, {
-				groupId : '999',
-				title : 'Repeating Event',
-				description : 'description for Repeating Event',
-				start : '2020-01-16T16:00:00'
-			}, {
-				title : 'Conference',
-				description : 'description for Conference',
-				start : '2020-01-11',
-				end : '2020-01-13'
-			}, {
-				title : 'Meeting',
-				description : 'description for Meeting',
-				start : '2020-11-12T10:30:00',
-				end : '2020-01-12T12:30:00'
-			}, {
-				title : 'Lunch',
-				description : 'description for Lunch',
-				start : '2020-01-12T12:00:00'
-			}, {
-				title : 'Meeting',
-				description : 'description for Meeting',
-				start : '2020-01-12T14:30:00'
-			}, {
-				title : 'Birthday Party',
-				description : 'description for Birthday Party',
-				start : '2020-01-13T07:00:00'
-			}, {
-				title : 'Click for Google',
-				description : 'description for Click for Google',
-				url : 'http://google.com/',
-				start : '2020-01-28'
-			} ],
-			dateClick : function(info){
+			dateClick : function(info) {
 				var recordContainer = document.getElementById("newRecordContainer");
 				var recordContainerWidth = recordContainer.offsetWidth;
 				var recordContainerHeight = recordContainer.offsetHeight;
 
-				
 				//close form if already open
 				if(formOpened === true){
 					closeNewRecordForm();
@@ -191,32 +164,39 @@ html, body {
 													+ recordContainer.offsetWidth/2 + "px";	
 					} 
 					else {
+						recordContainer.style.margin = '0';
 						//determine and set left coordinates of popup record form
 						if((info.jsEvent.clientX + recordContainerWidth) >= window.innerWidth){
-							recordContainer.style.left = info.jsEvent.clientX-recordContainerWidth+'px';		
-						} else {recordContainer.style.left = info.jsEvent.clientX+'px';}
+							recordContainer.style.left = info.jsEvent.clientX-recordContainerWidth+'px';					
+						} else {
+							recordContainer.style.left = info.jsEvent.clientX+'px';
+						}
 						
 						//determine and set top coordinates of popup record form
 						if ((info.jsEvent.clientY + recordContainerHeight) >= window.innerHeight){
 							recordContainer.style.top = info.jsEvent.clientY-recordContainerHeight+'px';				
-						} else {recordContainer.style.top = info.jsEvent.clientY+'px';}
+						} else {
+							recordContainer.style.top = info.jsEvent.clientY+'px';
+						}
 					}
 					openNewRecordForm();
 				}
 			}
 		});
-
+		//var events = new Array();
+		//events = createEventsArray();
+		calendar.addEventSource(createEventsArray());
 		//render Calendar
 		calendar.render();
-/* 		var view = calendar.view;
-		alert("The view's title is " + view.title); */
-		//testing on handler -- must use built in event triggers. 
-		//calendar.on('dateClick', function(info){});
 	});
 
 </script>
 </head>
 <body>
+
+	<c:forEach var="record" items="${recordList}">
+	    <c:set value="${records}${record.getRecordName()}" var='recordnames'/>
+	</c:forEach>
 
 	<div id='header-container'>
 		<table>
@@ -249,13 +229,13 @@ html, body {
 					<td>Start: <form:input type="date" id="startDate"
 							path="startDate" />
 					</td>
-					<td><form:input type="time" id="startTime" path="startTime" />
+<%-- 					<td><form:input type="time" id="startTime" path="startTime" /> --%>
 					</td>
 				</tr>
 				<tr>
 					<td>End: <form:input type="date" id="endDate" path="endDate" />
 					</td>
-					<td><form:input type="time" id="endTime" path="endTime" /></td>
+<%-- 					<td><form:input type="time" id="endTime" path="endTime" /></td> --%>
 				</tr>
 				<tr>
 					<td colspan=2>Event: <%-- 						<form:select path="event" multiple="false" >
@@ -281,9 +261,10 @@ html, body {
 			</table>
 		</form:form>
 	</div>
-    <div id='calendar-container'>
-			<div id='calendar'></div>
+	<div id='calendar-container'>
+		<div id='calendar'></div>
 	</div>
+
 
 </body>
 </html>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.HealthWellnessTracker.DAOs.RecordDAO;
 import com.HealthWellnessTracker.models.Record;
+import com.HealthWellnessTracker.models.UserProfile;
 
 public class RecordService {
 
@@ -32,6 +33,11 @@ public class RecordService {
 		int numDeletedRecords = recordDAO.deleteRecord(record);
 		if(numDeletedRecords == 1) flag = true;
 		return flag;
+	}
+	
+	public List<Record> findRecordByUser(UserProfile user) {
+		List<Record> recordsList = recordDAO.selectRecordsByUserId(user);
+		return recordsList;
 	}
 	
 	

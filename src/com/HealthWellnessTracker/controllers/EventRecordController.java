@@ -1,12 +1,11 @@
 package com.HealthWellnessTracker.controllers;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +63,8 @@ public class EventRecordController {
 			@ModelAttribute("newRecord") Record newRecord,
 			@RequestParam("eventSelected") long eventId) {
 		newRecord.setEndDate(null);
+		newRecord.setStartTime(null);
+		newRecord.setEndTime(null);
 		newRecord.setUserProfile(user);
 		newRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.createRecord(newRecord);
@@ -77,7 +78,11 @@ public class EventRecordController {
 	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
 	public ModelAndView showMyCalendar(@SessionAttribute("user") UserProfile user,
 			@ModelAttribute("newRecord") Record newRecord) {
-		List<Event> eventList = eventService.findEventByUser(user);	
-		return new ModelAndView("myCalendar","eventList", eventList);
+		List<Event> eventList = eventService.findEventByUser(user);
+		List<Record> recordList = recordService.findRecordByUser(user);
+		ModelAndView calendarMAV = new ModelAndView("myCalendar");
+		calendarMAV.addObject("eventList",eventList);
+		calendarMAV.addObject("recordList", recordList);		
+		return calendarMAV;
 	}
 }

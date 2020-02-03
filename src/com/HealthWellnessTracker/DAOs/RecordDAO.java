@@ -8,9 +8,8 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-import com.HealthWellnessTracker.models.Event;
-import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.models.Record;
+import com.HealthWellnessTracker.models.UserProfile;
 
 public class RecordDAO {
 
@@ -39,9 +38,9 @@ public class RecordDAO {
 		List<Record> recordList = null;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT ur from UserRecord ur "
+			Query query = em.createQuery("SELECT ur from Record ur "
 										+ "JOIN Event e ON ur.eventId = e.eventId"
-										+ "WHERE e.eventName = :eventName;");
+										+ "WHERE e.eventName = :eventName");
 			query.setParameter("eventName", eventName);
 			recordList = query.getResultList();
 		} catch(PersistenceException e) {
@@ -51,21 +50,21 @@ public class RecordDAO {
 		return recordList;		
 	}
 	
-//	//read
-//	public List<Record> selectRecordsByUserId(UserProfile userProfile) {
-//		EntityManager em = emf.createEntityManager();
-//		List<Record> recordList = null;
-//		try {
-//			em.getTransaction().begin();
-//			Query query = em.createQuery("SELECT e from UserRecord e WHERE e.userId = :userId;");
-//			query.setParameter("userId", userProfile.getUserId());
-//			recordList = query.getResultList();
-//		} catch(PersistenceException e) {
-//			e.printStackTrace();
-//		}
-//		em.close();
-//		return recordList;		
-//	}
+	//read
+	public List<Record> selectRecordsByUserId(UserProfile userProfile) {
+		EntityManager em = emf.createEntityManager();
+		List<Record> recordList = null;
+		try {
+			em.getTransaction().begin();
+			Query query = em.createQuery("SELECT e from Record e WHERE e.userProfile = :userProfile");
+			query.setParameter("userProfile", userProfile);
+			recordList = query.getResultList();
+		} catch(PersistenceException e) {
+			e.printStackTrace();
+		}
+		em.close();
+		return recordList;		
+	}
 	
 	//update
 	public int updateRecord(Record updatedRecord) {
@@ -73,12 +72,12 @@ public class RecordDAO {
 		int numUpdatedRecords = 0;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("UPDATE UserRecord e SET e.startDate = :startDate,"
+			Query query = em.createQuery("UPDATE Record e SET e.startDate = :startDate,"
 					+ "e.endDate = :endDate,"
 					+ "e.recordName = :recordName"
 					+ "e.recordTypeId = :recordTypeId"
 					+ "e.recordNotes = :recordNotes"
-					+ "WHERE recordId = :recordId;");
+					+ "WHERE recordId = :recordId");
 			query.setParameter("startDate", updatedRecord.getStartDate())
 				 .setParameter("endDate", updatedRecord.getEndDate())
 				 .setParameter("recordName", updatedRecord.getRecordName())
@@ -99,7 +98,7 @@ public class RecordDAO {
 		int numUpdatedRecords = 0;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("DELETE FROM UserRecord e WHERE e.recordId = :recordId;");
+			Query query = em.createQuery("DELETE FROM Record e WHERE e.recordId = :recordId");
 			query.setParameter("eventId", deletedRecord.getRecordID());
 			numUpdatedRecords = query.executeUpdate();
 			em.getTransaction().commit();
@@ -108,5 +107,8 @@ public class RecordDAO {
 		}
 		return numUpdatedRecords;
 	}
+	
+	//public 
+	
 	
 }
