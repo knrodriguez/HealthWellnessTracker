@@ -108,4 +108,11 @@ public class EventDAO {
 		em.close();
 		return numDeletedEvents;
 	}
+	
+	public Event findEventByEventId(long eventId) {
+		EntityManager em = emf.createEntityManager();
+		Event foundEvent = em.find(Event.class, eventId);
+		em.close();
+		return foundEvent;
+	}
 }

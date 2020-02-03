@@ -1,7 +1,9 @@
 package com.HealthWellnessTracker.controllers;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +26,9 @@ import com.HealthWellnessTracker.services.RecordService;
 @SessionAttributes(value= {"user"})
 public class EventRecordController {
 	
+	private EventService eventService = new EventService();
+	private RecordService recordService = new RecordService();
+	
 	@ModelAttribute("user")
 	public UserProfile user(HttpServletRequest request) {
 		UserProfile user = (UserProfile) request.getSession().getAttribute("user");
@@ -42,46 +47,37 @@ public class EventRecordController {
 		listEventCategory.add("Habit");
 		listEventCategory.add("Symptom");
 		listEventCategory.add("Illness");
-		for(String s: listEventCategory) {
-			System.out.println(s);
-		}
 		mav.addObject("newEvent");
 		mav.addObject("listEventCategory", listEventCategory);
 		return mav;
 	}
 	
 	@RequestMapping(value = "/newEvent", method = RequestMethod.POST)
-	public ModelAndView submitNewEvent(@ModelAttribute("user") UserProfile user,
+	public String submitNewEvent(@ModelAttribute("user") UserProfile user,
 			@ModelAttribute("newEvent") Event newEvent) {
-		EventService eventService = new EventService();
-		String message = eventService.createEvent(newEvent, user);
-		
-		return new ModelAndView("redirect:myCalendar");
+		String message = eventService.createEvent(newEvent, user);		
+		return "redirect:myCalendar";
 	}
 //------------------------------------Records------------------------------------------------
 	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
-	public ModelAndView submitNewRecordForm(@ModelAttribute("user") UserProfile user,
+	public String submitNewRecordForm(@ModelAttribute("user") UserProfile user,
 			@ModelAttribute("newRecord") Record newRecord,
-			@RequestParam("event") long eventId) {
-		RecordService recordService = new RecordService();
+			@RequestParam("eventSelected") long eventId) {
 		newRecord.setEndDate(null);
 		newRecord.setUserProfile(user);
+		newRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.createRecord(newRecord);
 		if(error) {
 			System.out.println("ERROR: could not create new record");
 		}
-		return new ModelAndView("redirect:myCalendar");
+		//return new ModelAndView("redirect:myCalendar");
+		return "redirect:myCalendar";
 	}
 //---------------------------------Show Calendar--------------------------------------------
 	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
 	public ModelAndView showMyCalendar(@SessionAttribute("user") UserProfile user,
 			@ModelAttribute("newRecord") Record newRecord) {
-		System.out.println(user.toString());
-		EventService eventService = new EventService();
 		List<Event> eventList = eventService.findEventByUser(user);	
-		for(Event e : eventList) {
-			System.out.println(e.toString());
-		}
 		return new ModelAndView("myCalendar","eventList", eventList);
 	}
 }

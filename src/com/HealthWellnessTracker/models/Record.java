@@ -1,7 +1,9 @@
 package com.HealthWellnessTracker.models;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "records")
-public class Record {
+public class Record implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "RecordId")

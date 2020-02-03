@@ -45,6 +45,9 @@ public class EventService {
 		 return foundEvent;
 	}
 	
-	
+	public Event findEventByEventId(long eventId) {
+		Event foundEvent = eventDAO.findEventByEventId(eventId);
+		return foundEvent;
+	}
 	
 }

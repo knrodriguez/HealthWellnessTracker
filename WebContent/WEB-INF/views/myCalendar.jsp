@@ -1,89 +1,86 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calendar View</title>
-<link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
-<link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
+<title>My Calendar</title>
+<link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
+	rel='stylesheet'>
+<link
+	href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
+	rel='stylesheet' />
 
 <link href='fullcalendar/bootstrap/main.css' rel='stylesheet' />
 <link href='fullcalendar/core/main.css' rel='stylesheet' />
 <link href='fullcalendar/daygrid/main.css' rel='stylesheet' />
 <link href='fullcalendar/timegrid/main.css' rel='stylesheet' />
+<link href='fullcalendar/list/main.css' rel='stylesheet' />
 <style>
 html, body {
-	overflow: visible; /* don't do scrollbars */
-/* 	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-	font-size: 14px; */
+	overflow: visible; /* scrollbars */
+	height:100%;
+	width: 100%;
 }
 
 #calendar-container {
-	position: absolute;
+	position: static;
 	width: 100vw;
 	z-index: 1;
-	max-height: 90vh;
-}
-
-.fc-header-toolbar {
-  /*
-  the calendar will be butting up against the edges,
-  but let's scoot in the header's buttons
-  */
-  padding-top: 1em;
-  padding-left: 1em;
-  padding-right: 1em;
+	height:90%;
 }
 
 .fc {
-	margin-left: 1%;
 	margin-right: 1%;
+	margin-left: 1%;
+	margin-bottom: 1%;
 }
 
 #header-container {
-	position: relative;
+	position: static;
 	width: 100vw;
 	top: 0;
 	left: 0;
 	text-align: center;
 	z-index: 1;
-	height: 5%;
+	height: 10%;
 }
 
-#footer-container {
-	position: relative;
-	bottom: 0;
-	left: 0;
-	text-align: center;
-	width: 100vw;
-	z-index: 1;
+.fc-toolbar h2 {
+  font-size: 1.75em;
+  margin: 0;
+  text-align: right;
+  
+}
+
+.fc-toolbar .fc-left:before .fc-left:after {
+    float: right;
+    content: url("images/logo.png");
+    
 }
 
 #newRecordContainer {
-	display: none;
+	position: fixed;
+	visibility: hidden;
+	display: block;
 	z-index: 1000; /*overlay in front of calendar*/
-	position: absolute;
 	border-style: solid;
 	border-width: thin;
-	width: 250px;
-	height: 250px;
-/* 	left: 0%;
-	right: 0%;
-	top: 0%; */
+	height: auto;
+	width: auto;
+	background-color: white;
 }
-
-input {
-	outline: graytext;
-}
-
-input:focus, input:active {
-	border-color: transparent;
-	border-bottom: 2px solid red;
-}
+/*works for input, not for class or id*/
+	input {
+		border-color: transparent;
+	}
+	
+	input:focus, input:active, input:hover{
+		background-color: #EEEEEE;
+	}
 </style>
 <script src='fullcalendar/core/main.js'></script>
 <script src='fullcalendar/daygrid/main.js'></script>
@@ -91,17 +88,18 @@ input:focus, input:active {
 <script src='fullcalendar/interaction/main.js'></script>
 <script src='/js/testingTimeGridView.js'></script>
 <script src='fullcalendar/bootstrap/main.js'></script>
+<script src='fullcalendar/list/main.js'></script>
 <script>
 	var formOpened = false;
 	function openNewRecordForm(){
-		document.getElementById("newRecordContainer").style.display = "flex";
+		document.getElementById("newRecordContainer").style.visibility = "visible";
 		formOpened = true;
 	};
 	
 	function closeNewRecordForm(){
 		document.getElementById("startDate").valueAsDate = null;
 		document.getElementById('newRecordForm').reset();
-		document.getElementById("newRecordContainer").style.display = "none";
+		document.getElementById("newRecordContainer").style.visibility = "hidden"; 
 		formOpened = false;
 	};
 
@@ -110,16 +108,19 @@ input:focus, input:active {
 		var calendarEl = document.getElementById('calendar');
 		//create JS variable of loaded Calendar module
 		var calendar = new FullCalendar.Calendar(calendarEl, {
-			height: 'auto',
-			contentHeight: 'auto',
-			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid' ],
-			themeSystem: 'bootstrap',
+			height: 'parent',
+			contentHeight: 0.8*window.innerHeight,
+			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid', 'list'],
+			//themeSystem: 'bootstrap',
 			selectable : true,
 			editable : true,
+			handleWindowResize: true,
+			fixedWeekCount: false,
+			eventLimit: true,
 			header : {
-				left : 'prev,next today',
+				left : '',
 				center : 'title',
-				right : 'dayGridMonth,timeGridWeek,timeGridDay'
+				right : 'prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 			},
 			events : [ {
 				title : 'All Day Event',
@@ -170,29 +171,45 @@ input:focus, input:active {
 			} ],
 			dateClick : function(info){
 				var recordContainer = document.getElementById("newRecordContainer");
-				var recordContainerSize = 250;
+				var recordContainerWidth = recordContainer.offsetWidth;
+				var recordContainerHeight = recordContainer.offsetHeight;
+
 				
+				//close form if already open
 				if(formOpened === true){
 					closeNewRecordForm();
 				}
 				else{
 					//set startDate to calendar date clicked
 					document.getElementById("startDate").valueAsDate = new Date(info.date);
-					//determine and set left coordinates of popup record form
-					if((info.jsEvent.clientX + recordContainerSize)> window.innerWidth){
-						recordContainer.style.left = info.jsEvent.clientX-recordContainerSize+'px';		
-					} else {recordContainer.style.left = info.jsEvent.clientX+'px';}
 					
-					//determine and set top coordinates of popup record form
-					if ((info.jsEvent.clientY + recordContainerSize) > window.innerHeight){
-						recordContainer.style.top = info.jsEvent.clientY-recordContainerSize+'px';				
-					} else {recordContainer.style.top = info.jsEvent.clientY+'px';}
+					//if window is small enough to have scrollbar, set form to center of page
+					if(document.body.scrollHeight > document.body.clientHeight){
+						recordContainer.style.top = '50%';
+						recordContainer.style.left= '50%';
+						recordContainer.style.margin= "-" + recordContainer.offsetHeight/2 + "px 0px 0px -" 
+													+ recordContainer.offsetWidth/2 + "px";	
+					} 
+					else {
+						//determine and set left coordinates of popup record form
+						if((info.jsEvent.clientX + recordContainerWidth) >= window.innerWidth){
+							recordContainer.style.left = info.jsEvent.clientX-recordContainerWidth+'px';		
+						} else {recordContainer.style.left = info.jsEvent.clientX+'px';}
+						
+						//determine and set top coordinates of popup record form
+						if ((info.jsEvent.clientY + recordContainerHeight) >= window.innerHeight){
+							recordContainer.style.top = info.jsEvent.clientY-recordContainerHeight+'px';				
+						} else {recordContainer.style.top = info.jsEvent.clientY+'px';}
+					}
 					openNewRecordForm();
 				}
 			}
 		});
+
 		//render Calendar
 		calendar.render();
+/* 		var view = calendar.view;
+		alert("The view's title is " + view.title); */
 		//testing on handler -- must use built in event triggers. 
 		//calendar.on('dateClick', function(info){});
 	});
@@ -201,66 +218,71 @@ input:focus, input:active {
 </head>
 <body>
 
-	<div id='header-container'> 
+	<div id='header-container'>
 		<table>
 			<tr>
 				<td><h3>Header</h3></td>
-				<td style="text-align: right;"><h3><a href="newEvent">Create New Event</a></h3></td>
+				<td style="text-align: right;"><h3>
+						<a href="newEvent">Create New Event</a>
+					</h3></td>
+				<td style="text-align: right;"><h3>
+						<a href="editUserProfile">Edit Profile</a>
+					</h3></td>
 				<!-- <td><h4>${user.getUserLogin().getUserId()}</h4></td>
 				<td><h4>${user.getUserLogin().getUsername()}</h4></td> -->
 			</tr>
 		</table>
-		
-		
+
+
 
 	</div>
-	
-	<div id='calendar-container'>
-		<div id='calendar'></div>
-	</div>
-	
+
 	<div id='newRecordContainer' class='newRecord'>
-		<form:form id='newRecordForm' class='newRecord' action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
+		<form:form id='newRecordForm' class='newRecord'
+			action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
 			<table>
 				<tr>
-					<td><form:input id="recordName" path="recordName" placeholder="New Event"/></td>
+					<td><form:input id="formInput" path="recordName"
+							placeholder="New Event" /></td>
 				</tr>
-<%-- 				<tr>
-					<td>Event: <form:input id="dropdownEvent" path="recordTypeId"/></td>
-				</tr> --%>
 				<tr>
-					<td>Start Date:<br>
-						<form:input type="date" id="startDate" path="startDate"/>
+					<td>Start: <form:input type="date" id="startDate"
+							path="startDate" />
+					</td>
+					<td><form:input type="time" id="startTime" path="startTime" />
 					</td>
 				</tr>
 				<tr>
-					<td>Event:<br>
-						<form:select path="event">
-							<form:option value='null' label="--Options--"/>
-							<form:options items="${eventList}" itemValue="${event}" itemLabel="${event.eventName}"/>
-						</form:select>
-				<!-- 		<select id="event" name="event">
+					<td>End: <form:input type="date" id="endDate" path="endDate" />
+					</td>
+					<td><form:input type="time" id="endTime" path="endTime" /></td>
+				</tr>
+				<tr>
+					<td colspan=2>Event: <%-- 						<form:select path="event" multiple="false" >
+							<form:option value="null" label="-- null value --"/>
+							<form:options items="${eventList}" itemLabel="eventName"/>
+						</form:select> --%> <select id="event" name="eventSelected">
 							<c:forEach items="${eventList}" var="event">
 								<option value="${event.eventId}">${event.eventName}</option>
 							</c:forEach>
-						</select> -->
+					</select>
 					</td>
-				</tr>				
+				</tr>
 				<tr>
-					<td>Record Notes:<br> 
-						<form:input id="textinput" path="recordNotes"/>
+					<td colspan=2>Notes:&nbsp;<form:input id="textinput"
+							path="recordNotes" />
 					</td>
 				</tr>
 				<tr>
 					<td><input type="submit" id="submit-button" value="submit"></td>
-					<td><input type="button" id="cancel-button" value="Close" onclick=closeNewRecordForm()></td>
+					<td><input type="button" id="cancel-button" value="Close"
+						onclick=closeNewRecordForm()></td>
 				</tr>
 			</table>
 		</form:form>
 	</div>
-	
-	<div id='footer-container'>
-		<h3><a href='homepage'>Home</a></h3>
+    <div id='calendar-container'>
+			<div id='calendar'></div>
 	</div>
 
 </body>
