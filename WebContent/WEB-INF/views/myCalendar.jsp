@@ -27,6 +27,7 @@ html, body {
 }
 
 #calendar-container {
+<!-- originally static-->
 	position: static;
 	width: 100vw;
 	z-index: 1;
@@ -40,27 +41,30 @@ html, body {
 }
 
 #header-container {
-	position: static;
-	width: 100vw;
-	top: 0;
-	left: 0;
+	position: relative;
+	margin-right: 10%;
+	bottom: -100px;
 	text-align: center;
-	z-index: 1;
 	height: 10%;
 }
 
-.fc-toolbar h2 {
-	font-size: 1.75em;
+
+.fc-center {
+	position: relative;
+	padding-left: 10%;
 	margin: 0;
 	text-align: right;
+	display: inline; 
+	vertical-align: middle;
 }
+
 
 .fc-toolbar .fc-left:before .fc-left:after {
-	float: right;
-	content: url("images/logo.png");
+	float: inherit;
+	content: "test";
 }
 
-#newRecordContainer {
+#newRecordFormContainer {
 	position: fixed;
 	visibility: hidden;
 	display: block;
@@ -73,6 +77,21 @@ html, body {
 	top: 0;
 	left: 0;
 }
+
+#recordContainer {
+	position: fixed;
+	visibility: hidden;
+	display: block;
+	z-index: 1000;
+	border-style: solid;
+	border-width: thin;
+	height: auto;
+	width: auto;
+	background-color: white;
+	top: 0;
+	left: 0;	
+}
+
 /*works for input, not for class or id*/
 input {
 	border-color: transparent;
@@ -89,37 +108,28 @@ input:focus, input:active, input:hover {
 <script src='/js/testingTimeGridView.js'></script>
 <script src='fullcalendar/bootstrap/main.js'></script>
 <script src='fullcalendar/list/main.js'></script>
+<script src='js/records.js'></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-$(document).ready(function() {
+/* $(document).ready(function() {
     $("div").click(function() {alert("Hello, World!");});
     
- });
+ }); */
 </script>
 <script>
-	
-	var formOpened = false;
-	function openNewRecordForm(){
-		document.getElementById("newRecordContainer").style.visibility = "visible";
-		formOpened = true;
-	};
-	
-	function closeNewRecordForm(){
-		document.getElementById("startDate").valueAsDate = null;
-		document.getElementById('newRecordForm').reset();
-		document.getElementById("newRecordContainer").style.visibility = "hidden"; 
-		formOpened = false;
-	};
-	
+		
  	function createEventsArray(){
 		var events = new Array();
 		var event = new Object();
-		var helpme = '${recordnames}';
-		window.alert('${recordnames}');
 		event.title = 'Test1';
 		event.start = '2020-02-02';
 		event.allDay = false;
-		events.push(event);			
+		events.push(event);
+		var event = new Object();
+		event.title = 'Test2';
+		event.start = '2020-02-04';
+		event.allDay = false;
+		events.push(event);
 		return events;
 	}; 
 
@@ -140,47 +150,15 @@ $(document).ready(function() {
 			eventLimit: true,
 			header : {
 				left : '',
-				center : 'title',
-				right : 'prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+				center: 'title',
+				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 			},
 			dateClick : function(info) {
-				var recordContainer = document.getElementById("newRecordContainer");
-				var recordContainerWidth = recordContainer.offsetWidth;
-				var recordContainerHeight = recordContainer.offsetHeight;
-
-				//close form if already open
-				if(formOpened === true){
-					closeNewRecordForm();
-				}
-				else{
-					//set startDate to calendar date clicked
-					document.getElementById("startDate").valueAsDate = new Date(info.date);
-					
-					//if window is small enough to have scrollbar, set form to center of page
-					if(document.body.scrollHeight > document.body.clientHeight){
-						recordContainer.style.top = '50%';
-						recordContainer.style.left= '50%';
-						recordContainer.style.margin= "-" + recordContainer.offsetHeight/2 + "px 0px 0px -" 
-													+ recordContainer.offsetWidth/2 + "px";	
-					} 
-					else {
-						recordContainer.style.margin = '0';
-						//determine and set left coordinates of popup record form
-						if((info.jsEvent.clientX + recordContainerWidth) >= window.innerWidth){
-							recordContainer.style.left = info.jsEvent.clientX-recordContainerWidth+'px';					
-						} else {
-							recordContainer.style.left = info.jsEvent.clientX+'px';
-						}
-						
-						//determine and set top coordinates of popup record form
-						if ((info.jsEvent.clientY + recordContainerHeight) >= window.innerHeight){
-							recordContainer.style.top = info.jsEvent.clientY-recordContainerHeight+'px';				
-						} else {
-							recordContainer.style.top = info.jsEvent.clientY+'px';
-						}
-					}
-					openNewRecordForm();
-				}
+				//save newRecordForm dimensions
+				displayForm("newRecordFormContainer", info);
+			},
+			eventClick : function(info) {
+				displayForm("recordContainer", info);				
 			}
 		});
 		//var events = new Array();
@@ -189,6 +167,7 @@ $(document).ready(function() {
 		//render Calendar
 		calendar.render();
 	});
+	
 
 </script>
 </head>
@@ -217,7 +196,7 @@ $(document).ready(function() {
 
 	</div>
 
-	<div id='newRecordContainer' class='newRecord'>
+	<div id='newRecordFormContainer' class='newRecord'>
 		<form:form id='newRecordForm' class='newRecord'
 			action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
 			<table>
@@ -255,16 +234,32 @@ $(document).ready(function() {
 				</tr>
 				<tr>
 					<td><input type="submit" id="submit-button" value="submit"></td>
-					<td><input type="button" id="cancel-button" value="Close"
-						onclick=closeNewRecordForm()></td>
+					<td><input type="button" id="closeNewRecordForm" value="Close"
+									onclick="closeForm('newRecordFormContainer')"></td>
 				</tr>
 			</table>
 		</form:form>
 	</div>
+	
 	<div id='calendar-container'>
 		<div id='calendar'></div>
 	</div>
 
+	<div id='recordContainer'>
+		<form:form id="recordForm" class="recordForm">
+			<table>
+				<tr>
+					<td id='eventTitle'></td>
+				</tr>
+				<tr>
+					<td>Start:&nbsp;</td><td id='eventStart'></td>
+				</tr>
+				<tr>
+					<td>End:&nbsp;</td><td id='eventEnd'></td>
+				</tr>
+			</table>
+		</form:form>
+	</div>
 
 </body>
 </html>
