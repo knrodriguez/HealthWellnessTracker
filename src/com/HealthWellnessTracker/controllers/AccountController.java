@@ -1,6 +1,7 @@
 package com.HealthWellnessTracker.controllers;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,20 +17,26 @@ import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.LoginService;
 import com.HealthWellnessTracker.services.LoginService.LoginError;
+import com.HealthWellnessTracker.services.UserProfileService;
 
 @Controller
-@SessionAttributes(value = {"user"})
+@SessionAttributes({"connectedUser"})
 public class AccountController {
 
 	private LoginService loginService = new LoginService();
+	private UserProfileService userProfileService = new UserProfileService();
 	
-	@ModelAttribute("user")
-	public UserProfile user(HttpServletRequest request) {
-		UserProfile user = (UserProfile) request.getSession().getAttribute("user");
-		if(user == null) {
-			user = new UserProfile();
+	@ModelAttribute("connectedUser")
+	public UserProfile connectedUser (HttpServletRequest request, HttpSession session) {
+		UserProfile connectedUser = new UserProfile();
+		session = request.getSession();
+		if(session.getAttribute("connectedUser") != null ) {
+			connectedUser = (UserProfile) session.getAttribute("connectedUser");
+		} else {
+			session.setAttribute("connectedUser", connectedUser);
 		}
-		return user;
+		System.out.println("user's name on account controller: " + connectedUser.getName());
+		return connectedUser;
 	}
 //-----------------------------------Login-----------------------------------------
 	@RequestMapping(value= {"/login"}, method = RequestMethod.GET)
@@ -39,13 +46,16 @@ public class AccountController {
 		
 	@RequestMapping(value = {"/login"}, method = RequestMethod.POST)
 	public ModelAndView submitLoginForm(@ModelAttribute("inputLogin") Login inputLogin,
-			@SessionAttribute("user") UserProfile user, Login userLogin) {
+			@SessionAttribute("connectedUser") UserProfile connectedUser, HttpServletRequest request, HttpSession session) {
 		Login tempLogin = loginService.logOn(inputLogin);	
 		if(tempLogin == null) {
 			return new ModelAndView("login","message",LoginError.INCORRECT_PASSWORD.toString());
 		} else {
-			user.setUserLogin(tempLogin);
-			return new ModelAndView("redirect:/myCalendar");
+			//connectedUser.setUserLogin(tempLogin);
+			connectedUser = userProfileService.findUserByUserId(tempLogin.getUserId());
+			session = request.getSession();
+			session.setAttribute("connectedUser", connectedUser);
+			return new ModelAndView("redirect:/myCalendar","connectedUser",connectedUser);
 		}			
 	}
 	
@@ -59,30 +69,29 @@ public class AccountController {
 	}
 	
 //-----------------------------------User Profile-----------------------------------------
-	//MUST REDO ALL IN USERPROFILE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	@RequestMapping(value = "/viewUserProfile", method = RequestMethod.GET)
+	public String showUserProfile(@ModelAttribute("userProfile") UserProfile userProfile,
+			@SessionAttribute("connectedUser") UserProfile connectedUser) {
+		System.out.println(connectedUser.getName());
+	//	return new ModelAndView("userProfile");
+		return "userProfile";
+	}
 	
-//	@RequestMapping(value = {"/showUserProfileForm","/createUserProfile"}, method = RequestMethod.GET)
-//	public ModelAndView showUserProfileForm(@ModelAttribute("userProfile") UserProfile newUserProfile, 
-//			@ModelAttribute("userLogin") Login userLogin) {
-//		newUserProfile = new UserProfile(userLogin);
-//		return new ModelAndView("createUserProfile", "newUserProfile", newUserProfile); 
-//	}
-//	
-//	@RequestMapping(value = "/saveUserProfile", method = RequestMethod.POST)
-//	public ModelAndView submitUserProfileForm(@ModelAttribute("userLogin") Login userLogin,
-//			@ModelAttribute("userProfile") UserProfile newUserProfile) {
-//		System.out.println("UserId: " + userLogin.getUserId());
-//		UserProfileService userProfileService = new UserProfileService();
-//		newUserProfile.setUserId(userLogin.getUserId());
-//		boolean success = userProfileService.createNewUserProfile(newUserProfile);
-//		if(!success) return new ModelAndView("createUserProfile");
-//		else return new ModelAndView("redirect://"); 
-//	}
-//
-//	@RequestMapping(value = "/userProfile", method = RequestMethod.GET)
-//	public String showUserProfile(@ModelAttribute("userLogin") Login userLogin) {
-//		return "viewUserProfile";
-//	}
+	@RequestMapping(value = "/editUserProfile", method = RequestMethod.POST)
+	public ModelAndView saveUserProfile(@ModelAttribute("userProfile") UserProfile userProfile,
+			@SessionAttribute("connectedUser") UserProfile connectedUser) {
+		userProfile.setUserLogin(connectedUser.getUserLogin());
+		int numProfilesUpdated = userProfileService.editUserProfile(userProfile);
+		if(numProfilesUpdated == 1) {
+			connectedUser = userProfileService.findUserByUserId(connectedUser.getUserLogin().getUserId());
+			return new ModelAndView("redirect:myCalendar", "connectedUser", connectedUser);
+		}	
+		else {
+			System.out.println("Cannot update profile ERROR! " + numProfilesUpdated);
+			return new ModelAndView("userProfile");
+		}		
+	}
 	
 //-----------------------------------Sign Up-----------------------------------------
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)

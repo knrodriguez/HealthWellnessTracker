@@ -14,10 +14,11 @@ public class UserProfileService {
 	}
 	
 	public int editUserProfile(UserProfile userProfile) {
-		userProfileDAO = new UserProfileDAO();
-		//if(userProfileDAO.updateUserProfile(userProfile)) return 1;
-		//else return 0;
-		return 0;
+		return userProfileDAO.updateUserProfile(userProfile);
+	}
+	
+	public UserProfile findUserByUserId(long userId) {
+		return userProfileDAO.selectUserProfileByUserId(userId);
 	}
 	
 	

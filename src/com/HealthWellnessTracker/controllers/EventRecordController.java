@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,26 +21,32 @@ import com.HealthWellnessTracker.models.Record;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.EventService;
 import com.HealthWellnessTracker.services.RecordService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-@SessionAttributes(value= {"user"})
+@SessionAttributes({"connectedUser"})
 public class EventRecordController {
 	
 	private EventService eventService = new EventService();
 	private RecordService recordService = new RecordService();
-	
-	@ModelAttribute("user")
-	public UserProfile user(HttpServletRequest request) {
-		UserProfile user = (UserProfile) request.getSession().getAttribute("user");
-		if(user == null) {
-			user = new UserProfile();
-		}
-		return user;
-	}
 
+/*	@ModelAttribute("connectedUser")
+	public UserProfile connectedUser(HttpServletRequest request, HttpSession session) {
+		UserProfile connectedUser = new UserProfile();
+		session = request.getSession();
+		if(session.getAttribute("connectedUser") != null ) {
+			System.out.println("Record: WE GOT AN ATTRIBUTE");
+			connectedUser = (UserProfile) session.getAttribute("connectedUser");
+		} else {
+			session.setAttribute("connectedUser", connectedUser);
+		}
+		System.out.println("user's name on record controller: " + connectedUser.getName());
+		return connectedUser;
+	}*/
 //-----------------------------------New Event----------------------------------------------	
 	@RequestMapping(value = "/newEvent", method = RequestMethod.GET)
-	public ModelAndView showNewEventForm(@ModelAttribute("user") UserProfile user,
+	public ModelAndView showNewEventForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newEvent") Event newEvent) {
 		ModelAndView mav = new ModelAndView();
 		List<String> listEventCategory = new ArrayList<>();
@@ -52,37 +59,57 @@ public class EventRecordController {
 	}
 	
 	@RequestMapping(value = "/newEvent", method = RequestMethod.POST)
-	public String submitNewEvent(@ModelAttribute("user") UserProfile user,
+	public String submitNewEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newEvent") Event newEvent) {
-		String message = eventService.createEvent(newEvent, user);		
+		String message = eventService.createEvent(newEvent, connectedUser);		
 		return "redirect:myCalendar";
 	}
 //------------------------------------Records------------------------------------------------
 	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
-	public String submitNewRecordForm(@ModelAttribute("user") UserProfile user,
+	public String submitNewRecordForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newRecord") Record newRecord,
 			@RequestParam("eventSelected") long eventId) {
 		newRecord.setEndDate(null);
 		newRecord.setStartTime(null);
 		newRecord.setEndTime(null);
-		newRecord.setUserProfile(user);
+		newRecord.setUserProfile(connectedUser);
 		newRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.createRecord(newRecord);
 		if(error) {
 			System.out.println("ERROR: could not create new record");
 		}
-		//return new ModelAndView("redirect:myCalendar");
 		return "redirect:myCalendar";
 	}
 //---------------------------------Show Calendar--------------------------------------------
-	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
-	public ModelAndView showMyCalendar(@SessionAttribute("user") UserProfile user,
-			@ModelAttribute("newRecord") Record newRecord) {
-		List<Event> eventList = eventService.findEventByUser(user);
-		List<Record> recordList = recordService.findRecordByUser(user);
+	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET, produces ="application/json")
+	//@ResponseBody String recordList
+	public ModelAndView showMyCalendar(@SessionAttribute("connectedUser") UserProfile connectedUser,
+			@ModelAttribute("newRecord") Record newRecord, HttpServletRequest request) {
+		System.out.println("at my calendar: " + connectedUser.getName());
+		List<Event> eventList = eventService.findEventByUser(connectedUser);
+		List<Record> recordList = recordService.findRecordsByUser(connectedUser);
+		JSONArray jsonArr = new JSONArray();
+		for(Record record: recordList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("id", record.getRecordID());
+			jsonObj.put("title", record.getRecordName());
+			jsonObj.put("start", record.getStartDate());
+			jsonObj.put("end", record.getEndDate());
+			jsonObj.put("eventName", record.getEvent().getEventName());
+			jsonObj.put("eventId", record.getEvent().getEventId());
+			jsonObj.put("notes", record.getRecordNotes());
+			jsonArr.put(jsonObj);
+		}
+		System.out.println(jsonArr.toString());
+		ObjectMapper objMapper = new ObjectMapper();
 		ModelAndView calendarMAV = new ModelAndView("myCalendar");
 		calendarMAV.addObject("eventList",eventList);
-		calendarMAV.addObject("recordList", recordList);		
+		try {
+			calendarMAV.addObject("recordList", objMapper.writeValueAsString(jsonArr.toString()));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		return calendarMAV;
 	}
 }

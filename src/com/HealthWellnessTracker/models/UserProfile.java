@@ -52,7 +52,9 @@ public class UserProfile implements Serializable{
 	@Column (name = "EmailAddress")
 	private String emailAddress;
 
-	public UserProfile() {}
+	public UserProfile() {
+		super();
+	}
 	
 	public UserProfile(Login login) {
 		this.userLogin = login;

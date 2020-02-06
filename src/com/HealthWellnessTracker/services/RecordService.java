@@ -35,7 +35,7 @@ public class RecordService {
 		return flag;
 	}
 	
-	public List<Record> findRecordByUser(UserProfile user) {
+	public List<Record> findRecordsByUser(UserProfile user) {
 		List<Record> recordsList = recordDAO.selectRecordsByUserId(user);
 		return recordsList;
 	}

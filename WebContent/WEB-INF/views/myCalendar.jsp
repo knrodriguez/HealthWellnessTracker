@@ -41,9 +41,10 @@ html, body {
 }
 
 #header-container {
-	position: relative;
+	position: static;
 	margin-right: 10%;
-	bottom: -100px;
+	top: 0;
+	//bottom: -100px;
 	text-align: center;
 	height: 10%;
 }
@@ -64,6 +65,23 @@ html, body {
 	content: "test";
 }
 
+/* .newRecord {
+	margin: 0.5%;
+} */
+
+.close {
+	position: relative;
+	top: -13px;
+	right: 0;
+	margin-right: 1%;
+	font-size: 2em;
+}
+
+.close:focus {
+	outline:none;
+	border-style: none;
+}
+
 #newRecordFormContainer {
 	position: fixed;
 	visibility: hidden;
@@ -76,6 +94,7 @@ html, body {
 	background-color: white;
 	top: 0;
 	left: 0;
+	transform: translate(0);
 }
 
 #recordContainer {
@@ -89,7 +108,8 @@ html, body {
 	width: auto;
 	background-color: white;
 	top: 0;
-	left: 0;	
+	left: 0;
+	transform: translate(10%);	
 }
 
 /*works for input, not for class or id*/
@@ -111,27 +131,14 @@ input:focus, input:active, input:hover {
 <script src='js/records.js'></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-/* $(document).ready(function() {
-    $("div").click(function() {alert("Hello, World!");});
-    
- }); */
+/*  $(document).ready(function() {
+    $.getJSON("http://localhost:8080/HealthWellnessTracker/myCalendar",
+    		function(data) {
+    	alert(data)
+    });
+ });  */
 </script>
-<script>
-		
- 	function createEventsArray(){
-		var events = new Array();
-		var event = new Object();
-		event.title = 'Test1';
-		event.start = '2020-02-02';
-		event.allDay = false;
-		events.push(event);
-		var event = new Object();
-		event.title = 'Test2';
-		event.start = '2020-02-04';
-		event.allDay = false;
-		events.push(event);
-		return events;
-	}; 
+<script> 
 
 	document.addEventListener('DOMContentLoaded', function() {
 		
@@ -161,9 +168,8 @@ input:focus, input:active, input:hover {
 				displayForm("recordContainer", info);				
 			}
 		});
-		//var events = new Array();
-		//events = createEventsArray();
-		calendar.addEventSource(createEventsArray());
+		var calendarEvents = JSON.parse(${recordList});
+		calendar.addEventSource(calendarEvents);
 		//render Calendar
 		calendar.render();
 	});
@@ -173,10 +179,6 @@ input:focus, input:active, input:hover {
 </head>
 <body>
 
-	<c:forEach var="record" items="${recordList}">
-	    <c:set value="${records}${record.getRecordName()}" var='recordnames'/>
-	</c:forEach>
-
 	<div id='header-container'>
 		<table>
 			<tr>
@@ -185,10 +187,8 @@ input:focus, input:active, input:hover {
 						<a href="newEvent">Create New Event</a>
 					</h3></td>
 				<td style="text-align: right;"><h3>
-						<a href="editUserProfile">Edit Profile</a>
+						<a href="viewUserProfile">Edit Profile</a>
 					</h3></td>
-				<!-- <td><h4>${user.getUserLogin().getUserId()}</h4></td>
-				<td><h4>${user.getUserLogin().getUsername()}</h4></td> -->
 			</tr>
 		</table>
 
@@ -196,35 +196,45 @@ input:focus, input:active, input:hover {
 
 	</div>
 
-	<div id='newRecordFormContainer' class='newRecord'>
-		<form:form id='newRecordForm' class='newRecord'
+	<div id='newRecordFormContainer' class="newRecord shadow p-3 mb-5 bg-white rounded">
+		<form:form id='newRecordForm'
 			action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
-			<table>
+			<table class='newRecord shadow-sm p-3 mb-5 bg-white rounded'>
 				<tr>
-					<td><form:input id="formInput" path="recordName"
-							placeholder="New Event" /></td>
+					<td></td>
+					<td>
+						<button type="button" class="close" aria-label="Close" 
+						onclick="closeForm('newRecordFormContainer')">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</td>
+					<!-- <img src="<c:url value="/images/" />"> -->
+				</tr>
+				<tr>
+					<td colspan=2 style='font-size: 1.25em;'>
+						<form:input required="required" id="formInput" path="recordName" 
+							placeholder="New Event" />
+					</td>
 				</tr>
 				<tr>
 					<td>Start: <form:input type="date" id="startDate"
 							path="startDate" />
 					</td>
-<%-- 					<td><form:input type="time" id="startTime" path="startTime" /> --%>
-					</td>
+					<%-- 					<td><form:input type="time" id="startTime" path="startTime" /> 
+					</td>--%>
 				</tr>
 				<tr>
 					<td>End: <form:input type="date" id="endDate" path="endDate" />
 					</td>
-<%-- 					<td><form:input type="time" id="endTime" path="endTime" /></td> --%>
+					<%-- 					<td><form:input type="time" id="endTime" path="endTime" /></td> --%>
 				</tr>
 				<tr>
-					<td colspan=2>Event: <%-- 						<form:select path="event" multiple="false" >
-							<form:option value="null" label="-- null value --"/>
-							<form:options items="${eventList}" itemLabel="eventName"/>
-						</form:select> --%> <select id="event" name="eventSelected">
+					<td colspan=2>Event: 
+						<select id="event" name="eventSelected">
 							<c:forEach items="${eventList}" var="event">
 								<option value="${event.eventId}">${event.eventName}</option>
 							</c:forEach>
-					</select>
+						</select>
 					</td>
 				</tr>
 				<tr>
@@ -233,9 +243,10 @@ input:focus, input:active, input:hover {
 					</td>
 				</tr>
 				<tr>
-					<td><input type="submit" id="submit-button" value="submit"></td>
-					<td><input type="button" id="closeNewRecordForm" value="Close"
-									onclick="closeForm('newRecordFormContainer')"></td>
+					<td>
+						<input type="submit" id="submit-button" value="Submit">
+						<input type="reset" id="closeNewRecordForm" value="Reset">
+					</td>
 				</tr>
 			</table>
 		</form:form>

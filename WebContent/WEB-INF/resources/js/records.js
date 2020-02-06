@@ -21,50 +21,51 @@
 	};	
 	
 	//global form object that contains the status of the last form accessed
-	var form = new Form();
+	var currentForm = new Form();
 	
-	function displayForm(formId, info) {
-		var formEl = document.getElementById(formId);
-		var formElWidth = formEl.offsetWidth;
-		var formElHeight = formEl.offsetHeight;
+	function displayForm(newFormId, info) {
+		var newFormEl = document.getElementById(newFormId);
+		var reopen = true;
 		
-		//close form if already open
-		if(form.isOpen() === true){
-			document.getElementById("startDate").valueAsDate = null;
-			closeForm(form.getElementId());
-		}
-		//set location of and open form
-		else {
-			if(formId === "newRecordFormContainer"){
-				document.getElementById("startDate").valueAsDate = new Date(info.date);
-			}
-			else {
-				populateRecord(info);
-			}
+		if(currentForm.isOpen()) {
+			closeForm(currentForm.getElementId());
+			if(newFormId !== "recordContainer")
+				reopen = false;
+		} 
+		
+		if(reopen) {
+						
+			if(!setToCenterWindow(newFormEl))
+				setLeftAndTopCoordinates(info, newFormEl, 
+									newFormEl.offsetWidth, 
+									newFormEl.offsetHeight);
 			
-			if(!setToCenterWindow(formEl)){
-				setLeftAndTopCoordinates(info, formEl, formElWidth, formElHeight);
-			}
-			openForm(formId);
+			populateRecord(newFormId, info);
+			openForm(newFormId);
 		}
 	};
 	
-	function populateRecord(info) {
-		var startDate = new Date(info.event.start);
-		var endDate = new Date(info.event.start);
-		document.getElementById('eventTitle').innerHTML = info.event.title;
-		document.getElementById('eventStart').innerHTML += startDate.toDateString();
-		document.getElementById('eventEnd').innerHTML += endDate.toDateString();
+	function populateRecord(formId, info) {
+		if(formId === "newRecordFormContainer")
+			document.getElementById("startDate").valueAsDate = new Date(info.date);
+		else {
+			var startDate = new Date(info.event.start);
+			var endDate = new Date(info.event.start);
+			document.getElementById('eventTitle').innerHTML = info.event.title;
+			document.getElementById('eventStart').innerHTML = startDate.toDateString();
+			document.getElementById('eventEnd').innerHTML = endDate.toDateString();
+		}
 	};
 	
 	function openForm(elementId){
 		document.getElementById(elementId).style.visibility = "visible";
-		form.setElementId(elementId);
-		form.setOpen(true);	
+		currentForm.setElementId(elementId);
+		currentForm.setOpen(true);	
 	};
 	
 	function closeForm(elementId){
 		if(elementId === 'newRecordFormContainer'){
+			document.getElementById("startDate").valueAsDate = null;
 			document.getElementById("newRecordForm").reset();
 		}
 		else if (elementId === 'recordContainer'){
@@ -73,8 +74,8 @@
 			document.getElementById('eventEnd').innerHTML = '';
 		}
 		document.getElementById(elementId).style.visibility = 'hidden'; 
-		form.setElementId(elementId);
-		form.setOpen(false);
+		currentForm.setElementId(elementId);
+		currentForm.setOpen(false);
 	};
 	
 	function clearForm(element){
@@ -86,7 +87,7 @@
 	
 	function setToCenterWindow(container) {
 		var set = false;
-		if(document.body.scrollHeight > document.body.clientHeight){
+		if(document.body.scrollHeight > document.body.innerWidth) {
 			container.style.top = '50%';
 			container.style.left= '50%';
 			container.style.margin= "-" + container.offsetHeight/2 
@@ -103,14 +104,16 @@
 		
 		//determine and set left coordinates of popup record form
 		if((info.jsEvent.clientX + containerWidth) >= window.innerWidth){
-			container.style.left = info.jsEvent.clientX-containerWidth+'px';					
+			container.style.left = info.jsEvent.clientX-containerWidth+'px';
+			container.style.transform = "translate(-8%)";
 		} else {
 			container.style.left = info.jsEvent.clientX+'px';
+			container.style.transform = "translate(8%)";
 		}
 		
 		//determine and set top coordinates of popup record form
 		if ((info.jsEvent.clientY + containerHeight) >= window.innerHeight){
-			container.style.top = info.jsEvent.clientY-containerHeight+'px';				
+			container.style.top = info.jsEvent.clientY-containerHeight+'px';
 		} else {
 			container.style.top = info.jsEvent.clientY+'px';
 		}
