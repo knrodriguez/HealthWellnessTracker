@@ -39,6 +39,13 @@ public class RecordService {
 		List<Record> recordsList = recordDAO.selectRecordsByUserId(user);
 		return recordsList;
 	}
+
+	public boolean deleteRecordByRecordId(long recordId) {
+		boolean error = false;
+		int numDeletedRecords = recordDAO.deleteRecordByRecordId(recordId);
+		if(numDeletedRecords != 1) error = true;
+		return error; 
+	}
 	
 	
 }

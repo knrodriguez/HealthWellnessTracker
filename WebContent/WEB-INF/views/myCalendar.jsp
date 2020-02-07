@@ -69,17 +69,25 @@ html, body {
 	margin: 0.5%;
 } */
 
-.close {
+.close .deleteRecord{
 	position: relative;
 	top: -13px;
 	right: 0;
 	margin-right: 1%;
 	font-size: 2em;
+	outline: none;
+	border-style: none;
 }
 
-.close:focus {
+.close:focus .deleteRecord:focus {
 	outline:none;
 	border-style: none;
+}
+
+.fa-trash-alt {
+	position: relative;
+	top: -13px;
+	right: 0;
 }
 
 #newRecordFormContainer {
@@ -97,6 +105,10 @@ html, body {
 	transform: translate(0);
 }
 
+.recordForm:hover {
+	
+}
+
 #recordContainer {
 	position: fixed;
 	visibility: hidden;
@@ -105,11 +117,11 @@ html, body {
 	border-style: solid;
 	border-width: thin;
 	height: auto;
-	width: auto;
+	width: auto%;
 	background-color: white;
 	top: 0;
 	left: 0;
-	transform: translate(10%);	
+	transform: translate(0);	
 }
 
 /*works for input, not for class or id*/
@@ -125,18 +137,23 @@ input:focus, input:active, input:hover {
 <script src='fullcalendar/daygrid/main.js'></script>
 <script src='fullcalendar/timegrid/main.js'></script>
 <script src='fullcalendar/interaction/main.js'></script>
-<script src='/js/testingTimeGridView.js'></script>
 <script src='fullcalendar/bootstrap/main.js'></script>
 <script src='fullcalendar/list/main.js'></script>
 <script src='js/records.js'></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-/*  $(document).ready(function() {
-    $.getJSON("http://localhost:8080/HealthWellnessTracker/myCalendar",
-    		function(data) {
-    	alert(data)
-    });
- });  */
+ $(document).ready(function() {  
+	 $("#editRecord").click(function(event){
+		 event.preventDefault();
+		$(".recordForm").find("*").prop("disabled", false);
+		$("#submitEditedRecord").show();
+		$("#resetEditedRecord").show();
+	});
+ });
 </script>
 <script> 
 
@@ -161,11 +178,12 @@ input:focus, input:active, input:hover {
 				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 			},
 			dateClick : function(info) {
-				//save newRecordForm dimensions
 				displayForm("newRecordFormContainer", info);
 			},
 			eventClick : function(info) {
-				displayForm("recordContainer", info);				
+				displayForm("recordContainer", info);
+				//PUT IN POPULATE FORM
+				
 			}
 		});
 		var calendarEvents = JSON.parse(${recordList});
@@ -173,6 +191,7 @@ input:focus, input:active, input:hover {
 		//render Calendar
 		calendar.render();
 	});
+	
 	
 
 </script>
@@ -201,8 +220,12 @@ input:focus, input:active, input:hover {
 			action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
 			<table class='newRecord shadow-sm p-3 mb-5 bg-white rounded'>
 				<tr>
-					<td></td>
 					<td>
+					</td>
+					<td>
+						<a href="#confirmationModal" data-toggle="modal" id="deleteRecord">
+							<i class="far fa-trash-alt fa-lg" style="color:black;"></i>
+						</a>		
 						<button type="button" class="close" aria-label="Close" 
 						onclick="closeForm('newRecordFormContainer')">
 							<span aria-hidden="true">&times;</span>
@@ -257,19 +280,59 @@ input:focus, input:active, input:hover {
 	</div>
 
 	<div id='recordContainer'>
-		<form:form id="recordForm" class="recordForm">
+		<a href="#" id="editRecord"> 
+			<i class="fas fa-pencil-alt" style='color: gray;'></i>
+		</a> 
+		<a href="#confirmationModal" data-toggle="modal" id="deleteRecord"> 
+			<i class="far fa-trash-alt fa-lg" style="color: gray;"></i>
+		</a>
+		<button type="button" class="close" aria-label="Close"
+			onclick="closeForm('recordContainer')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<form:form id="recordForm" class="recordForm" disabled="disabled">
 			<table>
 				<tr>
-					<td id='eventTitle'></td>
+					<td><input id='eventTitle' type="text" disabled="disabled" value=""></td>
 				</tr>
 				<tr>
-					<td>Start:&nbsp;</td><td id='eventStart'></td>
+					<td>Start:&nbsp;<input id='eventStart' type='date' disabled="disabled" value=""></td>
 				</tr>
 				<tr>
-					<td>End:&nbsp;</td><td id='eventEnd'></td>
+					<td>End:&nbsp;<input id='eventEnd' type='date' disabled="disabled" value=""></td>
+				</tr>
+				<tr>
+					<td>Notes:&nbsp;<input id='eventNotes' type='text' disabled="disabled" value=""></td>
 				</tr>
 			</table>
+			<button id="submitEditedRecord" type="submit" class="btn btn-primary" style="display:none;">Submit</button>
+			<input type="hidden" name="recordId" id="recordId">
+			<button id="resetEditedRecord" type="reset" class="btn btn-danger" style="display:none;">Reset</button>
 		</form:form>
+	</div>
+
+	<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmationModalLabel">Confirm Delete</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="confirmationModalBody">
+					Are you sure you want to delete it?
+				</div>
+				<div class="modal-footer">
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        			<form:form action="deleteRecord">
+        				<input type="hidden" name="recordId" id="recordId">
+        				<button type="submit" class="btn btn-danger">Delete</button>
+					</form:form>
+					</div>
+			</div>
+		</div>
 	</div>
 
 </body>

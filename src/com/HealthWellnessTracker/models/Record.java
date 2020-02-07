@@ -22,7 +22,7 @@ public class Record implements Serializable{
 	@Id
 	@Column(name = "RecordId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long recordID;
+	private long recordId;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "UserId")
@@ -58,11 +58,11 @@ public class Record implements Serializable{
 	}
 
 	public long getRecordID() {
-		return recordID;
+		return recordId;
 	}
 
 	public void setRecordID(long recordID) {
-		this.recordID = recordID;
+		this.recordId = recordID;
 	}
 
 	public UserProfile getUserProfile() {
@@ -139,7 +139,7 @@ public class Record implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UserRecord [recordID=" + recordID + ", userProfile=" + userProfile + ", startDate=" + startDate
+		return "UserRecord [recordID=" + recordId + ", userProfile=" + userProfile + ", startDate=" + startDate
 				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordTypeID=" + recordTypeId
 				+ ", recordNotes=" + recordNotes + "]";
 	}

@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,11 +66,19 @@ public class EventRecordController {
 		return "redirect:myCalendar";
 	}
 //------------------------------------Records------------------------------------------------
+	@RequestMapping(value = "/deleteRecord", method=RequestMethod.POST)
+	public String deleteRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
+			@RequestParam("recordId") String recordId) {
+		boolean error = recordService.deleteRecordByRecordId(Long.parseLong(recordId));
+		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
+		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");
+		return "redirect:/myCalendar";
+	}
+	
 	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
 	public String submitNewRecordForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newRecord") Record newRecord,
 			@RequestParam("eventSelected") long eventId) {
-		newRecord.setEndDate(null);
 		newRecord.setStartTime(null);
 		newRecord.setEndTime(null);
 		newRecord.setUserProfile(connectedUser);
@@ -98,6 +107,7 @@ public class EventRecordController {
 			jsonObj.put("eventName", record.getEvent().getEventName());
 			jsonObj.put("eventId", record.getEvent().getEventId());
 			jsonObj.put("notes", record.getRecordNotes());
+			jsonObj.put("allDay",false);
 			jsonArr.put(jsonObj);
 		}
 		System.out.println(jsonArr.toString());

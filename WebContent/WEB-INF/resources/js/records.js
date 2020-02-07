@@ -46,14 +46,18 @@
 	};
 	
 	function populateRecord(formId, info) {
-		if(formId === "newRecordFormContainer")
+		if(formId === "newRecordFormContainer"){
 			document.getElementById("startDate").valueAsDate = new Date(info.date);
+			document.getElementById("endDate").valueAsDate = new Date(info.date);
+		}
 		else {
 			var startDate = new Date(info.event.start);
-			var endDate = new Date(info.event.start);
-			document.getElementById('eventTitle').innerHTML = info.event.title;
-			document.getElementById('eventStart').innerHTML = startDate.toDateString();
-			document.getElementById('eventEnd').innerHTML = endDate.toDateString();
+			var endDate = new Date(info.event.end);
+			document.getElementById("recordId").value = info.event.id;
+			document.getElementById('eventTitle').value = info.event.title;
+			document.getElementById('eventStart').valueAsDate = startDate;
+			document.getElementById('eventEnd').valueAsDate = endDate;
+			document.getElementById('eventNotes').value = info.event.extendedProps.notes;
 		}
 	};
 	
@@ -64,15 +68,20 @@
 	};
 	
 	function closeForm(elementId){
-		if(elementId === 'newRecordFormContainer'){
+		switch(elementId){
+		case 'newRecordFormContainer':
 			document.getElementById("startDate").valueAsDate = null;
 			document.getElementById("newRecordForm").reset();
-		}
-		else if (elementId === 'recordContainer'){
+			break;
+		case 'recordContainer':
 			//document.getElementById("recordForm").reset();
 			document.getElementById('eventStart').innerHTML='';
 			document.getElementById('eventEnd').innerHTML = '';
-		}
+			break;
+		default:
+			break;
+		}		
+		
 		document.getElementById(elementId).style.visibility = 'hidden'; 
 		currentForm.setElementId(elementId);
 		currentForm.setOpen(false);

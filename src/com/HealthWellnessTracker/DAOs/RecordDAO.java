@@ -107,6 +107,21 @@ public class RecordDAO {
 		}
 		return numUpdatedRecords;
 	}
+
+	public int deleteRecordByRecordId(long recordId) {
+		EntityManager em = emf.createEntityManager();
+		int numDeletedRecords = 0;
+		try {
+			em.getTransaction().begin();
+			Query query = em.createQuery("DELETE FROM Record r WHERE r.recordId = :recordId");
+			query.setParameter("recordId", recordId);
+			numDeletedRecords = query.executeUpdate();
+			em.getTransaction().commit();
+		} catch(PersistenceException e) {
+			e.printStackTrace();
+		}
+		return numDeletedRecords;
+	}
 	
 	//public 
 	
