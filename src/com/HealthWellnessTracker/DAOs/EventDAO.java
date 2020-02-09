@@ -121,7 +121,7 @@ public class EventDAO {
 		int numDeletedEvents = 0;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("DELETE FROM Event e WHERE eventId = :eventId");
+			Query query = em.createQuery("DELETE FROM Event e WHERE e.eventId = :eventId");
 			query.setParameter("eventId", deletedEvent.getEventId());
 			numDeletedEvents = query.executeUpdate();
 			em.getTransaction().commit();

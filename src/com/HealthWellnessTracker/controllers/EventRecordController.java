@@ -71,10 +71,19 @@ public class EventRecordController {
 	@RequestMapping(value = "/editEvent", method = RequestMethod.POST)
 	public String editEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("editedEvent") Event editedEvent, @ModelAttribute("newEvent") Event newEvent) {
-		System.out.println(editedEvent.toString());
 		String message = eventService.editEvent(editedEvent);
 		System.out.println(message);
-		return "newEvent";
+		return "redirect:/newEvent";
+	}
+	
+	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
+	public String deleteEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
+			@RequestParam("eventId") String eventId) {
+		Event event = new Event();
+		event.setEventId(Long.parseLong(eventId));
+		String message = eventService.deleteEvent(event);
+		System.out.println(message);
+		return "redirect:/newEvent";
 	}
 //------------------------------------Records------------------------------------------------
 	@RequestMapping(value = "/editRecord", method=RequestMethod.POST)

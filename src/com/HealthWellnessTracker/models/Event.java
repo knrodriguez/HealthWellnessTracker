@@ -14,10 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+//indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
 
 @Entity
-@Table(name = "events", 
-		indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
+@Table(name = "events")		
 public class Event implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
