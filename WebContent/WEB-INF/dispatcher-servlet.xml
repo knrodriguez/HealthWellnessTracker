@@ -14,6 +14,7 @@
 		<mvc:resources location="/WEB-INF/resources/images/" mapping="/images/**"></mvc:resources>
 		<mvc:resources location="/WEB-INF/resources/css/" mapping="/css/**"></mvc:resources>
 		<mvc:resources location="/WEB-INF/resources/js/" mapping="/js/**"></mvc:resources>
+		<mvc:resources location="/WEB-INF/resources/fullcalendar/" mapping="/fullcalendar/**"></mvc:resources>
 	<!-- declare the view Resolver bean -->
 	<bean id="viewResolver" class = "org.springframework.web.servlet.view.UrlBasedViewResolver">
 	 <property name="viewClass" value = "org.springframework.web.servlet.view.JstlView"></property>

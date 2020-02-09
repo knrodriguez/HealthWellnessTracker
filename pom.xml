@@ -59,5 +59,36 @@
 	    <version>2.0.1.Final</version>
 	</dependency>
 
+	<!-- https://mvnrepository.com/artifact/org.webjars.bower/jquery -->
+	<dependency>
+		<groupId>org.webjars.bower</groupId>
+		<artifactId>jquery</artifactId>
+		<version>3.4.1</version>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/org.json/json -->
+	<dependency>
+	    <groupId>org.json</groupId>
+	    <artifactId>json</artifactId>
+	    <version>20190722</version>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	    <version>2.10.2</version>
+	</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.webjars/font-awesome -->
+	<dependency>
+	    <groupId>org.webjars</groupId>
+	    <artifactId>font-awesome</artifactId>
+	    <version>5.12.0</version>
+	</dependency>
+	
+
+	
+
   </dependencies>
 </project>

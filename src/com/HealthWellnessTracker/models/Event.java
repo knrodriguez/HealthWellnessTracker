@@ -1,6 +1,8 @@
 package com.HealthWellnessTracker.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,7 +21,7 @@ import javax.persistence.Table;
 public class Event implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name = "EventId")
@@ -27,9 +30,11 @@ public class Event implements Serializable{
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "UserId")
 	private UserProfile userProfile; 
+
+	@OneToMany(mappedBy = "event")
+	List<Record> records = new ArrayList<>();
 	
 	@Column (name = "EventCategory")
-	
 	private String eventCategory;
 	
 	@Column (name = "EventName")
@@ -39,10 +44,7 @@ public class Event implements Serializable{
 	private String eventDescription;
 
 	public Event() {
-		//this.user = null; should grab from user logged in
-		this.eventCategory = "";
-		this.eventName = "";
-		this.eventDescription = "";
+		super();
 	}
 	
 	public Event(UserProfile userProfile) {
@@ -90,10 +92,22 @@ public class Event implements Serializable{
 	public void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
 	}
+	
+	public List<Record> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<Record> records) {
+		this.records = records;
+	}
+
+	public void setEventId(long eventId) {
+		this.eventId = eventId;
+	}
 
 	@Override
 	public String toString() {
-		return "Event [eventId=" + eventId + ", userProfile=" + userProfile + ", eventCategory=" + eventCategory
+		return "Event [eventId=" + eventId + ", eventCategory=" + eventCategory
 				+ ", eventName=" + eventName + ", eventDescription=" + eventDescription + "]";
 	}
 	
