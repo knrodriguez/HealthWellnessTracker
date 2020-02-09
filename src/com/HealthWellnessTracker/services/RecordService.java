@@ -24,7 +24,7 @@ public class RecordService {
 	public boolean editRecord(Record record) {
 		boolean flag = false;
 		int numUpdatedRecords = recordDAO.updateRecord(record);
-		if (numUpdatedRecords == 1) flag = true;
+		if (numUpdatedRecords != 1) flag = true;
 		return flag;
 	}
 	

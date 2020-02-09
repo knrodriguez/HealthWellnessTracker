@@ -27,7 +27,6 @@ html, body {
 }
 
 #calendar-container {
-<!-- originally static-->
 	position: static;
 	width: 100vw;
 	z-index: 1;
@@ -41,7 +40,7 @@ html, body {
 }
 
 #header-container {
-	position: static;
+	position: relative;
 	margin-right: 10%;
 	top: 0;
 	//bottom: -100px;
@@ -149,7 +148,7 @@ input:focus, input:active, input:hover {
  $(document).ready(function() {  
 	 $("#editRecord").click(function(event){
 		 event.preventDefault();
-		$(".recordForm").find("*").prop("disabled", false);
+		$('#recordFieldset').prop("disabled", false);
 		$("#submitEditedRecord").show();
 		$("#resetEditedRecord").show();
 	});
@@ -158,7 +157,7 @@ input:focus, input:active, input:hover {
 <script> 
 
 	document.addEventListener('DOMContentLoaded', function() {
-		
+		var test="test this shit";
 		//create JS variable for HTML Calendar element
 		var calendarEl = document.getElementById('calendar');
 		//create JS variable of loaded Calendar module
@@ -166,7 +165,7 @@ input:focus, input:active, input:hover {
 			height: 'parent',
 			contentHeight: 0.8*window.innerHeight,
 			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid', 'list'],
-			//themeSystem: 'bootstrap',
+			themeSystem: 'bootstrap',
 			selectable : true,
 			editable : true,
 			handleWindowResize: true,
@@ -181,9 +180,7 @@ input:focus, input:active, input:hover {
 				displayForm("newRecordFormContainer", info);
 			},
 			eventClick : function(info) {
-				displayForm("recordContainer", info);
-				//PUT IN POPULATE FORM
-				
+				displayForm("recordContainer", info);	
 			}
 		});
 		var calendarEvents = JSON.parse(${recordList});
@@ -203,7 +200,7 @@ input:focus, input:active, input:hover {
 			<tr>
 				<td><h3>Header</h3></td>
 				<td style="text-align: right;"><h3>
-						<a href="newEvent">Create New Event</a>
+						<a href="newEvent">View My Events</a>
 					</h3></td>
 				<td style="text-align: right;"><h3>
 						<a href="viewUserProfile">Edit Profile</a>
@@ -290,24 +287,26 @@ input:focus, input:active, input:hover {
 			onclick="closeForm('recordContainer')">
 			<span aria-hidden="true">&times;</span>
 		</button>
-		<form:form id="recordForm" class="recordForm" disabled="disabled">
+		<form:form action="editRecord" id="recordForm" class="recordForm" modelAttribute="updatedRecord">
+			<fieldset id="recordFieldset" disabled="disabled">
 			<table>
 				<tr>
-					<td><input id='eventTitle' type="text" disabled="disabled" value=""></td>
+					<td><form:input id="eventTitle" path="recordName" type="text" value="" /></td>
 				</tr>
 				<tr>
-					<td>Start:&nbsp;<input id='eventStart' type='date' disabled="disabled" value=""></td>
+					<td>Start:&nbsp;<form:input id='eventStart' path="startDate" type='date' value="" /></td>
 				</tr>
 				<tr>
-					<td>End:&nbsp;<input id='eventEnd' type='date' disabled="disabled" value=""></td>
+					<td>End:&nbsp;<form:input id='eventEnd' path="endDate" type='date' value="" /></td>
 				</tr>
 				<tr>
-					<td>Notes:&nbsp;<input id='eventNotes' type='text' disabled="disabled" value=""></td>
+					<td>Notes:&nbsp;<form:input id='eventNotes' path="recordNotes" type='text' value="" /></td>
 				</tr>
 			</table>
+			<input type="hidden" name="recordId" id="recordIdEdit" value="" />
 			<button id="submitEditedRecord" type="submit" class="btn btn-primary" style="display:none;">Submit</button>
-			<input type="hidden" name="recordId" id="recordId">
 			<button id="resetEditedRecord" type="reset" class="btn btn-danger" style="display:none;">Reset</button>
+		</fieldset>
 		</form:form>
 	</div>
 
@@ -325,12 +324,12 @@ input:focus, input:active, input:hover {
 					Are you sure you want to delete it?
 				</div>
 				<div class="modal-footer">
-        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        			<form:form action="deleteRecord">
-        				<input type="hidden" name="recordId" id="recordId">
-        				<button type="submit" class="btn btn-danger">Delete</button>
+	        		<form:form action="deleteRecord">
+	        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        			<input type="hidden" name="recordId" id="recordIdDelete" value="">
+	        			<button type="submit" class="btn btn-danger" id="deleteRecordButton">Delete</button>
 					</form:form>
-					</div>
+				</div>
 			</div>
 		</div>
 	</div>

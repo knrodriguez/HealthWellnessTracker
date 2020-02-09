@@ -6,11 +6,111 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Create New Event | Health Wellness Tracker</title>
+<title>My Events | Health Wellness Tracker</title>
+<link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
+	rel='stylesheet'>
+<link
+	href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
+	rel='stylesheet' />
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	crossorigin="anonymous"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.editEventLink').click(function(event) {
+			event.preventDefault();
+			var id = $(this).attr('id').replace("editEvent", "");
+			$(".row" + id).find("*").prop("disabled", false);
+			$("#editEvent" + id).hide();
+			$("#deleteEvent" + id).hide();
+			$("#saveEvent" + id).show();
+			$("#cancelEditEvent" + id).show();
+			$("#saveEvent" + id).click(function(event) {
+				$("#eventForm").submit();
+				//$.post("editEvent",$("#eventForm").serialize());
+				$("#editEvent" + id).show();
+				$("#deleteEvent" + id).show();
+				$("#saveEvent" + id).hide();
+				$("#cancelEditEvent" + id).hide();
+				$(".row" + id).find("*").prop("disabled", true);
+			});
+			$("#cancelEditEvent" + id).click(function(event) {
+				$("#eventForm")[0].reset();
+				$("#editEvent" + id).show();
+				$("#deleteEvent" + id).show();
+				$("#saveEvent" + id).hide();
+				$("#cancelEditEvent" + id).hide();
+				$(".row" + id).find("*").prop("disabled", true);
+			});
+		});
+	});
+</script>
 </head>
 <body>
-	<h1>Create An Event</h1>
-	<div>
+	<h1>My Events</h1>
+
+	<div id="allUserEvents">
+		<form:form action="editEvent" id="eventForm" modelAttribute="editedEvent">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Type</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${userEvents}" var="event">
+						<tr class="row${event.eventId}">
+							<form:input type="hidden" path="eventId" value="${event.eventId}" /> 
+							<td><form:input path="eventName" disabled="true"
+									value="${event.eventName}" /></td>
+							<td><form:input path="eventCategory" disabled="true"
+									value="${event.eventCategory}" /></td>
+							<td><form:input path="eventDescription" disabled="true"
+									value="${event.eventDescription}" /></td>
+							<td><i class="fas fa-pencil-alt fa-lg editEventLink"
+								id='editEvent${event.eventId}' style="display: inline-block;"></i>
+								<a> <i class="far fa-save fa-lg"
+									id='saveEvent${event.eventId}' style="display: none;"></i></a></td>
+							<td><a href="#confirmationModali" data-toggle="modal"> <i
+									class="fas fa-minus fa-lg deleteEventLink"
+									id="deleteEvent${event.eventId}" style="display: inline-block;"></i></a>
+								<i class="far fa-times-circle fa-lg"
+								id="cancelEditEvent${event.eventId}" style="display: none;"></i></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</form:form>
+	</div>
+
+	<div class="modal fade" id="confirmationModali" tabindex="-1"
+		role="dialog" aria-labelledby="confirmationModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmationModalLabel">Confirm
+						Delete</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="confirmationModalBody">Are you
+					sure you want to delete it?</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-danger" id="deleteButton">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="createNewEvent">
 		<form:form action="newEvent" method="post" modelAttribute="newEvent">
 			<table>
 				<tr>
@@ -27,7 +127,7 @@
 							<c:forEach items="${listEventCategory}" var="category">
 								<form:option value="${category}">${category}</form:option>
 							</c:forEach>
-					</form:select></td>
+						</form:select></td>
 				</tr>
 				<tr>
 					<td>Event Description</td>

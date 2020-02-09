@@ -53,7 +53,8 @@
 		else {
 			var startDate = new Date(info.event.start);
 			var endDate = new Date(info.event.end);
-			document.getElementById("recordId").value = info.event.id;
+			document.getElementById("recordIdEdit").value = info.event.id;
+			document.getElementById("recordIdDelete").value = info.event.id;
 			document.getElementById('eventTitle').value = info.event.title;
 			document.getElementById('eventStart').valueAsDate = startDate;
 			document.getElementById('eventEnd').valueAsDate = endDate;
@@ -82,6 +83,9 @@
 			break;
 		}		
 		
+		document.getElementById('recordFieldset').disabled = true;
+		document.getElementById('submitEditedRecord').style.display = 'none';
+		document.getElementById('resetEditedRecord').style.display = 'none';
 		document.getElementById(elementId).style.visibility = 'hidden'; 
 		currentForm.setElementId(elementId);
 		currentForm.setOpen(false);

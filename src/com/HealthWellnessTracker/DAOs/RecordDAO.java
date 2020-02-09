@@ -74,16 +74,17 @@ public class RecordDAO {
 			em.getTransaction().begin();
 			Query query = em.createQuery("UPDATE Record e SET e.startDate = :startDate,"
 					+ "e.endDate = :endDate,"
-					+ "e.recordName = :recordName"
-					+ "e.recordTypeId = :recordTypeId"
-					+ "e.recordNotes = :recordNotes"
-					+ "WHERE recordId = :recordId");
+					+ "e.recordName = :recordName,"
+					+ "e.recordTypeId = :recordTypeId,"
+					+ "e.recordNotes = :recordNotes "
+					+ "WHERE e.recordId = :recordId");
 			query.setParameter("startDate", updatedRecord.getStartDate())
 				 .setParameter("endDate", updatedRecord.getEndDate())
 				 .setParameter("recordName", updatedRecord.getRecordName())
 				 .setParameter("recordTypeId", updatedRecord.getRecordTypeID())
 				 .setParameter("recordNotes", updatedRecord.getRecordNotes())
 				 .setParameter("recordId", updatedRecord.getRecordID());
+			System.out.println("at DAO, recordNotes= " + updatedRecord.getRecordNotes());
 			numUpdatedRecords = query.executeUpdate();
 			em.getTransaction().commit();
 		} catch(PersistenceException e) {

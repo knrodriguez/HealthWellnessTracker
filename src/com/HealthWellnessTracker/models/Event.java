@@ -107,7 +107,7 @@ public class Event implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Event [eventId=" + eventId + ", userProfile=" + userProfile + ", eventCategory=" + eventCategory
+		return "Event [eventId=" + eventId + ", eventCategory=" + eventCategory
 				+ ", eventName=" + eventName + ", eventDescription=" + eventDescription + "]";
 	}
 	
