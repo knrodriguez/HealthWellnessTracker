@@ -18,7 +18,7 @@ public class RecordDAO {
 	//create
 	public boolean insertRecord(Record record) {
 		EntityManager em = emf.createEntityManager();
-		boolean flag = false;
+		boolean error = false;
 		try{
 			em.getTransaction().begin();
 			em.persist(record);
@@ -26,28 +26,21 @@ public class RecordDAO {
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
 			System.out.println("Error creating new Record, invalid parametes inputted");
-			flag = true;
+			error = true;
 		}
 		em.close();
-		return flag;
+		return error;
 	}
 	
-	//read
-	public List<Record> selectRecordsByEventName(String eventName) {
+	public Record selectRecordByRecordId(long recordId) {
 		EntityManager em = emf.createEntityManager();
-		List<Record> recordList = null;
+		Record record = null;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT ur from Record ur "
-										+ "JOIN Event e ON ur.eventId = e.eventId"
-										+ "WHERE e.eventName = :eventName");
-			query.setParameter("eventName", eventName);
-			recordList = query.getResultList();
-		} catch(PersistenceException e) {
-			e.printStackTrace();
-		}
-		em.close();
-		return recordList;		
+			record = em.find(Record.class, recordId);
+		} catch(PersistenceException e) { e.printStackTrace(); }
+		
+		return record;
 	}
 	
 	//read
@@ -72,19 +65,20 @@ public class RecordDAO {
 		int numUpdatedRecords = 0;
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("UPDATE Record e SET e.startDate = :startDate,"
-					+ "e.endDate = :endDate,"
-					+ "e.recordName = :recordName,"
-					+ "e.recordTypeId = :recordTypeId,"
-					+ "e.recordNotes = :recordNotes "
-					+ "WHERE e.recordId = :recordId");
+			Query query = em.createQuery("UPDATE Record r SET r.startDate = :startDate,"
+					+ "r.endDate = :endDate,"
+					+ "r.recordName = :recordName,"
+					+ "r.startTime = :startTime,"
+					+ "r.endTime = :endTime,"
+					+ "r.recordNotes = :recordNotes "
+					+ "WHERE r.recordId = :recordId");
 			query.setParameter("startDate", updatedRecord.getStartDate())
 				 .setParameter("endDate", updatedRecord.getEndDate())
 				 .setParameter("recordName", updatedRecord.getRecordName())
-				 .setParameter("recordTypeId", updatedRecord.getRecordTypeID())
+				 .setParameter("startTime", updatedRecord.getStartTime())
+				 .setParameter("endTime", updatedRecord.getEndTime())
 				 .setParameter("recordNotes", updatedRecord.getRecordNotes())
 				 .setParameter("recordId", updatedRecord.getRecordID());
-			System.out.println("at DAO, recordNotes= " + updatedRecord.getRecordNotes());
 			numUpdatedRecords = query.executeUpdate();
 			em.getTransaction().commit();
 		} catch(PersistenceException e) {
@@ -93,21 +87,6 @@ public class RecordDAO {
 		return numUpdatedRecords;
 	}
 	
-	//delete
-	public int deleteRecord(Record deletedRecord) {
-		EntityManager em = emf.createEntityManager();
-		int numUpdatedRecords = 0;
-		try {
-			em.getTransaction().begin();
-			Query query = em.createQuery("DELETE FROM Record e WHERE e.recordId = :recordId");
-			query.setParameter("eventId", deletedRecord.getRecordID());
-			numUpdatedRecords = query.executeUpdate();
-			em.getTransaction().commit();
-		} catch(PersistenceException e) {
-			e.printStackTrace();
-		}
-		return numUpdatedRecords;
-	}
 
 	public int deleteRecordByRecordId(long recordId) {
 		EntityManager em = emf.createEntityManager();

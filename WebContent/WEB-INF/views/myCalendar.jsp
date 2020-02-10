@@ -65,12 +65,12 @@ html, body {
 /* .newRecord {
 	margin: 0.5%;
 } */
- 
-.close .deleteRecord{
+.close .deleteRecord {
 	font-size: 2em;
 	outline: none;
 	border-style: none;
-} 
+}
+
 .close:focus .deleteRecord:focus {
 	outline: none;
 	border-style: none;
@@ -245,11 +245,11 @@ div.icon-container a, i, button {
 
 	<div id='recordContainer' class="shadow p-3 mb-5 bg-white rounded">
 		<div class="d-flex flex-row justify-content-end">
-			<a class="p-2" href="#" id="editRecord"> <i class="fas fa-pencil-alt"
-				style='color: gray;'></i></a> 
-			<a href="#confirmationModal" class="p-2" 
-				data-toggle="modal" id="deleteRecord"> <i
-				class="far fa-trash-alt fa-lg" style="color: gray;"></i></a>
+			<a class="p-2" href="#" id="editRecord"> <i
+				class="fas fa-pencil-alt" style='color: gray;'></i></a> <a
+				href="#confirmationModal" class="p-2" data-toggle="modal"
+				id="deleteRecord"> <i class="far fa-trash-alt fa-lg"
+				style="color: gray;"></i></a>
 			<button type="button" class="close p-2" aria-label="Close"
 				onclick="closeForm('recordContainer')">
 				<span aria-hidden="true">&times;</span>
@@ -270,6 +270,13 @@ div.icon-container a, i, button {
 					<tr>
 						<td>End:&nbsp;<form:input id='eventEnd' path="endDate"
 								type='date' value="" /></td>
+					</tr>
+					<tr>
+						<td>Event:&nbsp;<form:select
+								id='event' path="records.EventId">
+								<form:option id="selectedEventName" value="" selected="true" />
+								<form:options items="${eventList}" itemValue="eventId" itemLabel="eventName"/>
+							</form:select></td>
 					</tr>
 					<tr>
 						<td>Notes:&nbsp;<form:input id='eventNotes'

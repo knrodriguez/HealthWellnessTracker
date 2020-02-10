@@ -3,13 +3,8 @@ package com.HealthWellnessTracker.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,8 +17,6 @@ import com.HealthWellnessTracker.models.Record;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.EventService;
 import com.HealthWellnessTracker.services.RecordService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @SessionAttributes({"connectedUser"})
@@ -49,7 +42,8 @@ public class EventRecordController {
 //-----------------------------------New Event----------------------------------------------	
 	@RequestMapping(value = "/newEvent", method = RequestMethod.GET)
 	public ModelAndView showNewEventForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newEvent") Event newEvent, @ModelAttribute("editedEvent") Event editedEvent) {
+			@ModelAttribute("newEvent") Event newEvent, 
+			@ModelAttribute("editedEvent") Event editedEvent) {
 		ModelAndView mav = new ModelAndView();
 		List<String> listEventCategory = new ArrayList<>();
 		listEventCategory.add("Habit");
@@ -122,36 +116,15 @@ public class EventRecordController {
 		return "redirect:myCalendar";
 	}
 //---------------------------------Show Calendar--------------------------------------------
-	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET, produces ="application/json")
-	//@ResponseBody String recordList
+	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
 	public ModelAndView showMyCalendar(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newRecord") Record newRecord, 
 			@ModelAttribute("updatedRecord") Record updatedRecord) {
-		System.out.println("at my calendar: " + connectedUser.getName());
 		List<Event> eventList = eventService.findEventByUser(connectedUser);
-		List<Record> recordList = recordService.findRecordsByUser(connectedUser);
-		JSONArray jsonArr = new JSONArray();
-		for(Record record: recordList) {
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("id", record.getRecordID());
-			jsonObj.put("title", record.getRecordName());
-			jsonObj.put("start", record.getStartDate());
-			jsonObj.put("end", record.getEndDate());
-			jsonObj.put("eventName", record.getEvent().getEventName());
-			jsonObj.put("eventId", record.getEvent().getEventId());
-			jsonObj.put("notes", record.getRecordNotes());
-			jsonObj.put("allDay",false);
-			jsonArr.put(jsonObj);
-		}
-		ObjectMapper objMapper = new ObjectMapper();
+		String recordsJSON = recordService.generateJSON(connectedUser);
 		ModelAndView calendarMAV = new ModelAndView("myCalendar");
 		calendarMAV.addObject("eventList",eventList);
-		try {
-			calendarMAV.addObject("recordList", objMapper.writeValueAsString(jsonArr.toString()));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		calendarMAV.addObject("recordList", recordsJSON);
 		return calendarMAV;
 	}
 }

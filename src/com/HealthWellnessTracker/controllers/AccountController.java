@@ -51,7 +51,6 @@ public class AccountController {
 		if(tempLogin == null) {
 			return new ModelAndView("login","message",LoginError.INCORRECT_PASSWORD.toString());
 		} else {
-			//connectedUser.setUserLogin(tempLogin);
 			connectedUser = userProfileService.findUserByUserId(tempLogin.getUserId());
 			session = request.getSession();
 			session.setAttribute("connectedUser", connectedUser);
@@ -62,8 +61,8 @@ public class AccountController {
 //-----------------------------------Logout----------------------------------------------
 	//MUST CHANGE TO USER!!!!!!!!!!!!!!!!!!!!!!!
 	@RequestMapping("/logout")
-	public String logout (@ModelAttribute("userLogin") Login userLogin, SessionStatus session) {
-		userLogin = new Login();
+	public String logout (@ModelAttribute("connectedUser") UserProfile connectedUser, SessionStatus session) {
+		connectedUser = new UserProfile();
 		session.setComplete();
 		return "redirect:/";
 	}

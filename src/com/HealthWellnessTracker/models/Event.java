@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-//indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
+//, indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
 
 @Entity
 @Table(name = "events")		
@@ -34,13 +34,13 @@ public class Event implements Serializable{
 	@OneToMany(mappedBy = "event")
 	List<Record> records = new ArrayList<>();
 	
-	@Column (name = "EventCategory")
+	@Column (name = "EventCategory", nullable = false)
 	private String eventCategory;
 	
-	@Column (name = "EventName")
+	@Column (name = "EventName", nullable = false)
 	private String eventName;
 	
-	@Column (name = "EventDescription")
+	@Column (name = "EventDescription", nullable = true)
 	private String eventDescription;
 
 	public Event() {

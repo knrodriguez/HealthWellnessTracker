@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 
 @Entity
@@ -33,23 +34,23 @@ public class UserProfile implements Serializable{
 	private List<Record> recordList = new ArrayList<>();
 	
 	@Basic
-	@Column(name = "Name")
+	@Column(name = "Name", nullable = true)
 	private String name;
 	
 	@Basic
-	@Column(name = "Age")
+	@Column(name = "Age", nullable = true)
 	private byte age;
 	
 	@Basic
-	@Column (name = "Birthdate")
+	@Column (name = "Birthdate", nullable = true)
 	private Date birthdate;
 	
 	@Basic
-	@Column (name = "Country")
+	@Column (name = "Country", nullable = true)
 	private String country;
 	
-	@Basic
-	@Column (name = "EmailAddress")
+	@Email(message = "Email address has invaid format.")
+	@Column (name = "EmailAddress", nullable = true)
 	private String emailAddress;
 
 	public UserProfile() {
