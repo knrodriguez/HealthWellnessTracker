@@ -17,6 +17,16 @@
 	crossorigin="anonymous"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<style>
+#allUserEvents {
+	padding: 1%;
+}
+
+i:hover {
+	color: gray; 
+	cursor:pointer;
+}
+</style>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".editEventLink").click(function(e) {
@@ -36,7 +46,6 @@
 				$(".row" + id).find("*").prop("disabled", true);
 			});
 			$("#cancelEditEvent" + id).click(function(e) {
-				http: //www.$.post/
 				$("#eventForm" + id)[0].reset();
 				$("#editEvent" + id).show();
 				$("#deleteEvent" + id).show();
@@ -52,20 +61,72 @@
 			$("#eventIdToDelete").val(id);
 			$("#confirmationModal").modal("show");
 		});
+		$("#editNewEvent").click(function(e) {
+			e.preventDefault();
+			$(".newRow").find("*").prop("disabled", false);
+			$("#editNewEvent").hide();
+			$("#deleteNewEvent").hide();
+			$("#saveNewEvent").show();
+			$("#cancelNewEvent").show();
+			$("#saveNewEvent").click(function(e){
+				e.preventDefault();
+				$("#newEventForm").submit();
+				$("#editNewEvent").show();
+				$("#deleteNewEvent").show();
+				$("#saveNewEvent").hide();
+				$("#cancelNewEvent").hide();
+				$(".newRow").find("*").prop("disabled", true);		
+			});
+			$("#cancelNewEvent").click(function(e) {
+				e.preventDefault();
+				$("#newEventForm")[0].reset();
+				$("#editNewEvent").show();
+				$("#deleteNewEvent").show();
+				$("#saveNewEvent").hide();
+				$("#cancelNewEvent").hide();
+				$(".newRow").find("*").prop("disabled", true);	
+			});
+		});
 	});
 </script>
 </head>
 <body>
-	<h1>My Events</h1>
+
+	<jsp:include page="header.jsp" />
 	<div id="allUserEvents">
+		<h2>My Events</h2>
 		<table class="table table-striped table-hover">
 			<thead class="thead-light">
 				<tr>
 					<th scope="col">Name</th>
 					<th scope="col">Type</th>
+					<th scope="col">Description</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+
 				</tr>
 			</thead>
 			<tbody>
+				<form:form id="newEventForm" action="newEvent" method="post"
+					modelAttribute="newEvent">
+					<tr class="newRow">
+						<td><form:input id="newEventName" path="eventName"
+								disabled="true" value="" /></td>
+						<td><form:select id="newEventCategory" path="eventCategory"
+								disabled="true">
+								<form:options items="${listEventCategory}" />
+							</form:select></td>
+						<td><form:input id="newEventDescription"
+								path="eventDescription" disabled="true" />
+						<td><i class="fas fa-pencil-alt fa-lg" id='editNewEvent'
+							style="display: inline-block;"></i> <i class="far fa-save fa-lg"
+							id='saveNewEvent' style="display: none;"></i></td>
+						<td><i class="fas fa-minus fa-lg" id="deleteNewEvent"
+							disabled="true" style="display: inline-block; color:gray;"></i> <i
+							class="far fa-times-circle fa-lg" id="cancelNewEvent"
+							style="display: none;"></i></td>
+					</tr>
+				</form:form>
 				<c:forEach items="${userEvents}" var="event">
 					<form:form action="editEvent" id="eventForm${event.eventId}"
 						modelAttribute="editedEvent">
@@ -73,16 +134,18 @@
 							<form:input type="hidden" path="eventId" value="${event.eventId}" />
 							<td><form:input id='eventName${event.eventId}'
 									path="eventName" disabled="true" value="${event.eventName}" /></td>
-							<td><form:input id='eventCategory${event.eventId}'
-									path="eventCategory" disabled="true"
-									value="${event.eventCategory}" /></td>
+							<td><form:select id='eventCategory${event.eventId}'
+									path="eventCategory" disabled="true">
+									<form:option value="${event.eventCategory}" selected="true" />
+									<form:options items="${listEventCategory}" />
+								</form:select></td>
 							<td><form:input id='eventDescription${event.eventId}'
 									path="eventDescription" disabled="true"
 									value="${event.eventDescription}" /></td>
 							<td><i class="fas fa-pencil-alt fa-lg editEventLink"
 								id='editEvent${event.eventId}' style="display: inline-block;"></i>
-								<i class="far fa-save fa-lg"
-									id='saveEvent${event.eventId}' style="display: none;"></i></td>
+								<i class="far fa-save fa-lg" id='saveEvent${event.eventId}'
+								style="display: none;"></i></td>
 							<td><i class="fas fa-minus fa-lg deleteEventLink"
 								id="deleteEvent${event.eventId}" style="display: inline-block;"></i>
 								<i class="far fa-times-circle fa-lg"
@@ -93,7 +156,7 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 	<div class="modal fade" id="confirmationModal" tabindex="-1"
 		role="dialog" aria-labelledby="confirmationModalCenterTitle"
 		aria-hidden="true">
@@ -121,38 +184,6 @@
 		</div>
 	</div>
 
-	<div id="createNewEvent">
-		<form:form action="newEvent" method="post" modelAttribute="newEvent">
-			<table>
-				<tr>
-					<td>Event Name</td>
-				</tr>
-				<tr>
-					<td><form:input path="eventName" placeholder="Event Name" /></td>
-				</tr>
-				<tr>
-					<td>Event Category</td>
-				</tr>
-				<tr>
-					<td><form:select path="eventCategory" name="eventCategory">
-							<c:forEach items="${listEventCategory}" var="category">
-								<form:option value="${category}">${category}</form:option>
-							</c:forEach>
-						</form:select></td>
-				</tr>
-				<tr>
-					<td>Event Description</td>
-				</tr>
-				<tr>
-					<td><form:input path="eventDescription"
-							placeholder="Event Description" /></td>
-				</tr>
-				<tr></tr>
-				<tr>
-					<td align="right"><input type="submit" value="Submit"></td>
-				</tr>
-			</table>
-		</form:form>
-	</div>
+	<jsp:include page="footer.jsp" />
 </body>
 </html>

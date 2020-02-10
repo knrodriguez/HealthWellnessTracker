@@ -42,22 +42,20 @@ html, body {
 #header-container {
 	position: relative;
 	margin-right: 10%;
-	top: 0;
-	//bottom: -100px;
+	top: 0; //
+	bottom: -100px;
 	text-align: center;
 	height: 10%;
 }
-
 
 .fc-center {
 	position: relative;
 	padding-left: 10%;
 	margin: 0;
 	text-align: right;
-	display: inline; 
+	display: inline;
 	vertical-align: middle;
 }
-
 
 .fc-toolbar .fc-left:before .fc-left:after {
 	float: inherit;
@@ -67,26 +65,15 @@ html, body {
 /* .newRecord {
 	margin: 0.5%;
 } */
-
+ 
 .close .deleteRecord{
-	position: relative;
-	top: -13px;
-	right: 0;
-	margin-right: 1%;
 	font-size: 2em;
 	outline: none;
 	border-style: none;
-}
-
+} 
 .close:focus .deleteRecord:focus {
-	outline:none;
+	outline: none;
 	border-style: none;
-}
-
-.fa-trash-alt {
-	position: relative;
-	top: -13px;
-	right: 0;
 }
 
 #newRecordFormContainer {
@@ -120,7 +107,7 @@ html, body {
 	background-color: white;
 	top: 0;
 	left: 0;
-	transform: translate(0);	
+	transform: translate(0);
 }
 
 /*works for input, not for class or id*/
@@ -131,6 +118,10 @@ input {
 input:focus, input:active, input:hover {
 	background-color: #EEEEEE;
 }
+
+div.icon-container a, i, button {
+	margin: 10%;
+}
 </style>
 <script src='fullcalendar/core/main.js'></script>
 <script src='fullcalendar/daygrid/main.js'></script>
@@ -139,11 +130,11 @@ input:focus, input:active, input:hover {
 <script src='fullcalendar/bootstrap/main.js'></script>
 <script src='fullcalendar/list/main.js'></script>
 <script src='js/records.js'></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	crossorigin="anonymous"></script>
 <script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
  $(document).ready(function() {  
 	 $("#editRecord").click(function(event){
@@ -157,7 +148,6 @@ input:focus, input:active, input:hover {
 <script> 
 
 	document.addEventListener('DOMContentLoaded', function() {
-		var test="test this shit";
 		//create JS variable for HTML Calendar element
 		var calendarEl = document.getElementById('calendar');
 		//create JS variable of loaded Calendar module
@@ -189,52 +179,31 @@ input:focus, input:active, input:hover {
 		calendar.render();
 	});
 	
-	
-
 </script>
 </head>
 <body>
 
-	<div id='header-container'>
-		<table>
-			<tr>
-				<td><h3>Header</h3></td>
-				<td style="text-align: right;"><h3>
-						<a href="newEvent">View My Events</a>
-					</h3></td>
-				<td style="text-align: right;"><h3>
-						<a href="viewUserProfile">Edit Profile</a>
-					</h3></td>
-			</tr>
-		</table>
+	<jsp:include page="header.jsp" />
 
-
-
-	</div>
-
-	<div id='newRecordFormContainer' class="newRecord shadow p-3 mb-5 bg-white rounded">
-		<form:form id='newRecordForm'
-			action="submitNewRecordForm" method="POST" modelAttribute="newRecord">
+	<div id='newRecordFormContainer'
+		class="newRecord shadow p-3 mb-5 bg-white rounded">
+		<form:form id='newRecordForm' action="submitNewRecordForm"
+			method="POST" modelAttribute="newRecord">
 			<table class='newRecord shadow-sm p-3 mb-5 bg-white rounded'>
 				<tr>
+					<td></td>
 					<td>
-					</td>
-					<td>
-						<a href="#confirmationModal" data-toggle="modal" id="deleteRecord">
-							<i class="far fa-trash-alt fa-lg" style="color:black;"></i>
-						</a>		
-						<button type="button" class="close" aria-label="Close" 
-						onclick="closeForm('newRecordFormContainer')">
+						<button type="button" class="close" aria-label="Close"
+							onclick="closeForm('newRecordFormContainer')">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</td>
 					<!-- <img src="<c:url value="/images/" />"> -->
 				</tr>
 				<tr>
-					<td colspan=2 style='font-size: 1.25em;'>
-						<form:input required="required" id="formInput" path="recordName" 
-							placeholder="New Event" />
-					</td>
+					<td colspan=2 style='font-size: 1.25em;'><form:input
+							required="required" id="formInput" path="recordName"
+							placeholder="New Event" /></td>
 				</tr>
 				<tr>
 					<td>Start: <form:input type="date" id="startDate"
@@ -249,12 +218,11 @@ input:focus, input:active, input:hover {
 					<%-- 					<td><form:input type="time" id="endTime" path="endTime" /></td> --%>
 				</tr>
 				<tr>
-					<td colspan=2>Event: 
-						<select id="event" name="eventSelected">
+					<td colspan=2>Event: <select id="event" name="eventSelected">
 							<c:forEach items="${eventList}" var="event">
 								<option value="${event.eventId}">${event.eventName}</option>
 							</c:forEach>
-						</select>
+					</select>
 					</td>
 				</tr>
 				<tr>
@@ -263,71 +231,82 @@ input:focus, input:active, input:hover {
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<input type="submit" id="submit-button" value="Submit">
+					<td><input type="submit" id="submit-button" value="Submit">
 						<input type="reset" id="closeNewRecordForm" value="Reset">
 					</td>
 				</tr>
 			</table>
 		</form:form>
 	</div>
-	
+
 	<div id='calendar-container'>
 		<div id='calendar'></div>
 	</div>
 
-	<div id='recordContainer'>
-		<a href="#" id="editRecord"> 
-			<i class="fas fa-pencil-alt" style='color: gray;'></i>
-		</a> 
-		<a href="#confirmationModal" data-toggle="modal" id="deleteRecord"> 
-			<i class="far fa-trash-alt fa-lg" style="color: gray;"></i>
-		</a>
-		<button type="button" class="close" aria-label="Close"
-			onclick="closeForm('recordContainer')">
-			<span aria-hidden="true">&times;</span>
-		</button>
-		<form:form action="editRecord" id="recordForm" class="recordForm" modelAttribute="updatedRecord">
+	<div id='recordContainer' class="shadow p-3 mb-5 bg-white rounded">
+		<div class="d-flex flex-row justify-content-end">
+			<a class="p-2" href="#" id="editRecord"> <i class="fas fa-pencil-alt"
+				style='color: gray;'></i></a> 
+			<a href="#confirmationModal" class="p-2" 
+				data-toggle="modal" id="deleteRecord"> <i
+				class="far fa-trash-alt fa-lg" style="color: gray;"></i></a>
+			<button type="button" class="close p-2" aria-label="Close"
+				onclick="closeForm('recordContainer')">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<form:form action="editRecord" id="recordForm" class="recordForm"
+			modelAttribute="updatedRecord">
 			<fieldset id="recordFieldset" disabled="disabled">
-			<table>
-				<tr>
-					<td><form:input id="eventTitle" path="recordName" type="text" value="" /></td>
-				</tr>
-				<tr>
-					<td>Start:&nbsp;<form:input id='eventStart' path="startDate" type='date' value="" /></td>
-				</tr>
-				<tr>
-					<td>End:&nbsp;<form:input id='eventEnd' path="endDate" type='date' value="" /></td>
-				</tr>
-				<tr>
-					<td>Notes:&nbsp;<form:input id='eventNotes' path="recordNotes" type='text' value="" /></td>
-				</tr>
-			</table>
-			<input type="hidden" name="recordId" id="recordIdEdit" value="" />
-			<button id="submitEditedRecord" type="submit" class="btn btn-primary" style="display:none;">Submit</button>
-			<button id="resetEditedRecord" type="reset" class="btn btn-danger" style="display:none;">Reset</button>
-		</fieldset>
+				<table>
+					<tr>
+						<td><form:input id="eventTitle" path="recordName" type="text"
+								value="" /></td>
+					</tr>
+					<tr>
+						<td>Start:&nbsp;<form:input id='eventStart' path="startDate"
+								type='date' value="" /></td>
+					</tr>
+					<tr>
+						<td>End:&nbsp;<form:input id='eventEnd' path="endDate"
+								type='date' value="" /></td>
+					</tr>
+					<tr>
+						<td>Notes:&nbsp;<form:input id='eventNotes'
+								path="recordNotes" type='text' value="" /></td>
+					</tr>
+				</table>
+				<input type="hidden" name="recordId" id="recordIdEdit" value="" />
+				<button id="submitEditedRecord" type="submit"
+					class="btn btn-primary" style="display: none;">Submit</button>
+				<button id="resetEditedRecord" type="reset" class="btn btn-danger"
+					style="display: none;">Reset</button>
+			</fieldset>
 		</form:form>
 	</div>
 
-	<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalCenterTitle" aria-hidden="true">
+	<div class="modal fade" id="confirmationModal" tabindex="-1"
+		role="dialog" aria-labelledby="confirmationModalCenterTitle"
+		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="confirmationModalLabel">Confirm Delete</h5>
+					<h5 class="modal-title" id="confirmationModalLabel">Confirm
+						Delete</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<div class="modal-body" id="confirmationModalBody">
-					Are you sure you want to delete it?
-				</div>
+				<div class="modal-body" id="confirmationModalBody">Are you
+					sure you want to delete it?</div>
 				<div class="modal-footer">
-	        		<form:form action="deleteRecord">
-	        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        			<input type="hidden" name="recordId" id="recordIdDelete" value="">
-	        			<button type="submit" class="btn btn-danger" id="deleteRecordButton">Delete</button>
+					<form:form action="deleteRecord">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<input type="hidden" name="recordId" id="recordIdDelete" value="">
+						<button type="submit" class="btn btn-danger"
+							id="deleteRecordButton">Delete</button>
 					</form:form>
 				</div>
 			</div>
