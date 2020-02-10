@@ -59,7 +59,7 @@
 	<h1>My Events</h1>
 	<div id="allUserEvents">
 		<table class="table table-striped table-hover">
-			<thead>
+			<thead class="thead-light">
 				<tr>
 					<th scope="col">Name</th>
 					<th scope="col">Type</th>

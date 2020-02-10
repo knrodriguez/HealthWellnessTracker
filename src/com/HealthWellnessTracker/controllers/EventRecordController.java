@@ -143,7 +143,6 @@ public class EventRecordController {
 			jsonObj.put("allDay",false);
 			jsonArr.put(jsonObj);
 		}
-		System.out.println(jsonArr.toString());
 		ObjectMapper objMapper = new ObjectMapper();
 		ModelAndView calendarMAV = new ModelAndView("myCalendar");
 		calendarMAV.addObject("eventList",eventList);
