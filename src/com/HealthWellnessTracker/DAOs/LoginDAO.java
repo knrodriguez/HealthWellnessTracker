@@ -28,7 +28,6 @@ public class LoginDAO implements LoginDAOI{
 			UserProfileDAO userProfileDAO = new UserProfileDAO();
 			userProfileDAO.insertUserProfile(newUserProfile);	
 		} catch(PersistenceException e) {
-			System.out.println("!!!!!!!!!!!ERROR!!!!!!!!!");
 			e.printStackTrace();
 		}
 		em.close();
@@ -45,7 +44,6 @@ public class LoginDAO implements LoginDAOI{
 		query.setParameter("username", username);
 		@SuppressWarnings("unchecked")
 		List<Login> loginList = query.getResultList();
-		//em.getTransaction().commit();
 		em.close();
 		emf.close();
 		if (loginList.isEmpty()) return null; //return null as no user exists with argument username
@@ -53,7 +51,7 @@ public class LoginDAO implements LoginDAOI{
 		else return loginList.get(0); //return first element of resultset (should only be 1)
 	}
 	
-	//SHOULD THIS BE BOOLEAN??
+	
 	@Override
 	public int updateLogin(Login login) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);

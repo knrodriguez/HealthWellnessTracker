@@ -6,121 +6,60 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Login</title>
+<title>Health Wellness Tracker | Login</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<style>
+body{
+    font-size:14px;
+    color:#fff;
+}
+.simple-login-container{
+    width:300px;
+    max-width:100%;
+    margin:50px auto;
+}
+.simple-login-container h2{
+    text-align:center;
+    font-size:20px;
+}
+
+.simple-login-container .btn-login{
+    background-color:#FF5964;
+    color:#fff;
+}
+a{
+    color:#000;
+}
+</style>
+
 </head>
 <body>
-	<div align="left">
+	<div>
 		<c:if test="${message != null}">
 			<p>${message}</p>
 		</c:if>
+	</div>
+	<div id='simple-login-container' title="Login Form" align="center">
 		<form:form action="login" method="POST" modelAttribute="inputLogin">
 			<table border="0">
 				<tr>
-					<td colspan="2" align="left"><h2>Spring MVC Form</h2></td>
+					<td colspan="2" align="left"><h2><img src="<c:url value = "/images/logo.png"/>"></h2></td>
 				</tr>
 				<tr>
-					<td>User Name:</td>
-					<td><form:input path="username" /></td>
+					<!-- <td><h2>Username:</h2></td> -->
+					<td><form:input class="form-control" id="login" path="username" placeholder="Username"/></td>
 				</tr>
 				<tr>
-					<td>Password:</td>
-					<td><form:input type="password" path="password" /></td>
+					<!-- <td><h2>Password:</h2></td> -->
+					<td><form:input class="form-control" id="login" type="password" path="password" placeholder="Password"/></td>
 				</tr>
 				<tr>
-					<td align="left"><input type="submit" value="Login"></td>
+					<td align="center"><input id='btn-login' type="submit" value="Login"></td>
 				</tr>
 			</table>
 		</form:form>
-		<br> <a href="signup">Sign Up</a>
+		<br> <a href="signup">Create An Account</a>
 	</div>
-
-	<!--%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%-->
-
-
-	<!-- 	<h1> This is the index page. </h1>
-	<a href= "index">Index</a>
-	<h2>USER CRUD OPERATIONS INPUT PAGE</h2>
-
- 	<form action="garbage" method="POST">
-	  id:
-	  <input type="text" name="userID" placeholder="ID">
-	  <br><br>
-	  First Name:
-	  <input type="text" name="firstName" placeholder="First Name">
-	  <br><br>
-	  Last Name:
-	  <input type="text" name="lastName" placeholder="Last Name">
-	  <br><br>
-	  Email:
-	  <input type="text" name="email" placeholder="Email Address">
-	  <br><br>
-	  Username:
-	  <input type="text" name="username" placeholder="Username">
-	  <br><br>
-	  Password:
-	  <input type="password" name="password" placeholder="Password">
-	  <br><br>
-	  <input type="submit" value="Add">
-	  <input type="submit" value="Delete">
-	  <input type="submit" value="Update">
-	  <input type="submit" value="Submit">
-	</form>
-	
-	<table>
-    <caption>All Users</caption>
-    <tr>
-        <th scope="col">ID</th>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Username</th>
-        <th scope="col">Password</th>
-    </tr>
-    <tr>
-    	<td>1</td>
-        <td>Bob</td>
-        <td>Denny</td>
-        <td>bdenny@gmail.com</td>
-        <td>bdenny</td>
-        <td>nunyabusiness</td>
-    </tr>
-	<tr>
-    	<td>2</td>
-        <td>Mary</td>
-        <td>Typhoid</td>
-        <td>mtyphoid@gmail.com</td>
-        <td>mtyphoid</td>
-        <td>nunyabusiness</td>
-    </tr>
-	<tr>
-    	<td>3</td>
-        <td>Alice</td>
-        <td>Nottingham</td>
-        <td>anottingham@gmail.com</td>
-        <td>anottingham</td>
-        <td>nunyabusiness</td>
-    </tr>
-	<tr>
-    	<td>4</td>
-        <td>Zaddy</td>
-        <td>Gertswag</td>
-        <td>fme@gmail.com</td>
-        <td>fme</td>
-        <td>yaszaddyyyy</td>
-    </tr>
-	<tr>
-    	<td>5</td>
-        <td>Millenials</td>
-        <td>AreTheWorst</td>
-        <td>millenialsaretheworst@gmail.com</td>
-        <td>millenialsstink</td>
-        <td>nunyabusiness</td>
-    </tr>
-</table>
-	
-	
-	<p>If you click the "Submit" button, the form-data will be sent to a page called "/action_page.php".</p>
-	 -->
-
 </body>
 </html>

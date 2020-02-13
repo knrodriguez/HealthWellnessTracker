@@ -1,6 +1,8 @@
 package com.HealthWellnessTracker.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,15 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+//, indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
 
 @Entity
-@Table(name = "events", 
-		indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
+@Table(name = "events")		
 public class Event implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name = "EventId")
@@ -27,22 +30,21 @@ public class Event implements Serializable{
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "UserId")
 	private UserProfile userProfile; 
+
+	@OneToMany(mappedBy = "event")
+	List<Record> records = new ArrayList<>();
 	
-	@Column (name = "EventCategory")
-	
+	@Column (name = "EventCategory", nullable = false)
 	private String eventCategory;
 	
-	@Column (name = "EventName")
+	@Column (name = "EventName", nullable = false)
 	private String eventName;
 	
-	@Column (name = "EventDescription")
+	@Column (name = "EventDescription", nullable = true)
 	private String eventDescription;
 
 	public Event() {
-		//this.user = null; should grab from user logged in
-		this.eventCategory = "";
-		this.eventName = "";
-		this.eventDescription = "";
+		super();
 	}
 	
 	public Event(UserProfile userProfile) {
@@ -90,10 +92,22 @@ public class Event implements Serializable{
 	public void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
 	}
+	
+	public List<Record> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<Record> records) {
+		this.records = records;
+	}
+
+	public void setEventId(long eventId) {
+		this.eventId = eventId;
+	}
 
 	@Override
 	public String toString() {
-		return "Event [eventId=" + eventId + ", userProfile=" + userProfile + ", eventCategory=" + eventCategory
+		return "Event [eventId=" + eventId + ", eventCategory=" + eventCategory
 				+ ", eventName=" + eventName + ", eventDescription=" + eventDescription + "]";
 	}
 	

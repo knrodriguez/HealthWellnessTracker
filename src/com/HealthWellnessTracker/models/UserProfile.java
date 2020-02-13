@@ -6,15 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 
 @Entity
@@ -24,9 +23,6 @@ public class UserProfile implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "UserId")
-	private long userId;
-	
 	@OneToOne
 	@PrimaryKeyJoinColumn(name = "UserId")
 	private Login userLogin;
@@ -35,37 +31,34 @@ public class UserProfile implements Serializable{
 	private List<Event> eventList = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "userProfile")
-	private List<UserRecord> recordList = new ArrayList<>();
+	private List<Record> recordList = new ArrayList<>();
 	
 	@Basic
-	@Column(name = "Name")
+	@Column(name = "Name", nullable = true)
 	private String name;
 	
 	@Basic
-	@Column(name = "Age")
+	@Column(name = "Age", nullable = true)
 	private byte age;
 	
 	@Basic
-	@Column (name = "Birthdate")
+	@Column (name = "Birthdate", nullable = true)
 	private Date birthdate;
 	
 	@Basic
-	@Column (name = "Country")
+	@Column (name = "Country", nullable = true)
 	private String country;
 	
-	@Basic
-	@Column (name = "EmailAddress")
+	@Email(message = "Email address has invaid format.")
+	@Column (name = "EmailAddress", nullable = true)
 	private String emailAddress;
 
-	public UserProfile() {}
+	public UserProfile() {
+		super();
+	}
 	
 	public UserProfile(Login login) {
-		this.userId = login.getUserId();
-//		this.userLogin = login;
-		this.name = "";
-		this.age = 0;
-		this.birthdate = null;
-		this.country = "";
+		this.userLogin = login;
 	}
 
 	public Login getUserLogin() {
@@ -76,13 +69,13 @@ public class UserProfile implements Serializable{
 		this.userLogin = userLogin;
 	}
 
-//	public List<Event> getEventList() {
-//		return eventList;
-//	}
-//
-//	public void setEventList(List<Event> eventList) {
-//		this.eventList = eventList;
-//	}
+	public List<Event> getEventList() {
+		return eventList;
+	}
+
+	public void setEventList(List<Event> eventList) {
+		this.eventList = eventList;
+	}
 
 	public String getName() {
 		return name;
@@ -116,20 +109,19 @@ public class UserProfile implements Serializable{
 		this.country = country;
 	}
 
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userID) {
-		this.userId = userID;
-	}
-
 	public String getEmailAddress() {
 		return emailAddress;
 	}
 
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserProfile [userLogin=" + userLogin + ", eventList=" + eventList + 
+				", recordList=" + recordList + ", name=" + name + ", age=" + age + ", birthdate=" + birthdate + 
+				", country=" + country + ", emailAddress=" + emailAddress + "]";
 	}
 	
 }

@@ -8,10 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Pattern;
 
 @Entity
@@ -26,13 +24,13 @@ public class Login implements Serializable{
 	private long userId;
 	
 	@Basic
-	@Column(name = "Username", unique = true, nullable = false)
+	@Column(name = "Username", unique = true, nullable = false, length = 50)
 	@Pattern(regexp="^[a-zA-Z_0-9-_]+$", 
 			message = "Usernames can contain letters (a-z), numbers(0-9), underscore (_) and dash (-) characters.")
 	private String username;
 	
 	@Basic
-	@Column(name = "Password", nullable = false)
+	@Column(name = "Password", nullable = false, length = 20)
 	@Pattern(regexp="#(?=.*[a-z])(?=.*[A-Z])(?=.*[!@$#%*_-&]).{8-16}$", 
 			message = "Passwords must contain:\n one (1) lowercase letter,\n"
 					+ "one (1) Uppercase letter,\n"
@@ -93,6 +91,5 @@ public class Login implements Serializable{
 	public void setUserProfile(UserProfile userProfile) {
 		this.userProfile = userProfile;
 	}
-	
 
 }
