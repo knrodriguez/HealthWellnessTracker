@@ -13,10 +13,10 @@ import com.HealthWellnessTracker.models.UserProfile;
 
 public class RecordDAO {
 
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
-	
-	//create
+	private final String appFactory = "HealthWellnessTrackerFactory";
+
 	public boolean insertRecord(Record record) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		boolean error = false;
 		try{
@@ -29,26 +29,27 @@ public class RecordDAO {
 			error = true;
 		}
 		em.close();
+		emf.close();
 		return error;
 	}
 	
-	public Record selectRecordByRecordId(long recordId) {
+	public Record getRecordByRecordId(long recordId) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		Record record = null;
 		try {
-			em.getTransaction().begin();
 			record = em.find(Record.class, recordId);
 		} catch(PersistenceException e) { e.printStackTrace(); }
-		
+		em.close();
+		emf.close();
 		return record;
 	}
 	
-	//read
-	public List<Record> selectRecordsByUserId(UserProfile userProfile) {
+	public List<Record> getRecordsByUserId(UserProfile userProfile) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		List<Record> recordList = null;
 		try {
-			em.getTransaction().begin();
 			Query query = em.createQuery("SELECT e from Record e WHERE e.userProfile = :userProfile");
 			query.setParameter("userProfile", userProfile);
 			recordList = query.getResultList();
@@ -56,11 +57,12 @@ public class RecordDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return recordList;		
 	}
 	
-	//update
 	public int updateRecord(Record updatedRecord) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedRecords = 0;
 		try {
@@ -84,11 +86,13 @@ public class RecordDAO {
 		} catch(PersistenceException e) {
 			e.printStackTrace();
 		}
+		em.close();
+		emf.close();
 		return numUpdatedRecords;
 	}
 	
-
 	public int deleteRecordByRecordId(long recordId) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedRecords = 0;
 		try {
@@ -100,10 +104,9 @@ public class RecordDAO {
 		} catch(PersistenceException e) {
 			e.printStackTrace();
 		}
+		em.close();
+		emf.close();
 		return numDeletedRecords;
-	}
-	
-	//public 
-	
+	}	
 	
 }

@@ -13,12 +13,11 @@ import com.HealthWellnessTracker.models.UserProfile;
 
 public class EventDAO {
 
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
-
+	private final String appFactory = "HealthWellnessTrackerFactory";
 	
 	public boolean insertEvent(Event newEvent) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
-		//Event newEvent = new Event(event);
 		boolean flag = false;
 		try{
 			em.getTransaction().begin();
@@ -27,26 +26,28 @@ public class EventDAO {
 			flag = true;
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			System.out.println("Error creating new Event, invalid parametes inputted");
 		}
 		em.close();
+		emf.close();
 		return flag;
 	}
 
 	public Event getEventByEventId(long eventId) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
-		Event foundEvent = em.find(Event.class, eventId);
+		Event foundEvent = null;
+		foundEvent = em.find(Event.class, eventId);
 		em.close();
+		emf.close();
 		return foundEvent;
 	}
 	
-
-	//read
 	public List<Event> getEventsByEventName(UserProfile userProfile, String eventName) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		List<Event> eventList = null;
 		try {
-			em.getTransaction().begin();
+		//	em.getTransaction().begin();
 			Query query = em.createQuery("SELECT e FROM Event e "
 					+ "WHERE e.eventName LIKE :eventName "
 					+ "AND e.userProfile = :userProfile "
@@ -58,16 +59,16 @@ public class EventDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return eventList;		
 	}
 	
-
-	//read
 	public List<Event> getEventsByUserId(UserProfile userProfile) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		List<Event> eventList = null;
 		try {
-			em.getTransaction().begin();
+			//em.getTransaction().begin();
 			Query query = em.createQuery("SELECT e from Event e WHERE e.userProfile = :userProfile");
 			query.setParameter("userProfile", userProfile);
 			eventList = query.getResultList();
@@ -75,24 +76,28 @@ public class EventDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return eventList;		
 	}
 	
 	public List<Event> getAllEvents(){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		List<Event> eventList = null;
 		try {
-			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT * from Event;");
+			//em.getTransaction().begin();
+			Query query = em.createQuery("SELECT e from Event e");
 			eventList = query.getResultList();
 		} catch(PersistenceException e) {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return eventList;
 	}
-	//update
+	
 	public int updateEvent(Event updatedEvent) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedEvents = 0;
 		try {
@@ -111,12 +116,12 @@ public class EventDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return numUpdatedEvents;
 	}
 
-
-	//delete
 	public int deleteEvent(Event deletedEvent) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedEvents = 0;
 		try {
@@ -129,6 +134,7 @@ public class EventDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return numDeletedEvents;
 	}
 }
