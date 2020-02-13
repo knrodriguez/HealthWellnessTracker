@@ -14,9 +14,7 @@ import com.HealthWellnessTracker.models.UserProfile;
 public class LoginDAO implements LoginDAOI{
 	
 	private final String appFactory = "HealthWellnessTrackerFactory";
-	//EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 	
-	//add login to database
 	public void insertLogin(Login login) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
@@ -34,12 +32,10 @@ public class LoginDAO implements LoginDAOI{
 		emf.close();
 	}
 
-	//retrieve login from database matching the argument's username
 	@Override
-	public Login selectLoginByUsername(String username) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
+	public Login getLoginByUsername(String username) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
 		Query query = em.createQuery("SELECT e FROM Login e WHERE e.username = :username");
 		query.setParameter("username", username);
 		@SuppressWarnings("unchecked")
@@ -50,7 +46,6 @@ public class LoginDAO implements LoginDAOI{
 		else if (loginList.size() > 1) return null; //NEED TO UPDATE! return null as error that more than 1 username exists in DB 
 		else return loginList.get(0); //return first element of resultset (should only be 1)
 	}
-	
 	
 	@Override
 	public int updateLogin(Login login) {
@@ -81,30 +76,5 @@ public class LoginDAO implements LoginDAOI{
 		if(success == 1) return 1;
 		else return 0;
 	}
-
-	@Override
-	public Login selectLoginByUserId() {
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
-//		EntityManager em = emf.createEntityManager();
-//		em.getTransaction().begin();
-//		Query query = em.createQuery("SELECT e FROM Login e");
-//		@SuppressWarnings("unchecked")
-//		List<Login> logins = query.getResultList();
-//		em.close();
-//		emf.close();
-//		
-//		for(Login l : logins) {
-//			if(l.getUsername().equals(login.getUsername()) &&
-//					l.getPassword().equals(login.getPassword())) {
-//				return l;
-//			}
-//		}
-		return null;
-	}
-	
-//	public void closeEMF() {
-//		emf.close();
-//	}
-
 	
 }

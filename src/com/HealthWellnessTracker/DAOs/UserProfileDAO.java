@@ -12,10 +12,10 @@ import com.HealthWellnessTracker.models.UserProfile;
 
 public class UserProfileDAO {
 
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
+	private final String appFactory = "HealthWellnessTrackerFactory";
 	
-	//createUserProfile
 	public boolean insertUserProfile(UserProfile user) {	
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		boolean flag = false;
 		try {
@@ -28,10 +28,12 @@ public class UserProfileDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return flag;
 	}
 		
-	public UserProfile selectUserProfileByUserId(long userId){
+	public UserProfile getUserProfileByUserId(long userId){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		UserProfile foundUser = null;
 		try {
@@ -40,10 +42,12 @@ public class UserProfileDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return foundUser;
 	}
 	
 	public int updateUserProfile(UserProfile userProfile) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int updatedUserProfiles = 0;
 		try {
@@ -67,23 +71,26 @@ public class UserProfileDAO {
 			e.printStackTrace();
 		}
 		em.close();
+		emf.close();
 		return updatedUserProfiles;
 	}
 	
-//	public int deleteUserProfile(UserProfile userProfile) {
-//		EntityManager em = emf.createEntityManager();
-//		int deletedUserProfiles = 0;
-//		try {
-//			em.getTransaction().begin();
-//			Query query = em.createQuery("DELETE FROM UserProfile up"
-//					+ "WHERE up.userId = :userId");
-//			query.setParameter("userId",userProfile.getUserId());
-//			deletedUserProfiles = query.executeUpdate();
-//			em.getTransaction().commit();
-//		}catch(PersistenceException e) {
-//			e.printStackTrace();
-//		}
-//		em.close();
-//		return deletedUserProfiles;
-//	}
+	public int deleteUserProfile(long userProfileId) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManager em = emf.createEntityManager();
+		int deletedUserProfiles = 0;
+		try {
+			em.getTransaction().begin();
+			Query query = em.createQuery("DELETE FROM UserProfile up"
+					+ "WHERE up.userId = :userId");
+			query.setParameter("userId",userProfileId);
+			deletedUserProfiles = query.executeUpdate();
+			em.getTransaction().commit();
+		}catch(PersistenceException e) {
+			e.printStackTrace();
+		}
+		em.close();
+		emf.close();
+		return deletedUserProfiles;
+	}
 }
