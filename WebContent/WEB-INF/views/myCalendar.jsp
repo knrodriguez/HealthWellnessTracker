@@ -272,11 +272,15 @@ div.icon-container a, i, button {
 								type='date' value="" /></td>
 					</tr>
 					<tr>
-						<td>Event:&nbsp;<form:select
-								id='event' path="records.EventId">
-								<form:option id="selectedEventName" value="" selected="true" />
-								<form:options items="${eventList}" itemValue="eventId" itemLabel="eventName"/>
-							</form:select></td>
+						<td>Event:&nbsp;
+							<select id="editingEvent" name="editedEventId">
+								<option id="currentEvent" value="" selected="selected" ></option>
+								<optgroup label = "All">
+								<c:forEach items="${eventList}" var="eventOption">
+									<option value="${eventOption.eventId}">${eventOption.eventName}</option>
+								</c:forEach>
+								</optgroup>
+							</select>
 					</tr>
 					<tr>
 						<td>Notes:&nbsp;<form:input id='eventNotes'

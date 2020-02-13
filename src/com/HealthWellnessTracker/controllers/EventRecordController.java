@@ -83,9 +83,12 @@ public class EventRecordController {
 	@RequestMapping(value = "/editRecord", method=RequestMethod.POST)
 	public String editRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("updatedRecord") Record updatedRecord,
-			@RequestParam ("recordId") long recordId) {
+			@RequestParam ("recordId") long recordId, 
+			@RequestParam("editedEventId") long eventId) {
 		System.out.println("at controller, recordNotes= " + updatedRecord.getRecordNotes());
 		updatedRecord.setRecordID(recordId);
+		Event newEvent = eventService.findEventByEventId(eventId);
+		updatedRecord.setEvent(newEvent);
 		boolean error = recordService.editRecord(updatedRecord);
 		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
 		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");

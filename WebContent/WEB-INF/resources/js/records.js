@@ -58,8 +58,9 @@
 			document.getElementById('eventTitle').value = info.event.title;
 			document.getElementById('eventStart').valueAsDate = startDate;
 			document.getElementById('eventEnd').valueAsDate = endDate;
-			document.getElementById('selectedEventName').innerHTML = info.event.extendedProps.eventName;
 			document.getElementById('eventNotes').value = info.event.extendedProps.notes;
+			document.getElementById('currentEvent').value = info.event.extendedProps.eventId;
+			document.getElementById('currentEvent').innerHTML = info.event.extendedProps.eventName;
 		}
 	};
 	
