@@ -18,7 +18,7 @@ public class UserProfileService {
 	}
 	
 	public UserProfile findUserByUserId(long userId) {
-		return userProfileDAO.selectUserProfileByUserId(userId);
+		return userProfileDAO.getUserProfileByUserId(userId);
 	}
 	
 	

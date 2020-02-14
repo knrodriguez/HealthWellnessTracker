@@ -29,10 +29,10 @@ public class EventService {
 		else return updatedEvent.getEventName() + " Failed to Update. :(";
 	}
 	
-	public String deleteEvent(Event deletedEvent) {
-		int numEventsDeleted = eventDAO.deleteEvent(deletedEvent);
-		if(numEventsDeleted == 1) return deletedEvent.getEventName() + " Deleted! :)";
-		else return deletedEvent.getEventName() + " Failed to Delete. :(";
+	public String deleteEvent(long deletedEventId) {
+		int numEventsDeleted = eventDAO.deleteEvent(deletedEventId);
+		if(numEventsDeleted == 1) return "Delete successful.";
+		else return " Failed to Delete. :(";
 	}
 	
 	public List<Event> findEventByName(UserProfile user, String eventName) {

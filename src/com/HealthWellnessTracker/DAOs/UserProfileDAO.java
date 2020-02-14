@@ -93,4 +93,16 @@ public class UserProfileDAO {
 		emf.close();
 		return deletedUserProfiles;
 	}
+
+	public List<UserProfile> getAllProfiles(){
+		List<UserProfile> allProfiles = null;
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManager em = emf.createEntityManager();
+		try {
+			Query query = em.createQuery("SELECT up FROM UserProfile up");
+			allProfiles = query.getResultList();
+		}catch(PersistenceException e) {e.printStackTrace();}
+		
+		return allProfiles;
+	}
 }

@@ -15,21 +15,24 @@ public class LoginDAO implements LoginDAOI{
 	
 	private final String appFactory = "HealthWellnessTrackerFactory";
 	
-	public void insertLogin(Login login) {
+	public boolean insertLogin(Login login) {
+		boolean error = false;
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			em.persist(login);
-			em.getTransaction().commit();			
+			em.getTransaction().commit();	
 			UserProfile newUserProfile = new UserProfile(login);
 			UserProfileDAO userProfileDAO = new UserProfileDAO();
 			userProfileDAO.insertUserProfile(newUserProfile);	
 		} catch(PersistenceException e) {
 			e.printStackTrace();
+			error = true;
 		}
 		em.close();
 		emf.close();
+		return error;
 	}
 
 	@Override
@@ -77,4 +80,14 @@ public class LoginDAO implements LoginDAOI{
 		else return 0;
 	}
 	
+	public List<Login> getAllLogins(){
+		List<Login> allLogins = null;
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManager em = emf.createEntityManager();
+		try {
+			Query query = em.createQuery("SELECT l FROM Login l");
+			allLogins = query.getResultList();
+		} catch(PersistenceException e) {e.printStackTrace();}
+		return allLogins;	
+	}
 }

@@ -55,7 +55,7 @@ public class LoginService {
 	
 	//log onto account
 	public Login logOn(Login inputLogin) {
-		Login loginFromDatabase = loginDAO.selectLoginByUsername(inputLogin.getUsername());
+		Login loginFromDatabase = loginDAO.getLoginByUsername(inputLogin.getUsername());
 		if(loginFromDatabase != null && loginFromDatabase.getPassword().equals(inputLogin.getPassword()))		
 			return loginFromDatabase;
 		return null;
@@ -71,7 +71,7 @@ public class LoginService {
 	public LoginError changePassword(String username, String password) {
 		LoginError error = null;
 		//LoginDAO loginDAO = new LoginDAO();
-		loginDAO.selectLoginByUsername(username);
+		loginDAO.getLoginByUsername(username);
 		return error;
 	}
 	
@@ -81,12 +81,12 @@ public class LoginService {
 	//find account	
 	public Login findAccount(String username) {
 		//LoginDAO loginDAO = new LoginDAO();	
-		return loginDAO.selectLoginByUsername(username);
+		return loginDAO.getLoginByUsername(username);
 	}
 	
 	//test if login exists in database
 	public boolean exists(Login login) {
-		return (loginDAO.selectLoginByUsername(login.getUsername()) == null ? false:true);
+		return (loginDAO.getLoginByUsername(login.getUsername()) == null ? false:true);
 	}
 	
 }

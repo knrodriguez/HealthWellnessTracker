@@ -27,12 +27,12 @@ public class RecordService {
 	}*/
 	
 	public List<Record> findRecordsByUser(UserProfile user) {
-		List<Record> recordsList = recordDAO.selectRecordsByUserId(user);
+		List<Record> recordsList = recordDAO.getRecordsByUserId(user);
 		return recordsList;
 	}
 	
-	public Record findRecordByRecordId(long recordId) {
-		Record record = recordDAO.selectRecordByRecordId(recordId);
+	public int findRecordByRecordId(long recordId) {
+		int record = recordDAO.deleteRecordByRecordId(recordId);
 		return record;
 	}
 	
@@ -52,7 +52,7 @@ public class RecordService {
 	
 	public String generateJSON(UserProfile user) {
 		String json = "";
-		List<Record> recordList = recordDAO.selectRecordsByUserId(user);
+		List<Record> recordList = recordDAO.getRecordsByUserId(user);
 		JSONArray jsonArr = new JSONArray();
 		ObjectMapper objMapper = new ObjectMapper();
 		

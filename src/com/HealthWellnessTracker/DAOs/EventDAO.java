@@ -120,14 +120,14 @@ public class EventDAO {
 		return numUpdatedEvents;
 	}
 
-	public int deleteEvent(Event deletedEvent) {
+	public int deleteEvent(long deletedEventId) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedEvents = 0;
 		try {
 			em.getTransaction().begin();
 			Query query = em.createQuery("DELETE FROM Event e WHERE e.eventId = :eventId");
-			query.setParameter("eventId", deletedEvent.getEventId());
+			query.setParameter("eventId", deletedEventId);
 			numDeletedEvents = query.executeUpdate();
 			em.getTransaction().commit();
 		} catch(PersistenceException e) {
@@ -137,4 +137,5 @@ public class EventDAO {
 		emf.close();
 		return numDeletedEvents;
 	}
+
 }

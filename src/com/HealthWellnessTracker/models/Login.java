@@ -56,6 +56,12 @@ public class Login implements Serializable{
 		this.userProfile = userProfile;
 	}
 
+	public Login(long id, String username, String password) {
+		this.userId = id;
+		this.username = username;
+		this.password = password;
+	}
+
 	public long getUserId() {
 		return userId;
 	}
@@ -90,6 +96,14 @@ public class Login implements Serializable{
 
 	public void setUserProfile(UserProfile userProfile) {
 		this.userProfile = userProfile;
+	}
+	
+	public boolean equals(Login l2) {
+		boolean sameId = this.userId == l2.userId;
+		boolean sameUsername = this.username.equals(l2.username);
+		boolean samePassword = this.password.equals(l2.password);
+		if(sameId && sameUsername && samePassword) return true;
+		else return false;
 	}
 
 }

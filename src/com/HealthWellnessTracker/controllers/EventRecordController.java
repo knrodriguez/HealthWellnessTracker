@@ -73,9 +73,7 @@ public class EventRecordController {
 	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 	public String deleteEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
 			@RequestParam("eventId") String eventId) {
-		Event event = new Event();
-		event.setEventId(Long.parseLong(eventId));
-		String message = eventService.deleteEvent(event);
+		String message = eventService.deleteEvent(Long.parseLong(eventId));
 		System.out.println(message);
 		return "redirect:/newEvent";
 	}

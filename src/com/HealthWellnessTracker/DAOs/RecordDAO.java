@@ -109,4 +109,14 @@ public class RecordDAO {
 		return numDeletedRecords;
 	}	
 	
+	public List<Record> getAllRecords(){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManager em = emf.createEntityManager();
+		List<Record> allRecords = null;
+		try {
+			Query query = em.createQuery("SELECT r FROM Record r");
+			allRecords = query.getResultList();
+		} catch(PersistenceException e) {e.printStackTrace();}
+		return allRecords;
+	}
 }

@@ -1,4 +1,4 @@
-package test;
+package com.HealthWellnessTracker.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class testAccountLogIn {
+class TestRecordDAO {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
