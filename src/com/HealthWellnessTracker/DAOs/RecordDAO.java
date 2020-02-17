@@ -8,13 +8,25 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.Record;
 import com.HealthWellnessTracker.models.UserProfile;
 
-public class RecordDAO {
+public class RecordDAO implements DAOInterface<Record>{
 
 	private final String appFactory = "HealthWellnessTrackerFactory";
 
+	@Override
+	public boolean insert(Record newObj) {return insertRecord(newObj);}
+	@Override
+	public Record find(long id) {return getRecordByRecordId(id);}
+	@Override
+	public int update(Record updatedObj) {return updateRecord(updatedObj);}
+	@Override
+	public int delete(long id) {return deleteRecord(id);}	
+	@Override
+	public List<Record> getAll() {return getAllRecords();}
+	
 	public boolean insertRecord(Record record) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
@@ -91,7 +103,7 @@ public class RecordDAO {
 		return numUpdatedRecords;
 	}
 	
-	public int deleteRecordByRecordId(long recordId) {
+	public int deleteRecord(long recordId) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedRecords = 0;

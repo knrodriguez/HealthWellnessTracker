@@ -9,11 +9,23 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import com.HealthWellnessTracker.models.Event;
+import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 
-public class EventDAO {
+public class EventDAO implements DAOInterface<Event>{
 
 	private final String appFactory = "HealthWellnessTrackerFactory";
+	
+	@Override
+	public boolean insert(Event newObj) {return insertEvent(newObj);}
+	@Override
+	public Event find(long id) {return getEventByEventId(id);}
+	@Override
+	public int update(Event updatedObj) {return updateEvent(updatedObj);}
+	@Override
+	public int delete(long id) {return deleteEvent(id);}	
+	@Override
+	public List<Event> getAll() {return getAllEvents();}
 	
 	public boolean insertEvent(Event newEvent) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);

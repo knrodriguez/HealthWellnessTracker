@@ -11,9 +11,20 @@ import javax.persistence.Query;
 import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 
-public class UserProfileDAO {
+public class UserProfileDAO implements DAOInterface<UserProfile> {
 
 	private final String appFactory = "HealthWellnessTrackerFactory";
+	
+	@Override
+	public boolean insert(UserProfile newObj) {return insertUserProfile(newObj);}
+	@Override
+	public UserProfile find(long id) {return getUserProfileByUserId(id);}
+	@Override
+	public int update(UserProfile updatedObj) {return updateUserProfile(updatedObj);}
+	@Override
+	public int delete(long id) {return deleteUserProfile(id);}	
+	@Override
+	public List<UserProfile> getAll() {return getAllUserProfiles();}
 	
 	public boolean insertUserProfile(UserProfile user) {	
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
@@ -96,7 +107,7 @@ public class UserProfileDAO {
 		return deletedUserProfiles;
 	}
 
-	public List<UserProfile> getAllProfiles(){
+	public List<UserProfile> getAllUserProfiles(){
 		List<UserProfile> allProfiles = null;
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();

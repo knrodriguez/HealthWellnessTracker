@@ -11,9 +11,20 @@ import javax.persistence.Query;
 import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 
-public class LoginDAO implements LoginDAOI{
+public class LoginDAO implements DAOInterface<Login>{
 	
 	private final String appFactory = "HealthWellnessTrackerFactory";
+	
+	@Override
+	public boolean insert(Login newObj) {return insertLogin(newObj);}
+	@Override
+	public Login find(long id) {return getLoginByUserId(id);}
+	@Override
+	public int update(Login updatedObj) {return updateLogin(updatedObj);}
+	@Override
+	public int delete(long id) {return deleteLogin(id);}	
+	@Override
+	public List<Login> getAll() {return getAllLogins();}
 	
 	public boolean insertLogin(Login login) {
 		boolean error = false;
@@ -35,7 +46,7 @@ public class LoginDAO implements LoginDAOI{
 		return error;
 	}
 
-	@Override
+	//@Override
 	public Login getLoginByUsername(String username) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
@@ -50,7 +61,7 @@ public class LoginDAO implements LoginDAOI{
 		else return loginList.get(0); //return first element of resultset (should only be 1)
 	}
 	
-	@Override
+	//@Override
 	public int updateLogin(Login login) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
@@ -66,13 +77,13 @@ public class LoginDAO implements LoginDAOI{
 		else return 0;
 	}
 
-	@Override
-	public int deleteLogin(Login login) {
+	//@Override
+	public int deleteLogin(long userId) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		Query query = em.createQuery("DELETE FROM Login WHERE userId = :userId");
-		query.setParameter("userId", login.getUserId());
+		query.setParameter("userId", userId);
 		int success = query.executeUpdate(); //returns the # of entities updated
 		em.getTransaction().commit();
 		em.close();
@@ -90,4 +101,15 @@ public class LoginDAO implements LoginDAOI{
 		} catch(PersistenceException e) {e.printStackTrace();}
 		return allLogins;	
 	}
+	
+	public Login getLoginByUserId(long userId) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManager em = emf.createEntityManager();
+		Login foundLogin = null;
+		try {
+			foundLogin = em.find(Login.class, userId);
+		} catch(PersistenceException e) {e.printStackTrace();}
+		return foundLogin;
+	}
+
 }

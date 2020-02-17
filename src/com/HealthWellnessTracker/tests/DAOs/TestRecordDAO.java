@@ -96,7 +96,7 @@ public class TestRecordDAO {
 		emTest.getTransaction().begin();
 		emTest.persist(expectedRecord);
 		emTest.getTransaction().commit(); 
-		actualResult = recordDAO.deleteRecordByRecordId(expectedRecord.getRecordId());
+		actualResult = recordDAO.deleteRecord(expectedRecord.getRecordId());
 		assertEquals(expectedResult, actualResult);	 
 	}
 

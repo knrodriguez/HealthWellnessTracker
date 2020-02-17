@@ -31,8 +31,8 @@ public class RecordService {
 		return recordsList;
 	}
 	
-	public int findRecordByRecordId(long recordId) {
-		int record = recordDAO.deleteRecordByRecordId(recordId);
+	public Record findRecordByRecordId(long recordId) {
+		Record record = recordDAO.getRecordByRecordId(recordId);
 		return record;
 	}
 	
@@ -43,9 +43,9 @@ public class RecordService {
 		return flag;
 	}
 
-	public boolean deleteRecordByRecordId(long recordId) {
+	public boolean removeRecord(long recordId) {
 		boolean error = false;
-		int numDeletedRecords = recordDAO.deleteRecordByRecordId(recordId);
+		int numDeletedRecords = recordDAO.deleteRecord(recordId);
 		if(numDeletedRecords != 1) error = true;
 		return error; 
 	}

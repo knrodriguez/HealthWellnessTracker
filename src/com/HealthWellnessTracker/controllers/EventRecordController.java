@@ -96,7 +96,7 @@ public class EventRecordController {
 	@RequestMapping(value = "/deleteRecord", method=RequestMethod.POST)
 	public String deleteRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@RequestParam("recordId") String recordId) {
-		boolean error = recordService.deleteRecordByRecordId(Long.parseLong(recordId));
+		boolean error = recordService.removeRecord(Long.parseLong(recordId));
 		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
 		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");
 		return "redirect:/myCalendar";

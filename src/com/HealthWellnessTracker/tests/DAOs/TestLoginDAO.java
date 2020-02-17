@@ -81,7 +81,7 @@ public class TestLoginDAO {
 		em.getTransaction().begin();
 		em.persist(expectedLogin);
 		em.getTransaction().commit();
-		actualResult = loginDAO.deleteLogin(expectedLogin);
+		actualResult = loginDAO.deleteLogin(expectedLogin.getUserId());
 		assertEquals(expectedResult, actualResult);
 	}
 
