@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 
 public class UserProfileDAO {
@@ -81,9 +82,10 @@ public class UserProfileDAO {
 		int deletedUserProfiles = 0;
 		try {
 			em.getTransaction().begin();
+			Login userLogin = em.find(Login.class, userProfileId);
 			Query query = em.createQuery("DELETE FROM UserProfile up"
-					+ "WHERE up.userId = :userId");
-			query.setParameter("userId",userProfileId);
+					+ " WHERE up.userLogin = :userLogin");
+			query.setParameter("userLogin",userLogin);
 			deletedUserProfiles = query.executeUpdate();
 			em.getTransaction().commit();
 		}catch(PersistenceException e) {

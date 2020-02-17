@@ -1,4 +1,4 @@
-package com.HealthWellnessTracker.tests;
+package com.HealthWellnessTracker.tests.DAOs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.HealthWellnessTracker.DAOs.LoginDAO;
 import com.HealthWellnessTracker.models.Login;
 
-class TestLoginDAO {
+public class TestLoginDAO {
 
 	static Login expectedLogin = null;
 	private static LoginDAO loginDAO = new LoginDAO();
@@ -25,76 +25,68 @@ class TestLoginDAO {
 	static EntityManager em = null; 
 	
 	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("HealthWellnessTrackerFactory");
 	}
 
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 		expectedLogin = new Login();
 		em = emf.createEntityManager();
 	}
 	
 	@Test
-	void testInsertLogin() {
+	public void testInsertLogin() {
+		Login actualLogin = null;
 		expectedLogin.setPassword("fdsfsd");
 		expectedLogin.setUsername("testInsert");
-		em.getTransaction().begin();
-		em.persist(expectedLogin);
-		em.getTransaction().commit();
-		Login actualLogin = em.find(Login.class, expectedLogin.getUserId());
+		loginDAO.insertLogin(expectedLogin);
+		actualLogin = em.find(Login.class, expectedLogin.getUserId());
 		assertTrue(expectedLogin.equals(actualLogin));
 	}
 	
 	
 	@Test
-	void testGetLogin() {
+	public void testGetLogin() {
+		Login actualLogin = null;
 		expectedLogin.setPassword("fdsfsd");
 		expectedLogin.setUsername("testGet");
 		em.getTransaction().begin();
 		em.persist(expectedLogin);
 		em.getTransaction().commit();
-		Login actualLogin = loginDAO.getLoginByUsername("testGet");
+		actualLogin = loginDAO.getLoginByUsername("testGet");
 		assertTrue(expectedLogin.equals(actualLogin));
 	}
 	
 	@Test
-	void testUpdateLogin() {
-		int expectedResult = 1;
+	public void testUpdateLogin() {
+		int expectedResult = 1, actualResult = 0;
 		expectedLogin.setPassword("fdsfsd");
 		expectedLogin.setUsername("testUpdate");
 		em.getTransaction().begin();
 		em.persist(expectedLogin);
 		em.getTransaction().commit();
-		em.getTransaction().begin();
-		Query query = em.createQuery("UPDATE Login l SET l.username = :username, "
-									+ "l.password = :password WHERE l.userId = :userId");
-		query.setParameter("username", "newUsername")
-			 .setParameter("password", "newPass")
-			 .setParameter("userId", expectedLogin.getUserId());
-		int actualResult = query.executeUpdate();
-		em.getTransaction().commit();
+		
+		expectedLogin.setPassword("newPass");
+		expectedLogin.setUsername("newUsername");
+		actualResult = loginDAO.updateLogin(expectedLogin);
 		assertEquals(expectedResult, actualResult);
 	}
 	
 	@Test
-	void testDeleteLogin() {
-		int expectedResult = 1;
+	public void testDeleteLogin() {
+		int expectedResult = 1, actualResult = 0;
 		expectedLogin.setPassword("fdsfsd");
 		expectedLogin.setUsername("testDelete");
 		em.getTransaction().begin();
 		em.persist(expectedLogin);
 		em.getTransaction().commit();
-		em.getTransaction().begin();
-		Query query = em.createQuery("DELETE FROM Login l WHERE l.userId = :userId");
-		query.setParameter("userId", expectedLogin.getUserId());
-		int actualResult = query.executeUpdate();
-		em.getTransaction().commit();
+		actualResult = loginDAO.deleteLogin(expectedLogin);
 		assertEquals(expectedResult, actualResult);
 	}
 
 	@AfterEach
-	void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		em.getTransaction().begin();
 		Query query = em.createQuery("DELETE FROM Login l WHERE l.userId = :userId");
 		query.setParameter("userId", expectedLogin.getUserId());
@@ -104,7 +96,7 @@ class TestLoginDAO {
 	}
 	
 	@AfterAll
-	static void tearDownAfterClass() throws Exception {
+	public static void tearDownAfterClass() throws Exception {
 		emf.close();
 	}
 

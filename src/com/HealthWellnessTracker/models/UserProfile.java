@@ -40,7 +40,7 @@ public class UserProfile implements Serializable{
 	
 	@Basic
 	@Column(name = "Age", nullable = true)
-	private byte age;
+	private int age;
 	
 	@Basic
 	@Column (name = "Birthdate", nullable = true)
@@ -86,12 +86,12 @@ public class UserProfile implements Serializable{
 		this.name = name;
 	}
 
-	public byte getAge() {
+	public int getAge() {
 		return age;
 	}
 
-	public void setAge(byte age) {
-		this.age = age;
+	public void setAge(int i) {
+		this.age = i;
 	}
 
 	public Date getBirthdate() {
@@ -123,6 +123,18 @@ public class UserProfile implements Serializable{
 		return "UserProfile [userLogin=" + userLogin + ", eventList=" + eventList + 
 				", recordList=" + recordList + ", name=" + name + ", age=" + age + ", birthdate=" + birthdate + 
 				", country=" + country + ", emailAddress=" + emailAddress + "]";
+	}
+	
+	@Override
+	public boolean equals(Object userProfile) {
+		if(userProfile instanceof UserProfile) {
+			UserProfile otherProfile = (UserProfile) userProfile;
+			//since all fields in UserProfile can be null, 
+			//only compare the primary key userId from Login userLogin
+			boolean sameId = this.userLogin.getUserId() == otherProfile.userLogin.getUserId();
+			if(sameId) return true;
+		}
+		return false;
 	}
 	
 }

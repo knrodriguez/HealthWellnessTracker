@@ -84,7 +84,7 @@ public class EventRecordController {
 			@RequestParam ("recordId") long recordId, 
 			@RequestParam("editedEventId") long eventId) {
 		System.out.println("at controller, recordNotes= " + updatedRecord.getRecordNotes());
-		updatedRecord.setRecordID(recordId);
+		updatedRecord.setRecordId(recordId);
 		Event newEvent = eventService.findEventByEventId(eventId);
 		updatedRecord.setEvent(newEvent);
 		boolean error = recordService.editRecord(updatedRecord);

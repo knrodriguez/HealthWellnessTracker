@@ -57,11 +57,11 @@ public class Record implements Serializable{
 		super();
 	}
 
-	public long getRecordID() {
+	public long getRecordId() {
 		return recordId;
 	}
 
-	public void setRecordID(long recordID) {
+	public void setRecordId(long recordID) {
 		this.recordId = recordID;
 	}
 
@@ -144,5 +144,22 @@ public class Record implements Serializable{
 				+ ", recordNotes=" + recordNotes + "]";
 	}
 
+	@Override
+	public boolean equals(Object record) {
+		if(record instanceof Record) {
+			Record otherRecord = (Record) record;
+			boolean sameId = this.recordId == otherRecord.recordId;
+			boolean sameName = this.recordName.equals(otherRecord.recordName);
+			boolean sameNotes = this.recordNotes.equals(otherRecord.recordNotes);
+			boolean sameUser = this.userProfile.equals(otherRecord.userProfile);
+			boolean sameStartDate = this.startDate == otherRecord.startDate;
+			boolean sameEndDate = this.endDate == otherRecord.endDate;
+			boolean sameStartTime = this.startTime == otherRecord.startTime;
+			boolean sameEndTime = this.endTime == otherRecord.endTime;
+			if(sameId && sameName && sameNotes && sameUser && sameStartDate && sameEndDate && sameStartTime && sameEndTime)
+				return true;
+		}
+		return false;
+	}
 	
 }

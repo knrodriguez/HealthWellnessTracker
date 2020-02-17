@@ -51,6 +51,13 @@ public class Event implements Serializable{
 		this.userProfile = userProfile;
 	}
 	
+	public Event(String name, String category, String description, UserProfile user) {
+		this.eventName = name;
+		this.eventCategory = category;
+		this.eventDescription = description;
+		this.userProfile = user;
+	}
+	
 	public Event(Event event) {
 		this.eventId = event.getEventId();
 		this.eventCategory = event.getEventCategory();
@@ -110,7 +117,19 @@ public class Event implements Serializable{
 				+ ", eventName=" + eventName + ", eventDescription=" + eventDescription + "]";
 	}
 	
-	
+	@Override
+	public boolean equals(Object event) {
+		if(event instanceof Event) {
+			Event otherEvent = (Event) event;
+			boolean sameId = this.eventId == otherEvent.eventId;
+			boolean sameName = this.eventName.equals(otherEvent.eventName);
+			boolean sameCat = this.eventCategory.equals(otherEvent.eventCategory);
+			boolean sameDesc = this.eventDescription.equals(otherEvent.eventDescription);
+			boolean sameUser = this.userProfile.equals(otherEvent.userProfile);	
+			if(sameId && sameName && sameCat && sameDesc && sameUser) return true;
+		}
+		return false;
+	}
 	
 	
 	

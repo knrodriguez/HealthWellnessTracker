@@ -80,7 +80,7 @@ public class RecordDAO {
 				 .setParameter("startTime", updatedRecord.getStartTime())
 				 .setParameter("endTime", updatedRecord.getEndTime())
 				 .setParameter("recordNotes", updatedRecord.getRecordNotes())
-				 .setParameter("recordId", updatedRecord.getRecordID());
+				 .setParameter("recordId", updatedRecord.getRecordId());
 			numUpdatedRecords = query.executeUpdate();
 			em.getTransaction().commit();
 		} catch(PersistenceException e) {

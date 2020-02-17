@@ -58,7 +58,7 @@ public class RecordService {
 		
 		for(Record record: recordList) {
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("id", record.getRecordID());
+			jsonObj.put("id", record.getRecordId());
 			jsonObj.put("title", record.getRecordName());
 			jsonObj.put("start", record.getStartDate());
 			jsonObj.put("end", record.getEndDate());

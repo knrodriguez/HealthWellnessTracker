@@ -98,12 +98,15 @@ public class Login implements Serializable{
 		this.userProfile = userProfile;
 	}
 	
-	public boolean equals(Login l2) {
-		boolean sameId = this.userId == l2.userId;
-		boolean sameUsername = this.username.equals(l2.username);
-		boolean samePassword = this.password.equals(l2.password);
-		if(sameId && sameUsername && samePassword) return true;
-		else return false;
+	public boolean equals(Object login) {
+		if(login instanceof Login) {
+			Login otherLogin = (Login) login;
+			boolean sameId = this.userId == otherLogin.userId;
+			boolean sameUsername = this.username.equals(otherLogin.username);
+			boolean samePassword = this.password.equals(otherLogin.password);
+			if(sameId && sameUsername && samePassword) return true;
+		}
+		return false;	
 	}
 
 }
