@@ -1,4 +1,4 @@
-package com.HealthWellnessTracker.models;
+package com.HealthWellnessTracker.models.inprogress;
 
 public class QuestionFormat {
 

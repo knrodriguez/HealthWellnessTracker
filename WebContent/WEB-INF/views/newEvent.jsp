@@ -18,8 +18,11 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <style>
+
 #allUserEvents {
 	padding: 1%;
+	left: 0;
+	flex: 1 0 auto;
 }
 
 i:hover {

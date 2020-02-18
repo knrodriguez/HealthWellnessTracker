@@ -20,23 +20,17 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <style>
-html {
+html, body {
 	height: 100%;
-	box-sizing: border-box;
-	position: relative;
 }
 
 body {
-	position: relative;
-	padding-bottom: 6rem;
-	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .footer {
-	position: relative;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	flex-shrink: 0;
 	padding: 1rem;
 	background-color: #efefef;
 	text-align: center;
@@ -44,8 +38,8 @@ body {
 </style>
 </head>
 <body>
-	<nav class="navbar navbar-light bg-light footer"> <a
-		class="navbar-brand" href="#">Fixed bottom</a>
+	<footer> <nav class="navbar navbar-light bg-light footer">
+	<a class="navbar-brand" href="#">Fixed bottom</a>
 	<ul class="nav justify-content-end">
 		<li class="nav-item"><a class="nav-link active" href="#">FAQ</a>
 		</li>
@@ -55,6 +49,6 @@ body {
 		<li class="nav-item"><a class="nav-link disabled" href="#"
 			tabindex="-1" aria-disabled="false">Contact Us</a></li>
 	</ul>
-	</nav>
+	</nav> </footer>
 </body>
 </html>
