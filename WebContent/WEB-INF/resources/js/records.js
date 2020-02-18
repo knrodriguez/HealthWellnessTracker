@@ -1,54 +1,51 @@
 	
 	function Form() {
-		var elementId = "";
 		var open = false;
-		
-		this.setElementId = function(newElementId) {
-			this.elementId = newElementId;
-		};
+		var typeOfClick = "";		
 		
 		this.setOpen = function(openState) {
 			this.open = openState;
 		};
 		
-		this.getElementId = function() {
-			return this.elementId;
-		};
-		
 		this.isOpen = function() {
 			return this.open;
 		};	
+		
+		this.setTypeOfClick = function(clickType) {
+			this.typeOfClick = clickType;
+		}
+		
+		this.getTypeOfClick = function(){
+			return this.typeOfClick;
+		}
 	};	
 	
 	//global form object that contains the status of the last form accessed
 	var currentForm = new Form();
-	
-	function displayForm(newFormId, info) {
-		var newFormEl = document.getElementById(newFormId);
+
+	function displayForm(info, clickType) {
 		var reopen = true;
 		
 		if(currentForm.isOpen()) {
-			closeForm(currentForm.getElementId());
-			if(newFormId !== "recordContainer")
+			closeForm(clickType);
+			if(clickType === "dateClick")
 				reopen = false;
 		} 
 		
 		if(reopen) {
-						
-			if(!setToCenterWindow(newFormEl))
-				setLeftAndTopCoordinates(info, newFormEl, 
-									newFormEl.offsetWidth, 
-									newFormEl.offsetHeight);
-			
-			populateRecord(newFormId, info);
-			openForm(newFormId);
+			if(!setToCenterWindow()){
+				setLeftAndTopCoordinates(info);
+			}
+			populateRecord(info, clickType);
+			openForm(clickType);
 		}
 	};
 	
-	function populateRecord(formId, info) {
-		if(formId === "newRecordFormContainer"){
-			document.getElementById("startDate").valueAsDate = new Date(info.date);
-			document.getElementById("endDate").valueAsDate = new Date(info.date);
+	function populateRecord(info, clickType) {
+		if(clickType === "dateClick"){
+			document.getElementById("eventStart").valueAsDate = new Date(info.date);
+			document.getElementById("eventEnd").valueAsDate = new Date(info.date);
+			document.getElementById("event").selectedIndex = -1;
 		}
 		else {
 			var startDate = new Date(info.event.start);
@@ -64,33 +61,33 @@
 		}
 	};
 	
-	function openForm(elementId){
-		document.getElementById(elementId).style.visibility = "visible";
-		currentForm.setElementId(elementId);
+	function openForm(clickType){
+		if(clickType === "dateClick"){
+			document.getElementById('recordFieldset').disabled = false;
+			document.getElementById('editRecord').style.visibility = 'hidden';
+			document.getElementById('deleteRecord').style.visibility = 'hidden';
+			document.getElementById('submitEditedRecord').style.display = 'block';
+			document.getElementById('resetEditedRecord').style.display = 'block';
+		} else {
+			document.getElementById('editRecord').style.visibility = 'visible';
+			document.getElementById('deleteRecord').style.visibility = 'visible';
+		}
+		document.getElementById("recordContainer").style.visibility = "visible";
 		currentForm.setOpen(true);	
+		currentForm.setTypeOfClick(clickType);
 	};
 	
-	function closeForm(elementId){
-		switch(elementId){
-		case 'newRecordFormContainer':
-			document.getElementById("startDate").valueAsDate = null;
-			document.getElementById("newRecordForm").reset();
-			break;
-		case 'recordContainer':
-			//document.getElementById("recordForm").reset();
-			document.getElementById('eventStart').innerHTML='';
-			document.getElementById('eventEnd').innerHTML = '';
-			break;
-		default:
-			break;
-		}		
-		
+	function closeForm(clickType){
+		document.getElementById("recordForm").reset();
+		document.getElementById('eventStart').innerHTML='';
+		document.getElementById('eventEnd').innerHTML = '';		
+		document.getElementById('currentEvent').innerHTML = "";
 		document.getElementById('recordFieldset').disabled = true;
 		document.getElementById('submitEditedRecord').style.display = 'none';
 		document.getElementById('resetEditedRecord').style.display = 'none';
-		document.getElementById(elementId).style.visibility = 'hidden'; 
-		currentForm.setElementId(elementId);
+		document.getElementById("recordContainer").style.visibility = 'hidden'; 
 		currentForm.setOpen(false);
+		currentForm.setTypeOfClick(clickType);
 	};
 	
 	function clearForm(element){
@@ -100,23 +97,27 @@
 		}
 	};
 	
-	function setToCenterWindow(container) {
+	function setToCenterWindow() {
+		var container = document.getElementById("recordContainer");
 		var set = false;
-		if(document.body.scrollHeight > document.body.innerWidth) {
+
+		if(document.body.scrollHeight > document.body.clientHeight) {
 			container.style.top = '50%';
 			container.style.left= '50%';
 			container.style.margin= "-" + container.offsetHeight/2 
-									+ "px 0px 0px -" + container.offsetWidth/2 
-									+ "px";	
+									+ "px 0px 0px -"
+									+ container.offsetWidth/2 + "px";	
 			set = true;
 		} 
 		return set;
 	};
 	
-	function setLeftAndTopCoordinates(info, container, containerWidth, 
-										containerHeight) {
-		container.style.margin = '0';
+	function setLeftAndTopCoordinates(info) {		
+		var container = document.getElementById("recordContainer");
+		var containerWidth = container.offsetWidth;
+		var containerHeight = container.offsetHeight;
 		
+		container.style.margin = '0';
 		//determine and set left coordinates of popup record form
 		if((info.jsEvent.clientX + containerWidth) >= window.innerWidth){
 			container.style.left = info.jsEvent.clientX-containerWidth+'px';
@@ -125,7 +126,7 @@
 			container.style.left = info.jsEvent.clientX+'px';
 			container.style.transform = "translate(8%)";
 		}
-		
+
 		//determine and set top coordinates of popup record form
 		if ((info.jsEvent.clientY + containerHeight) >= window.innerHeight){
 			container.style.top = info.jsEvent.clientY-containerHeight+'px';

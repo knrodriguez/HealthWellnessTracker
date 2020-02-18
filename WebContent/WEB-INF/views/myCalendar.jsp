@@ -10,9 +10,10 @@
 <title>My Calendar</title>
 <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
 	rel='stylesheet'>
-<link
-	href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
-	rel='stylesheet' />
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
 
 <link href='fullcalendar/bootstrap/main.css' rel='stylesheet' />
 <link href='fullcalendar/core/main.css' rel='stylesheet' />
@@ -76,25 +77,9 @@ html, body {
 	border-style: none;
 }
 
-#newRecordFormContainer {
-	position: fixed;
-	visibility: hidden;
-	display: block;
-	z-index: 1000; /*overlay in front of calendar*/
-	border-style: solid;
-	border-width: thin;
-	height: auto;
-	width: auto;
-	background-color: white;
-	top: 0;
-	left: 0;
-	transform: translate(0);
+.recordForm {
+	border-style: 0px;
 }
-
-.recordForm:hover {
-	
-}
-
 #recordContainer {
 	position: fixed;
 	visibility: hidden;
@@ -111,14 +96,6 @@ html, body {
 }
 
 /*works for input, not for class or id*/
-input {
-	border-color: transparent;
-}
-
-input:focus, input:active, input:hover {
-	background-color: #EEEEEE;
-}
-
 div.icon-container a, i, button {
 	margin: 10%;
 }
@@ -167,10 +144,10 @@ div.icon-container a, i, button {
 				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 			},
 			dateClick : function(info) {
-				displayForm("newRecordFormContainer", info);
+				displayForm(info, "dateClick");
 			},
 			eventClick : function(info) {
-				displayForm("recordContainer", info);	
+				displayForm(info, "eventClick");	
 			}
 		});
 		var calendarEvents = JSON.parse(${recordList});
@@ -185,115 +162,85 @@ div.icon-container a, i, button {
 
 	<jsp:include page="header.jsp" />
 
-	<div id='newRecordFormContainer'
-		class="newRecord shadow p-3 mb-5 bg-white rounded">
-		<form:form id='newRecordForm' action="submitNewRecordForm"
-			method="POST" modelAttribute="newRecord">
-			<table class='newRecord shadow-sm p-3 mb-5 bg-white rounded'>
-				<tr>
-					<td></td>
-					<td>
-						<button type="button" class="close" aria-label="Close"
-							onclick="closeForm('newRecordFormContainer')">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</td>
-					<!-- <img src="<c:url value="/images/" />"> -->
-				</tr>
-				<tr>
-					<td colspan=2 style='font-size: 1.25em;'><form:input
-							required="required" id="formInput" path="recordName"
-							placeholder="New Event" /></td>
-				</tr>
-				<tr>
-					<td>Start: <form:input type="date" id="startDate"
-							path="startDate" />
-					</td>
-					<%-- 					<td><form:input type="time" id="startTime" path="startTime" /> 
-					</td>--%>
-				</tr>
-				<tr>
-					<td>End: <form:input type="date" id="endDate" path="endDate" />
-					</td>
-					<%-- 					<td><form:input type="time" id="endTime" path="endTime" /></td> --%>
-				</tr>
-				<tr>
-					<td colspan=2>Event: <select id="event" name="eventSelected">
-							<c:forEach items="${eventList}" var="event">
-								<option value="${event.eventId}">${event.eventName}</option>
-							</c:forEach>
-					</select>
-					</td>
-				</tr>
-				<tr>
-					<td colspan=2>Notes:&nbsp;<form:input id="textinput"
-							path="recordNotes" />
-					</td>
-				</tr>
-				<tr>
-					<td><input type="submit" id="submit-button" value="Submit">
-						<input type="reset" id="closeNewRecordForm" value="Reset">
-					</td>
-				</tr>
-			</table>
-		</form:form>
-	</div>
-
 	<div id='calendar-container'>
 		<div id='calendar'></div>
 	</div>
 
-	<div id='recordContainer' class="shadow p-3 mb-5 bg-white rounded">
-		<div class="d-flex flex-row justify-content-end">
-			<a class="p-2" href="#" id="editRecord"> <i
-				class="fas fa-pencil-alt" style='color: gray;'></i></a> <a
-				href="#confirmationModal" class="p-2" data-toggle="modal"
-				id="deleteRecord"> <i class="far fa-trash-alt fa-lg"
-				style="color: gray;"></i></a>
-			<button type="button" class="close p-2" aria-label="Close"
-				onclick="closeForm('recordContainer')">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<form:form action="editRecord" id="recordForm" class="recordForm"
-			modelAttribute="updatedRecord">
-			<fieldset id="recordFieldset" disabled="disabled">
-				<table>
-					<tr>
-						<td><form:input id="eventTitle" path="recordName" type="text"
-								value="" /></td>
-					</tr>
-					<tr>
-						<td>Start:&nbsp;<form:input id='eventStart' path="startDate"
-								type='date' value="" /></td>
-					</tr>
-					<tr>
-						<td>End:&nbsp;<form:input id='eventEnd' path="endDate"
-								type='date' value="" /></td>
-					</tr>
-					<tr>
-						<td>Event:&nbsp;
-							<select id="editingEvent" name="editedEventId">
-								<option id="currentEvent" value="" selected="selected" ></option>
-								<optgroup label = "All">
-								<c:forEach items="${eventList}" var="eventOption">
-									<option value="${eventOption.eventId}">${eventOption.eventName}</option>
-								</c:forEach>
+	<div id='recordContainer'
+		class="shadow p-3 mb-5 bg-white rounded border border-0">
+			<div class="d-flex flex-row justify-content-end">
+				<a class="p-2" href="#" id="editRecord" title="Edit"> <i
+					class="fas fa-pencil-alt" style='color: gray;'></i></a> <a
+					href="#confirmationModal" class="p-2" data-toggle="modal"
+					id="deleteRecord"> <i class="far fa-trash-alt fa-lg"
+					style="color: gray;"></i></a>
+				<button type="button" class="close p-2" aria-label="Close"
+					onclick="closeForm('recordContainer')">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form:form action="editRecord" id="recordForm" class="recordForm"
+				modelAttribute="updatedRecord">
+				<fieldset id="recordFieldset" disabled="disabled">
+					<div class="form-group">
+						<form:input id="eventTitle" class="form-control form-control-lg border border-0"
+							path="recordName" type="text" value="" placeholder="New Record" />
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-1 col-form-label col-form-label-sm">Start:&nbsp;&nbsp;</label>
+						<div class="col-sm-6">
+							<form:input id='eventStart' class="form-control form-control-sm"
+								path="startDate" type='date' value="" />
+						</div>
+						<div class="col-sm-5">
+							<form:input id="startTime" class="form-control form-control-sm"
+								path="startTime" type="time" value="" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-1 col-form-label col-form-label-sm">End:&nbsp;&nbsp;</label>
+						<div class="col-sm-6">
+							<form:input id='eventEnd' class="form-control form-control-sm"
+								path="endDate" type='date' value="" />
+						</div>
+						<div class="col-sm-5">
+							<form:input id="endTime" class="form-control form-control-sm"
+								path="endTime" type="time" value="" />
+						</div>
+					</div>
+					<div class="form-group row dropdown">
+						<label class="col-sm-2 col-form-label">Event:&nbsp;</label>
+						<div class="col-sm-8">
+							<select id="event" class="form-control" name="editedEventId">
+								<option id="currentEvent" value="" selected="selected"></option>
+								<optgroup label="All">
+									<c:forEach items="${eventList}" var="eventOption">
+										<option value="${eventOption.eventId}">${eventOption.eventName}</option>
+									</c:forEach>
 								</optgroup>
 							</select>
-					</tr>
-					<tr>
-						<td>Notes:&nbsp;<form:input id='eventNotes'
-								path="recordNotes" type='text' value="" /></td>
-					</tr>
-				</table>
-				<input type="hidden" name="recordId" id="recordIdEdit" value="" />
-				<button id="submitEditedRecord" type="submit"
-					class="btn btn-primary" style="display: none;">Submit</button>
-				<button id="resetEditedRecord" type="reset" class="btn btn-danger"
-					style="display: none;">Reset</button>
-			</fieldset>
-		</form:form>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Notes:&nbsp;</label>
+						<div class="col-sm-8">
+							<form:input id='eventNotes' class="form-control"
+								path="recordNotes" type='text' value="" />
+						</div>
+						<input type="hidden" name="recordId" id="recordIdEdit" value="" />
+					</div>
+					<div class="form-group row">
+						<div class="col">
+							<button id="submitEditedRecord" type="submit"
+								class="btn btn-primary" style="display: none;">Submit</button>
+						</div>
+						<div class="col">
+							<button id="resetEditedRecord" type="reset"
+								class="btn btn-danger" style="display: none;">Reset</button>
+						</div>
+					</div>
+				</fieldset>
+			</form:form>
 	</div>
 
 	<div class="modal fade" id="confirmationModal" tabindex="-1"
