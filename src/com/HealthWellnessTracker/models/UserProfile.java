@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 
 
 @Entity
@@ -50,7 +49,6 @@ public class UserProfile implements Serializable{
 	@Column (name = "Country", nullable = true)
 	private String country;
 	
-	@Email(message = "Email address has invaid format.")
 	@Column (name = "EmailAddress", nullable = true)
 	private String emailAddress;
 
@@ -76,6 +74,14 @@ public class UserProfile implements Serializable{
 
 	public void setEventList(List<Event> eventList) {
 		this.eventList = eventList;
+	}
+
+	public List<Record> getRecordList() {
+		return recordList;
+	}
+
+	public void setRecordList(List<Record> recordList) {
+		this.recordList = recordList;
 	}
 
 	public String getName() {

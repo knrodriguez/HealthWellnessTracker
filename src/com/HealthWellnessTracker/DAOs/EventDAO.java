@@ -14,8 +14,6 @@ import com.HealthWellnessTracker.models.UserProfile;
 
 public class EventDAO implements DAOInterface<Event>{
 
-	private final String appFactory = "HealthWellnessTrackerFactory";
-	
 	@Override
 	public boolean insert(Event newObj) {return insertEvent(newObj);}
 	@Override
@@ -28,7 +26,7 @@ public class EventDAO implements DAOInterface<Event>{
 	public List<Event> getAll() {return getAllEvents();}
 	
 	public boolean insertEvent(Event newEvent) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		boolean flag = false;
 		try{
@@ -45,7 +43,7 @@ public class EventDAO implements DAOInterface<Event>{
 	}
 
 	public Event getEventByEventId(long eventId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		Event foundEvent = null;
 		foundEvent = em.find(Event.class, eventId);
@@ -53,30 +51,9 @@ public class EventDAO implements DAOInterface<Event>{
 		emf.close();
 		return foundEvent;
 	}
-	
-	public List<Event> getEventsByEventName(UserProfile userProfile, String eventName) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
-		EntityManager em = emf.createEntityManager();
-		List<Event> eventList = null;
-		try {
-		//	em.getTransaction().begin();
-			Query query = em.createQuery("SELECT e FROM Event e "
-					+ "WHERE e.eventName LIKE :eventName "
-					+ "AND e.userProfile = :userProfile "
-					+ "ORDER BY e.eventName asc");
-			query.setParameter("eventName", eventName)
-			.setParameter("userProfile", userProfile);
-			eventList = query.getResultList();
-		} catch(PersistenceException e) {
-			e.printStackTrace();
-		}
-		em.close();
-		emf.close();
-		return eventList;		
-	}
-	
+
 	public List<Event> getEventsByUserId(UserProfile userProfile) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		List<Event> eventList = null;
 		try {
@@ -93,7 +70,7 @@ public class EventDAO implements DAOInterface<Event>{
 	}
 	
 	public List<Event> getAllEvents(){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		List<Event> eventList = null;
 		try {
@@ -109,7 +86,7 @@ public class EventDAO implements DAOInterface<Event>{
 	}
 	
 	public int updateEvent(Event updatedEvent) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedEvents = 0;
 		try {
@@ -133,7 +110,7 @@ public class EventDAO implements DAOInterface<Event>{
 	}
 
 	public int deleteEvent(long deletedEventId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedEvents = 0;
 		try {

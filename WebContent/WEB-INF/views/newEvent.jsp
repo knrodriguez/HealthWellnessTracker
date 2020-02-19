@@ -114,7 +114,8 @@ i:hover {
 					modelAttribute="newEvent">
 					<tr class="newRow">
 						<td><form:input id="newEventName" path="eventName"
-								disabled="true" value="" /></td>
+								disabled="true" value="" />
+								<form:errors path="eventName" /></td>
 						<td><form:select id="newEventCategory" path="eventCategory"
 								disabled="true">
 								<form:options items="${listEventCategory}" />

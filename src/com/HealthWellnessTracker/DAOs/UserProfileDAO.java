@@ -13,8 +13,6 @@ import com.HealthWellnessTracker.models.UserProfile;
 
 public class UserProfileDAO implements DAOInterface<UserProfile> {
 
-	private final String appFactory = "HealthWellnessTrackerFactory";
-	
 	@Override
 	public boolean insert(UserProfile newObj) {return insertUserProfile(newObj);}
 	@Override
@@ -27,7 +25,7 @@ public class UserProfileDAO implements DAOInterface<UserProfile> {
 	public List<UserProfile> getAll() {return getAllUserProfiles();}
 	
 	public boolean insertUserProfile(UserProfile user) {	
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		boolean flag = false;
 		try {
@@ -45,7 +43,7 @@ public class UserProfileDAO implements DAOInterface<UserProfile> {
 	}
 		
 	public UserProfile getUserProfileByUserId(long userId){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		UserProfile foundUser = null;
 		try {
@@ -59,7 +57,7 @@ public class UserProfileDAO implements DAOInterface<UserProfile> {
 	}
 	
 	public int updateUserProfile(UserProfile userProfile) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int updatedUserProfiles = 0;
 		try {
@@ -88,7 +86,7 @@ public class UserProfileDAO implements DAOInterface<UserProfile> {
 	}
 	
 	public int deleteUserProfile(long userProfileId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int deletedUserProfiles = 0;
 		try {
@@ -109,7 +107,7 @@ public class UserProfileDAO implements DAOInterface<UserProfile> {
 
 	public List<UserProfile> getAllUserProfiles(){
 		List<UserProfile> allProfiles = null;
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		try {
 			Query query = em.createQuery("SELECT up FROM UserProfile up");

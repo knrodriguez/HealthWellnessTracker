@@ -179,39 +179,39 @@ div.icon-container a, i, button {
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form:form action="editRecord" id="recordForm" class="recordForm"
-				modelAttribute="updatedRecord">
+			<form:form id="recordForm" class="recordForm"
+				modelAttribute="record">
 				<fieldset id="recordFieldset" disabled="disabled">
 					<div class="form-group">
-						<form:input id="eventTitle" class="form-control form-control-lg border border-0"
+						<form:input id="recordTitle" class="form-control form-control-lg border border-0"
 							path="recordName" type="text" value="" placeholder="New Record" />
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-1 col-form-label col-form-label-sm">Start:&nbsp;&nbsp;</label>
 						<div class="col-sm-6">
-							<form:input id='eventStart' class="form-control form-control-sm"
+							<form:input id='startDate' class="form-control form-control-sm"
 								path="startDate" type='date' value="" />
 						</div>
 						<div class="col-sm-5">
-							<form:input id="startTime" class="form-control form-control-sm"
-								path="startTime" type="time" value="" />
+							<input id="startTime" class="form-control form-control-sm" name="timeStarts"
+								type="time" >
 						</div>
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-1 col-form-label col-form-label-sm">End:&nbsp;&nbsp;</label>
 						<div class="col-sm-6">
-							<form:input id='eventEnd' class="form-control form-control-sm"
+							<form:input id='endDate' class="form-control form-control-sm"
 								path="endDate" type='date' value="" />
 						</div>
 						<div class="col-sm-5">
-							<form:input id="endTime" class="form-control form-control-sm"
-								path="endTime" type="time" value="" />
+							<input id="endTime" class="form-control form-control-sm" name="timeEnds"
+								type="time" >
 						</div>
 					</div>
 					<div class="form-group row dropdown">
 						<label class="col-sm-2 col-form-label">Event:&nbsp;</label>
 						<div class="col-sm-8">
-							<select id="event" class="form-control" name="editedEventId">
+							<select id="eventId" class="form-control" name="eventId">
 								<option id="currentEvent" value="" selected="selected"></option>
 								<optgroup label="All">
 									<c:forEach items="${eventList}" var="eventOption">
@@ -224,10 +224,10 @@ div.icon-container a, i, button {
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Notes:&nbsp;</label>
 						<div class="col-sm-8">
-							<form:input id='eventNotes' class="form-control"
+							<form:input id='recordNotes' class="form-control"
 								path="recordNotes" type='text' value="" />
 						</div>
-						<input type="hidden" name="recordId" id="recordIdEdit" value="" />
+						
 					</div>
 					<div class="form-group row">
 						<div class="col">

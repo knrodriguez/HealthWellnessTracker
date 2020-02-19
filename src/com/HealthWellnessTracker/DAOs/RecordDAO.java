@@ -14,8 +14,6 @@ import com.HealthWellnessTracker.models.UserProfile;
 
 public class RecordDAO implements DAOInterface<Record>{
 
-	private final String appFactory = "HealthWellnessTrackerFactory";
-
 	@Override
 	public boolean insert(Record newObj) {return insertRecord(newObj);}
 	@Override
@@ -28,7 +26,7 @@ public class RecordDAO implements DAOInterface<Record>{
 	public List<Record> getAll() {return getAllRecords();}
 	
 	public boolean insertRecord(Record record) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		boolean error = false;
 		try{
@@ -46,7 +44,7 @@ public class RecordDAO implements DAOInterface<Record>{
 	}
 	
 	public Record getRecordByRecordId(long recordId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		Record record = null;
 		try {
@@ -58,7 +56,7 @@ public class RecordDAO implements DAOInterface<Record>{
 	}
 	
 	public List<Record> getRecordsByUserId(UserProfile userProfile) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		List<Record> recordList = null;
 		try {
@@ -74,7 +72,7 @@ public class RecordDAO implements DAOInterface<Record>{
 	}
 	
 	public int updateRecord(Record updatedRecord) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedRecords = 0;
 		try {
@@ -104,7 +102,7 @@ public class RecordDAO implements DAOInterface<Record>{
 	}
 	
 	public int deleteRecord(long recordId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedRecords = 0;
 		try {
@@ -122,7 +120,7 @@ public class RecordDAO implements DAOInterface<Record>{
 	}	
 	
 	public List<Record> getAllRecords(){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		List<Record> allRecords = null;
 		try {

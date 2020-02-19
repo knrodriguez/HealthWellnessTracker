@@ -35,11 +35,6 @@ public class EventService {
 		else return " Failed to Delete. :(";
 	}
 	
-	public List<Event> findEventByName(UserProfile user, String eventName) {
-		 List<Event> foundEvent = eventDAO.getEventsByEventName(user,"%"+eventName+"%");
-		 return foundEvent;
-	}
-	
 	public List<Event> findEventByUser(UserProfile user) {
 		 List<Event> foundEvent = eventDAO.getEventsByUserId(user);
 		 return foundEvent;

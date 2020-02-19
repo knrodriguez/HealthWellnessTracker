@@ -47,9 +47,6 @@ public class Record implements Serializable{
 	@Column (name = "RecordName", nullable = false)
 	private String recordName;
 	
-	@Column
-	private long recordTypeId;
-	
 	@Column (name = "RecordNotes", nullable = true)
 	private String recordNotes;
 	
@@ -121,14 +118,6 @@ public class Record implements Serializable{
 		this.recordName = recordName;
 	}
 
-	public long getRecordTypeID() {
-		return recordTypeId;
-	}
-
-	public void setRecordTypeID(long recordTypeID) {
-		this.recordTypeId = recordTypeID;
-	}
-
 	public String getRecordNotes() {
 		return recordNotes;
 	}
@@ -140,8 +129,7 @@ public class Record implements Serializable{
 	@Override
 	public String toString() {
 		return "UserRecord [recordID=" + recordId + ", userProfile=" + userProfile + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordTypeID=" + recordTypeId
-				+ ", recordNotes=" + recordNotes + "]";
+				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordNotes=" + recordNotes + "]";
 	}
 
 	@Override

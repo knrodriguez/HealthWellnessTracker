@@ -27,7 +27,7 @@
 		var reopen = true;
 		
 		if(currentForm.isOpen()) {
-			closeForm(clickType);
+			closeForm(currentForm.getTypeOfClick());
 			if(clickType === "dateClick")
 				reopen = false;
 		} 
@@ -43,21 +43,27 @@
 	
 	function populateRecord(info, clickType) {
 		if(clickType === "dateClick"){
-			document.getElementById("eventStart").valueAsDate = new Date(info.date);
-			document.getElementById("eventEnd").valueAsDate = new Date(info.date);
-			document.getElementById("event").selectedIndex = -1;
+			document.getElementById("startDate").valueAsDate = new Date(info.date);
+			document.getElementById("endDate").valueAsDate = new Date(info.date);
+			document.getElementById("eventId").selectedIndex = -1;
+			document.getElementById("recordForm").action = "submitNewRecordForm";
 		}
 		else {
 			var startDate = new Date(info.event.start);
 			var endDate = new Date(info.event.end);
-			document.getElementById("recordIdEdit").value = info.event.id;
+			var recordIdEl = document.createElement("input");
+			recordIdEl.type = "text";
+			recordIdEl.id = "recordIdEl";
+			recordIdEl.style.display = "none";
+			recordIdEl.value = info.event.id;
 			document.getElementById("recordIdDelete").value = info.event.id;
-			document.getElementById('eventTitle').value = info.event.title;
-			document.getElementById('eventStart').valueAsDate = startDate;
-			document.getElementById('eventEnd').valueAsDate = endDate;
-			document.getElementById('eventNotes').value = info.event.extendedProps.notes;
+			document.getElementById('recordTitle').value = info.event.title;
+			document.getElementById('startDate').valueAsDate = startDate;
+			document.getElementById('endDate').valueAsDate = endDate;
+			document.getElementById('recordNotes').value = info.event.extendedProps.notes;
 			document.getElementById('currentEvent').value = info.event.extendedProps.eventId;
 			document.getElementById('currentEvent').innerHTML = info.event.extendedProps.eventName;
+			document.getElementById("recordForm").action = "editRecord";			
 		}
 	};
 	
@@ -78,9 +84,15 @@
 	};
 	
 	function closeForm(clickType){
+		if(clickType === "eventClick"){
+			document.getElementById("editRecord").style.visibility = "hidden";
+			document.getElementById("deleteRecord").style.visibility = "hidden";
+			var recordIdEl = document.getElementById("recordIdEl");
+			recordIdEl.remove();
+		}
 		document.getElementById("recordForm").reset();
-		document.getElementById('eventStart').innerHTML='';
-		document.getElementById('eventEnd').innerHTML = '';		
+		document.getElementById('startDate').innerHTML='';
+		document.getElementById('endDate').innerHTML = '';		
 		document.getElementById('currentEvent').innerHTML = "";
 		document.getElementById('recordFieldset').disabled = true;
 		document.getElementById('submitEditedRecord').style.display = 'none';

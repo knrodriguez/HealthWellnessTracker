@@ -49,18 +49,6 @@ public class Login implements Serializable{
 		this.username = username;
 		this.password = password;
 	}
-	
-	public Login(String username, String password, UserProfile userProfile) {
-		this.username = username;
-		this.password = password;
-		this.userProfile = userProfile;
-	}
-
-	public Login(long id, String username, String password) {
-		this.userId = id;
-		this.username = username;
-		this.password = password;
-	}
 
 	public long getUserId() {
 		return userId;

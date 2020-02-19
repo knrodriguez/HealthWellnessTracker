@@ -1,9 +1,13 @@
 package com.HealthWellnessTracker.controllers;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,7 +61,7 @@ public class EventRecordController {
 	
 	@RequestMapping(value = "/newEvent", method = RequestMethod.POST)
 	public String submitNewEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newEvent") Event newEvent) {
+			@ModelAttribute("newEvent") @Valid Event newEvent) {
 		String message = eventService.createEvent(newEvent, connectedUser);		
 		return "redirect:myCalendar";
 	}
@@ -80,16 +84,14 @@ public class EventRecordController {
 //------------------------------------Records------------------------------------------------
 	@RequestMapping(value = "/editRecord", method=RequestMethod.POST)
 	public String editRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("updatedRecord") Record updatedRecord,
+			@ModelAttribute("record") Record updatedRecord,
 			@RequestParam ("recordId") long recordId, 
-			@RequestParam("editedEventId") long eventId) {
+			@RequestParam("eventId") long eventId) {
 		System.out.println("at controller, recordNotes= " + updatedRecord.getRecordNotes());
 		updatedRecord.setRecordId(recordId);
 		Event newEvent = eventService.findEventByEventId(eventId);
 		updatedRecord.setEvent(newEvent);
 		boolean error = recordService.editRecord(updatedRecord);
-		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
-		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");
 		return "redirect:/myCalendar";
 	}
 	
@@ -97,35 +99,31 @@ public class EventRecordController {
 	public String deleteRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@RequestParam("recordId") String recordId) {
 		boolean error = recordService.removeRecord(Long.parseLong(recordId));
-		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
-		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");
 		return "redirect:/myCalendar";
 	}
 	
 	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
 	public String submitNewRecordForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newRecord") Record newRecord,
-			@RequestParam("eventSelected") long eventId) {
-		newRecord.setStartTime(null);
-		newRecord.setEndTime(null);
+			@ModelAttribute("record") Record newRecord,
+			@RequestParam("eventId") long eventId,
+			@RequestParam("timeStarts") String startTime,
+			@RequestParam("timeEnds") String endTime) {
+		newRecord.setStartTime(Time.valueOf(startTime+":00")); 
+		newRecord.setEndTime(Time.valueOf(endTime+":00"));	 
 		newRecord.setUserProfile(connectedUser);
 		newRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.createRecord(newRecord);
-		if(error) {
-			System.out.println("ERROR: could not create new record");
-		}
 		return "redirect:myCalendar";
 	}
 //---------------------------------Show Calendar--------------------------------------------
 	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
 	public ModelAndView showMyCalendar(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newRecord") Record newRecord, 
-			@ModelAttribute("updatedRecord") Record updatedRecord) {
+			@ModelAttribute("record") Record record) {
 		List<Event> eventList = eventService.findEventByUser(connectedUser);
 		String recordsJSON = recordService.generateJSON(connectedUser);
 		ModelAndView calendarMAV = new ModelAndView("myCalendar");
-		calendarMAV.addObject("eventList",eventList);
-		calendarMAV.addObject("recordList", recordsJSON);
+		calendarMAV.addObject("eventList",eventList)
+				   .addObject("recordList", recordsJSON);
 		return calendarMAV;
 	}
 }

@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 //, indexes = {@Index (name = "user_based_events", columnList = "EventName,UserId", unique = true)})
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "events")		
@@ -31,11 +33,14 @@ public class Event implements Serializable{
 	private UserProfile userProfile; 
 
 	@OneToMany(mappedBy = "event")
-	List<Record> records = new ArrayList<>();
+	List<Record> recordList = new ArrayList<>();
 	
+	@NotNull
 	@Column (name = "EventCategory", nullable = false)
 	private String eventCategory;
 	
+	@NotNull
+	@Size(min = 5, max = 50, message = "Event name must be less than 50 characters.")
 	@Column (name = "EventName", nullable = false)
 	private String eventName;
 	
@@ -46,24 +51,11 @@ public class Event implements Serializable{
 		super();
 	}
 	
-	public Event(UserProfile userProfile) {
-		super();
-		this.userProfile = userProfile;
-	}
-	
 	public Event(String name, String category, String description, UserProfile user) {
 		this.eventName = name;
 		this.eventCategory = category;
 		this.eventDescription = description;
 		this.userProfile = user;
-	}
-	
-	public Event(Event event) {
-		this.eventId = event.getEventId();
-		this.eventCategory = event.getEventCategory();
-		this.eventDescription = event.getEventDescription();
-		this.eventName = event.getEventName();
-		this.userProfile = event.getUserProfile();
 	}
 
 	public UserProfile getUserProfile() {
@@ -74,10 +66,10 @@ public class Event implements Serializable{
 		this.userProfile = userProfile;
 	}
 
-	public Long getEventId() {
+	public long getEventId() {
 		return eventId;
 	}
-	public void setEventId(Long eventId) {
+	public void setEventId(long eventId) {
 		this.eventId = eventId;
 	}
 	public String getEventCategory() {
@@ -99,16 +91,12 @@ public class Event implements Serializable{
 		this.eventDescription = eventDescription;
 	}
 	
-	public List<Record> getRecords() {
-		return records;
+	public List<Record> getRecordList() {
+		return recordList;
 	}
 
-	public void setRecords(List<Record> records) {
-		this.records = records;
-	}
-
-	public void setEventId(long eventId) {
-		this.eventId = eventId;
+	public void setRecordList(List<Record> records) {
+		this.recordList = records;
 	}
 
 	@Override
