@@ -94,18 +94,29 @@ div.icon-container a, i, button {
 .fc td{
 	border-top-style: none;
 	border-bottom-style: solid;
-	border-left-style: none;
-	border-right-style:none;
+	border-bottom-width: 2px;
+/* 	border-left-style: none;
+	border-right-style:none; */
 	border-width:1px;
 }
+
 .fc-day-grid * .fc-day {
-	border-top-style: solid;
+	/* border-top-style: solid; */
 	border-bottom-style: solid;
 	border-left-style: solid;
 	border-right-style:solid;
 	border-width:1px;	
 }
 
+.fc-day-grid * td:first-child,
+.fc-day-grid * td:last-child{
+	background-color:#f8f9fa;
+}
+
+.fc-axis ~ td {
+	border-left-style:solid;
+	border-right-style:solid;
+}
 
 
 </style>
