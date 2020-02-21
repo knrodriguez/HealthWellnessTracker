@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
 <title>My Calendar</title>
 <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
 	rel='stylesheet'>
@@ -40,15 +41,6 @@ html, body {
 	margin-bottom: 1%;
 }
 
-#header-container {
-	position: relative;
-	margin-right: 10%;
-	top: 0; //
-	bottom: -100px;
-	text-align: center;
-	height: 10%;
-}
-
 .fc-center {
 	position: relative;
 	padding-left: 10%;
@@ -58,21 +50,8 @@ html, body {
 	vertical-align: middle;
 }
 
-.fc-toolbar .fc-left:before .fc-left:after {
-	float: inherit;
-	content: "test";
-}
-
-/* .newRecord {
-	margin: 0.5%;
-} */
 .close .deleteRecord {
 	font-size: 2em;
-	outline: none;
-	border-style: none;
-}
-
-.close:focus .deleteRecord:focus {
 	outline: none;
 	border-style: none;
 }
@@ -80,6 +59,7 @@ html, body {
 .recordForm {
 	border-style: 0px;
 }
+
 #recordContainer {
 	position: fixed;
 	visibility: hidden;
@@ -88,7 +68,7 @@ html, body {
 	border-style: solid;
 	border-width: thin;
 	height: auto;
-	width: auto%;
+	width: 400px;
 	background-color: white;
 	top: 0;
 	left: 0;
@@ -99,6 +79,35 @@ html, body {
 div.icon-container a, i, button {
 	margin: 10%;
 }
+
+.form-control {
+	border:0px;
+	box-shadow:0px;
+}
+
+.fc th{
+	border:0;
+	padding-right:5px;
+	text-align:right;
+}
+
+.fc td{
+	border-top-style: none;
+	border-bottom-style: solid;
+	border-left-style: none;
+	border-right-style:none;
+	border-width:1px;
+}
+.fc-day-grid * .fc-day {
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-style:solid;
+	border-width:1px;	
+}
+
+
+
 </style>
 <script src='fullcalendar/core/main.js'></script>
 <script src='fullcalendar/daygrid/main.js'></script>
@@ -119,7 +128,18 @@ div.icon-container a, i, button {
 		$('#recordFieldset').prop("disabled", false);
 		$("#submitEditedRecord").show();
 		$("#resetEditedRecord").show();
-	});
+	 });
+	 $("#submitEditedRecord").click(function(e) {
+		 var form = $("#recordForm");
+		 if (form[0].checkValidity() === false){
+			 e.preventDefault();
+			 e.stopPropagation();
+		 }
+		 form.addClass('was-validated');
+		//form.submit();
+
+		 
+	 });
  });
 </script>
 <script> 
@@ -132,7 +152,7 @@ div.icon-container a, i, button {
 			height: 'parent',
 			contentHeight: 0.8*window.innerHeight,
 			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid', 'list'],
-			themeSystem: 'bootstrap',
+			//themeSystem: 'bootstrap',
 			selectable : true,
 			editable : true,
 			handleWindowResize: true,
@@ -148,6 +168,11 @@ div.icon-container a, i, button {
 			},
 			eventClick : function(info) {
 				displayForm(info, "eventClick");	
+			},
+			eventTimeFormat: {
+				hour:'2-digit',
+				minute: '2-digit',
+				hour12: true
 			}
 		});
 		var calendarEvents = JSON.parse(${recordList});
@@ -183,14 +208,16 @@ div.icon-container a, i, button {
 				modelAttribute="record">
 				<fieldset id="recordFieldset" disabled="disabled">
 					<div class="form-group">
-						<form:input id="recordTitle" class="form-control form-control-lg border border-0"
-							path="recordName" type="text" value="" placeholder="New Record" />
+						<form:input id="recordTitle" class="form-control form-control-lg"
+							path="recordName" type="text" value="" placeholder="New Record" required="true"/>
+					<div class="valid-feedback"></div>
+					<div class="invalid-feedback">Please include record name.</div>
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-1 col-form-label col-form-label-sm">Start:&nbsp;&nbsp;</label>
 						<div class="col-sm-6">
 							<form:input id='startDate' class="form-control form-control-sm"
-								path="startDate" type='date' value="" />
+								path="startDate" type='date' value="" required="true"/>
 						</div>
 						<div class="col-sm-5">
 							<input id="startTime" class="form-control form-control-sm" name="timeStarts"
@@ -201,7 +228,7 @@ div.icon-container a, i, button {
 						<label class="col-sm-1 col-form-label col-form-label-sm">End:&nbsp;&nbsp;</label>
 						<div class="col-sm-6">
 							<form:input id='endDate' class="form-control form-control-sm"
-								path="endDate" type='date' value="" />
+								path="endDate" type='date' value="" required="true"/>
 						</div>
 						<div class="col-sm-5">
 							<input id="endTime" class="form-control form-control-sm" name="timeEnds"
@@ -210,8 +237,8 @@ div.icon-container a, i, button {
 					</div>
 					<div class="form-group row dropdown">
 						<label class="col-sm-2 col-form-label">Event:&nbsp;</label>
-						<div class="col-sm-8">
-							<select id="eventId" class="form-control" name="eventId">
+						<div class="col-sm-10">
+							<select id="eventId" class="form-control" name="eventId" required="true">
 								<option id="currentEvent" value="" selected="selected"></option>
 								<optgroup label="All">
 									<c:forEach items="${eventList}" var="eventOption">
@@ -223,11 +250,10 @@ div.icon-container a, i, button {
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Notes:&nbsp;</label>
-						<div class="col-sm-8">
+						<div class="col-sm-10">
 							<form:input id='recordNotes' class="form-control"
 								path="recordNotes" type='text' value="" />
-						</div>
-						
+						</div>				
 					</div>
 					<div class="form-group row">
 						<div class="col">

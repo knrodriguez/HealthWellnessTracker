@@ -39,14 +39,14 @@ body {
 </head>
 <body>
 	<footer> <nav class="navbar navbar-light bg-light footer">
-	<a class="navbar-brand" href="#">Fixed bottom</a>
+	<a class="navbar-brand" href="#">Health &amp; Wellness Tracker</a>
 	<ul class="nav justify-content-end">
 		<li class="nav-item"><a class="nav-link active" href="#">FAQ</a>
 		</li>
 		<li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
 		<li class="nav-item"><a class="nav-link" href="#">Privacy
 				Policy</a></li>
-		<li class="nav-item"><a class="nav-link disabled" href="#"
+		<li class="nav-item"><a class="nav-link" href="#"
 			tabindex="-1" aria-disabled="false">Contact Us</a></li>
 	</ul>
 	</nav> </footer>

@@ -41,74 +41,126 @@
 		}
 	};
 	
+/*
+ * Populate the record form when a date or event is clicked.
+ * Parameters: info - FullCalendar object detailing the mouse click, 
+ * 			   clickType - String representing whether a date or event was clicked.
+ */	
 	function populateRecord(info, clickType) {
 		if(clickType === "dateClick"){
+			//get hours and minutes values from the clicked on DateTime
+			var calendarDate = new Date(info.date);
+			var hours = calendarDate.getHours();
+			var minutes = calendarDate.getMinutes();
+			//translate the hours and minutes values into input value of time
+			document.getElementById("startTime").value = calculateTime(hours ,minutes);
+			document.getElementById("endTime").value = calculateTime(hours+1, minutes);
+			
+			//automatically set the start and end dates to the date clicked on
 			document.getElementById("startDate").valueAsDate = new Date(info.date);
 			document.getElementById("endDate").valueAsDate = new Date(info.date);
+			//Event dropdown will be blank
 			document.getElementById("eventId").selectedIndex = -1;
+			//set form action to create new record
 			document.getElementById("recordForm").action = "submitNewRecordForm";
 		}
 		else {
+			//workaround to show events with the same date
 			var startDate = new Date(info.event.start);
-			var endDate = new Date(info.event.end);
+			var endDate;
+			if(info.event.end === null){
+				endDate = startDate;
+			}
+			else {
+				endDate = new Date(info.event.end);
+			}
+			
+			//create recordId element to pass its value 
 			var recordIdEl = document.createElement("input");
-			recordIdEl.type = "text";
-			recordIdEl.id = "recordIdEl";
-			recordIdEl.style.display = "none";
-			recordIdEl.value = info.event.id;
+			recordIdEl.setAttribute("type","hidden");
+			recordIdEl.setAttribute("id", "recordIdEl");	
+			recordIdEl.setAttribute("name","recordId");
+			recordIdEl.setAttribute("value", info.event.id);	
+			document.getElementById("recordForm").appendChild(recordIdEl);
+			
+			//set the values of all record elements to be viewed and/or edited
 			document.getElementById("recordIdDelete").value = info.event.id;
 			document.getElementById('recordTitle').value = info.event.title;
 			document.getElementById('startDate').valueAsDate = startDate;
+			document.getElementById('startTime').value = info.event.extendedProps.recordStartTime;
+			document.getElementById('endTime').value = info.event.extendedProps.recordEndTime;
 			document.getElementById('endDate').valueAsDate = endDate;
 			document.getElementById('recordNotes').value = info.event.extendedProps.notes;
 			document.getElementById('currentEvent').value = info.event.extendedProps.eventId;
 			document.getElementById('currentEvent').innerHTML = info.event.extendedProps.eventName;
+			
+			//if user edits record, change form action to edit the record
 			document.getElementById("recordForm").action = "editRecord";			
 		}
 	};
-	
+
+/*
+ * Sets the record form to display
+ * Parameters: clickType - String representing whether a date or event was clicked.
+ */
 	function openForm(clickType){
 		if(clickType === "dateClick"){
+			//set the form to editable
 			document.getElementById('recordFieldset').disabled = false;
 			document.getElementById('editRecord').style.visibility = 'hidden';
 			document.getElementById('deleteRecord').style.visibility = 'hidden';
+			//show submit and reset buttons
 			document.getElementById('submitEditedRecord').style.display = 'block';
 			document.getElementById('resetEditedRecord').style.display = 'block';
 		} else {
+			//show edit and delete icons;
 			document.getElementById('editRecord').style.visibility = 'visible';
 			document.getElementById('deleteRecord').style.visibility = 'visible';
 		}
+		
+		//show the record form
 		document.getElementById("recordContainer").style.visibility = "visible";
+		
+		//set the current form's status 
 		currentForm.setOpen(true);	
 		currentForm.setTypeOfClick(clickType);
 	};
-	
+
+/*
+ * Reset form input values and close record form
+ * Parameters: clickType - String representing whether a date or event was clicked.
+ */	
 	function closeForm(clickType){
 		if(clickType === "eventClick"){
+			//hide the edit and delete record icons, and remove the recordId element
 			document.getElementById("editRecord").style.visibility = "hidden";
 			document.getElementById("deleteRecord").style.visibility = "hidden";
-			var recordIdEl = document.getElementById("recordIdEl");
-			recordIdEl.remove();
+			document.getElementById("recordIdEl").remove();
 		}
+		
+		//reset/clear all form fields
 		document.getElementById("recordForm").reset();
 		document.getElementById('startDate').innerHTML='';
-		document.getElementById('endDate').innerHTML = '';		
+		document.getElementById('endDate').innerHTML = '';
+		document.getElementById('startTime').value='';
+		document.getElementById('endTime').value = '';
 		document.getElementById('currentEvent').innerHTML = "";
 		document.getElementById('recordFieldset').disabled = true;
+		
+		//hide the submit and reset buttons, and the form.
 		document.getElementById('submitEditedRecord').style.display = 'none';
 		document.getElementById('resetEditedRecord').style.display = 'none';
 		document.getElementById("recordContainer").style.visibility = 'hidden'; 
+		
+		//set the current form's status 
 		currentForm.setOpen(false);
 		currentForm.setTypeOfClick(clickType);
 	};
-	
-	function clearForm(element){
-		alert(element.childNodes.length);
-		for(var i = element.childNodes.length-1; i > 1; i--) {
-			element.childNodes[i].innerHTML = '';	
-		}
-	};
-	
+
+/*
+ * Sets the location of the form if page uses scrollbar
+ * Returns: boolean whether the form's coordinates have been set 
+ */
 	function setToCenterWindow() {
 		var container = document.getElementById("recordContainer");
 		var set = false;
@@ -123,15 +175,22 @@
 		} 
 		return set;
 	};
-	
+
+/*
+ * Sets the form's coordinates based on user's click coordinates
+ * Parameters: info - FullCalendar object that details mouse click.
+ */
 	function setLeftAndTopCoordinates(info) {		
 		var container = document.getElementById("recordContainer");
 		var containerWidth = container.offsetWidth;
 		var containerHeight = container.offsetHeight;
 		
 		container.style.margin = '0';
-		//determine and set left coordinates of popup record form
-		if((info.jsEvent.clientX + containerWidth) >= window.innerWidth){
+		container.style.marginLeft = '1%';
+		container.style.marginRight = '1%';
+		
+		//determine and set left coordinates of pop-up record form
+		if((info.jsEvent.clientX + containerWidth) >= window.innerWidth-50){
 			container.style.left = info.jsEvent.clientX-containerWidth+'px';
 			container.style.transform = "translate(-8%)";
 		} else {
@@ -139,10 +198,25 @@
 			container.style.transform = "translate(8%)";
 		}
 
-		//determine and set top coordinates of popup record form
-		if ((info.jsEvent.clientY + containerHeight) >= window.innerHeight){
+		//determine and set top coordinates of pop-up record form
+		if ((info.jsEvent.clientY + containerHeight) >= window.innerHeight-50){
 			container.style.top = info.jsEvent.clientY-containerHeight+'px';
 		} else {
 			container.style.top = info.jsEvent.clientY+'px';
 		}
 	};
+	
+/*
+ * Format the time input values when creating a record
+ * Parameters: hours - int ranging from 0 to 23, minutes - int ranging from 0 to 59
+ * Returns: a String representing the hours and minutes in hh:mm format. 
+ */
+	function calculateTime(hours, minutes){
+		if(hours < 10){
+			hours = "0" + hours;
+		}
+		if (minutes === 0){
+			minutes = "00";
+		}
+		return hours + ":" + minutes;
+	}

@@ -17,11 +17,7 @@
 	crossorigin="anonymous"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<style>
-.navbar-nav li a:last-child {
-	margin-left: auto;
-}
-</style>
+
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light"> <a
@@ -35,23 +31,13 @@
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-			<li class="nav-item mr-auto"><a class="nav-link" href="viewUserProfile">Profile
+			<li class="nav-item m-auto"><a class="nav-link" href="viewUserProfile">Profile
 			</a></li>
-			<li class="nav-item mr-auto"><a class="nav-link" href="newEvent">Events
+			<li class="nav-item m-auto"><a class="nav-link" href="myEvents">Events
 			</a></li>
-			<!-- <li class="nav-item dropdown"><a
-				class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-				role="button" data-toggle="dropdown" aria-haspopup="true"
-				aria-expanded="false"> Dropdown </a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="#">Action</a> <a
-						class="dropdown-item" href="#">Another action</a>
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="#">Something else here</a>
-				</div></li> -->
-			<li class="nav-item mr-auto"><a class="nav-link" href="myCalendar">Calendar</a>
+			<li class="nav-item m-auto"><a class="nav-link" href="myCalendar">Calendar</a>
 			</li>
-			<li class="nav-item ml-auto"><a class="nav-link" href="logout">Logout</a></li>
+			<li class="nav-item m-auto"><a class="nav-link" href="logout">Logout</a></li>
 		</ul>
 	</div>
 	</nav>
@@ -59,5 +45,3 @@
 
 </body>
 </html>
-
-<!-- for class= "nav-item active	<span class="sr-only">(current)</span> -->

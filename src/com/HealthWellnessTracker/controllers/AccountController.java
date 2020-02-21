@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.HealthWellnessTracker.models.ErrorCode;
 import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.LoginService;
@@ -49,7 +50,7 @@ public class AccountController {
 			@SessionAttribute("connectedUser") UserProfile connectedUser, HttpServletRequest request, HttpSession session) {
 		Login tempLogin = loginService.logOn(inputLogin);	
 		if(tempLogin == null) {
-			return new ModelAndView("login","message",LoginError.INCORRECT_PASSWORD.toString());
+			return new ModelAndView("login","message",ErrorCode.INCORRECT_LOGIN_CREDENTIALS.toString());
 		} else {
 			connectedUser = userProfileService.findUserByUserId(tempLogin.getUserId());
 			session = request.getSession();
@@ -73,7 +74,6 @@ public class AccountController {
 	public String showUserProfile(@ModelAttribute("userProfile") UserProfile userProfile,
 			@SessionAttribute("connectedUser") UserProfile connectedUser) {
 		System.out.println(connectedUser.getName());
-	//	return new ModelAndView("userProfile");
 		return "userProfile";
 	}
 	

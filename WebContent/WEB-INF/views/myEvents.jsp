@@ -17,8 +17,8 @@
 	crossorigin="anonymous"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="js/events.js"></script>
 <style>
-
 #allUserEvents {
 	padding: 1%;
 	left: 0;
@@ -26,77 +26,20 @@
 }
 
 i:hover {
-	color: gray; 
-	cursor:pointer;
+	color: gray;
+	cursor: pointer;
 }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".editEventLink").click(function(e) {
-			e.preventDefault();
-			var id = $(this).attr("id").replace("editEvent", "");
-			$(".row" + id).find("*").prop("disabled", false);
-			$("#editEvent" + id).hide();
-			$("#deleteEvent" + id).hide();
-			$("#saveEvent" + id).show();
-			$("#cancelEditEvent" + id).show();
-			$("#saveEvent" + id).click(function(e) {
-				$("#eventForm" + id).submit();
-				$("#editEvent" + id).show();
-				$("#deleteEvent" + id).show();
-				$("#saveEvent" + id).hide();
-				$("#cancelEditEvent" + id).hide();
-				$(".row" + id).find("*").prop("disabled", true);
-			});
-			$("#cancelEditEvent" + id).click(function(e) {
-				$("#eventForm" + id)[0].reset();
-				$("#editEvent" + id).show();
-				$("#deleteEvent" + id).show();
-				$("#saveEvent" + id).hide();
-				$("#cancelEditEvent" + id).hide();
-				$(".row" + id).find("*").prop("disabled", true);
-			});
-		});
-		$(".deleteEventLink").click(function(e) {
-			e.preventDefault();
-			var id = $(this).attr("id").replace("deleteEvent", "");
-			var deleteEventName = $("#eventName" + id).val();
-			$("#eventIdToDelete").val(id);
-			$("#confirmationModal").modal("show");
-		});
-		$("#editNewEvent").click(function(e) {
-			e.preventDefault();
-			$(".newRow").find("*").prop("disabled", false);
-			$("#editNewEvent").hide();
-			$("#deleteNewEvent").hide();
-			$("#saveNewEvent").show();
-			$("#cancelNewEvent").show();
-			$("#saveNewEvent").click(function(e){
-				e.preventDefault();
-				$("#newEventForm").submit();
-				$("#editNewEvent").show();
-				$("#deleteNewEvent").show();
-				$("#saveNewEvent").hide();
-				$("#cancelNewEvent").hide();
-				$(".newRow").find("*").prop("disabled", true);		
-			});
-			$("#cancelNewEvent").click(function(e) {
-				e.preventDefault();
-				$("#newEventForm")[0].reset();
-				$("#editNewEvent").show();
-				$("#deleteNewEvent").show();
-				$("#saveNewEvent").hide();
-				$("#cancelNewEvent").hide();
-				$(".newRow").find("*").prop("disabled", true);	
-			});
-		});
+		editMyEventsTable();
 	});
 </script>
 </head>
 <body>
 
 	<jsp:include page="header.jsp" />
-	<div id="allUserEvents">
+	<div id="allUserEvents" class="table-responsive">
 		<h2>My Events</h2>
 		<table class="table table-striped table-hover">
 			<thead class="thead-light">
@@ -110,24 +53,30 @@ i:hover {
 				</tr>
 			</thead>
 			<tbody>
-				<form:form id="newEventForm" action="newEvent" method="post"
+				<form:form id="newEventForm" action="myEvents" method="post"
 					modelAttribute="newEvent">
 					<tr class="newRow">
-						<td><form:input id="newEventName" path="eventName"
-								disabled="true" value="" />
-								<form:errors path="eventName" /></td>
-						<td><form:select id="newEventCategory" path="eventCategory"
-								disabled="true">
-								<form:options items="${listEventCategory}" />
-							</form:select></td>
-						<td><form:input id="newEventDescription"
-								path="eventDescription" disabled="true" />
+						<td><div class="form-group">
+								<form:input id="newEventName" class="form-control"
+									path="eventName" disabled="true" value="" />
+								<form:errors path="eventName" />
+							</div></td>
+						<td><div class="form-group dropdown">
+								<form:select id="newEventCategory" class="form-control"
+									path="eventCategory" disabled="true">
+									<form:options items="${listEventCategory}" />
+								</form:select>
+							</div></td>
+						<td><div class="form-group">
+								<form:input id="newEventDescription" class="form-control"
+									path="eventDescription" disabled="true" />
+							</div>
 						<td><i class="fas fa-pencil-alt fa-lg" id='editNewEvent'
 							style="display: inline-block;"></i> <i class="far fa-save fa-lg"
 							id='saveNewEvent' style="display: none;"></i></td>
 						<td><i class="fas fa-minus fa-lg" id="deleteNewEvent"
-							disabled="true" style="display: inline-block; color:gray;"></i> <i
-							class="far fa-times-circle fa-lg" id="cancelNewEvent"
+							disabled="true" style="display: inline-block; color: gray;"></i>
+							<i class="far fa-times-circle fa-lg" id="cancelNewEvent"
 							style="display: none;"></i></td>
 					</tr>
 				</form:form>
@@ -136,16 +85,17 @@ i:hover {
 						modelAttribute="editedEvent">
 						<tr class="row${event.eventId}">
 							<form:input type="hidden" path="eventId" value="${event.eventId}" />
-							<td><form:input id='eventName${event.eventId}'
-									path="eventName" disabled="true" value="${event.eventName}" /></td>
-							<td><form:select id='eventCategory${event.eventId}'
+							<td><div class="form-group"><form:input id='eventName${event.eventId}'
+									class="form-control" path="eventName" disabled="true" value="${event.eventName}" /></div></td>
+							<td><div class="form-group dropdown">
+							<form:select id='eventCategory${event.eventId}' class="form-control"
 									path="eventCategory" disabled="true">
 									<form:option value="${event.eventCategory}" selected="true" />
 									<form:options items="${listEventCategory}" />
-								</form:select></td>
-							<td><form:input id='eventDescription${event.eventId}'
-									path="eventDescription" disabled="true"
-									value="${event.eventDescription}" /></td>
+								</form:select></div></td>
+							<td><div class="form-group"><form:input id='eventDescription${event.eventId}'
+									class="form-control" path="eventDescription" disabled="true"
+									value="${event.eventDescription}" /></div></td>
 							<td><i class="fas fa-pencil-alt fa-lg editEventLink"
 								id='editEvent${event.eventId}' style="display: inline-block;"></i>
 								<i class="far fa-save fa-lg" id='saveEvent${event.eventId}'
@@ -164,7 +114,7 @@ i:hover {
 	<div class="modal fade" id="confirmationModal" tabindex="-1"
 		role="dialog" aria-labelledby="confirmationModalCenterTitle"
 		aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-dialog modal-dialog-centered" role="dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="confirmationModalLabel">Confirm

@@ -44,7 +44,7 @@ public class EventRecordController {
 	}*/
 	
 //-----------------------------------New Event----------------------------------------------	
-	@RequestMapping(value = "/newEvent", method = RequestMethod.GET)
+	@RequestMapping(value = "/myEvents", method = RequestMethod.GET)
 	public ModelAndView showNewEventForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newEvent") Event newEvent, 
 			@ModelAttribute("editedEvent") Event editedEvent) {
@@ -59,11 +59,11 @@ public class EventRecordController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/newEvent", method = RequestMethod.POST)
+	@RequestMapping(value = "/myEvents", method = RequestMethod.POST)
 	public String submitNewEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newEvent") @Valid Event newEvent) {
 		String message = eventService.createEvent(newEvent, connectedUser);		
-		return "redirect:myCalendar";
+		return "redirect:myEvents";
 	}
 	
 	@RequestMapping(value = "/editEvent", method = RequestMethod.POST)
@@ -71,7 +71,7 @@ public class EventRecordController {
 			@ModelAttribute("editedEvent") Event editedEvent, @ModelAttribute("newEvent") Event newEvent) {
 		String message = eventService.editEvent(editedEvent);
 		System.out.println(message);
-		return "redirect:/newEvent";
+		return "redirect:/myEvents";
 	}
 	
 	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
@@ -79,18 +79,19 @@ public class EventRecordController {
 			@RequestParam("eventId") String eventId) {
 		String message = eventService.deleteEvent(Long.parseLong(eventId));
 		System.out.println(message);
-		return "redirect:/newEvent";
+		return "redirect:/myEvents";
 	}
 //------------------------------------Records------------------------------------------------
 	@RequestMapping(value = "/editRecord", method=RequestMethod.POST)
 	public String editRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("record") Record updatedRecord,
 			@RequestParam ("recordId") long recordId, 
-			@RequestParam("eventId") long eventId) {
-		System.out.println("at controller, recordNotes= " + updatedRecord.getRecordNotes());
+			@RequestParam("eventId") long eventId,
+			@RequestParam("timeStarts") String startTime,
+			@RequestParam("timeEnds") String endTime) {
+		updatedRecord = recordService.addTime(updatedRecord, startTime, endTime);
 		updatedRecord.setRecordId(recordId);
-		Event newEvent = eventService.findEventByEventId(eventId);
-		updatedRecord.setEvent(newEvent);
+		updatedRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.editRecord(updatedRecord);
 		return "redirect:/myCalendar";
 	}
@@ -108,8 +109,7 @@ public class EventRecordController {
 			@RequestParam("eventId") long eventId,
 			@RequestParam("timeStarts") String startTime,
 			@RequestParam("timeEnds") String endTime) {
-		newRecord.setStartTime(Time.valueOf(startTime+":00")); 
-		newRecord.setEndTime(Time.valueOf(endTime+":00"));	 
+		newRecord = recordService.addTime(newRecord, startTime, endTime);
 		newRecord.setUserProfile(connectedUser);
 		newRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.createRecord(newRecord);

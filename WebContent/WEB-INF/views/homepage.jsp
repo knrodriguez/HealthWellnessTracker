@@ -56,7 +56,7 @@ footer {
 	<div id="bodyContainer">
 		<!-- Get rid of underline in links is from CSS -->
 		<header> <nav class="navbar navbar-light bg-light"> <a
-			class="navbar-brand ml-auto" href="login">Login</a> </nav> </header>
+			class="navbar-item ml-auto" href="login">Login</a> </nav> </header>
 		<div id="logo-image" class="text-center">
 			<img src="<c:url value="/images/logo.png"/>" style="margin: 200" />
 		</div>
