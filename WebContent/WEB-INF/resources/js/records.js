@@ -60,7 +60,7 @@
 			document.getElementById("startDate").valueAsDate = new Date(info.date);
 			document.getElementById("endDate").valueAsDate = new Date(info.date);
 			//Event dropdown will be blank
-			document.getElementById("eventId").selectedIndex = -1;
+			//document.getElementById("eventId").selectedIndex = -1;
 			//set form action to create new record
 			document.getElementById("recordForm").action = "submitNewRecordForm";
 		}
@@ -74,7 +74,6 @@
 			else {
 				endDate = new Date(info.event.end);
 			}
-			
 			//create recordId element to pass its value 
 			var recordIdEl = document.createElement("input");
 			recordIdEl.setAttribute("type","hidden");
@@ -91,9 +90,8 @@
 			document.getElementById('endTime').value = info.event.extendedProps.recordEndTime;
 			document.getElementById('endDate').valueAsDate = endDate;
 			document.getElementById('recordNotes').value = info.event.extendedProps.notes;
-			document.getElementById('currentEvent').value = info.event.extendedProps.eventId;
-			document.getElementById('currentEvent').innerHTML = info.event.extendedProps.eventName;
-			
+			/*			document.getElementById('currentEvent').value = info.event.extendedProps.eventId;
+			document.getElementById('currentEvent').innerHTML = info.event.extendedProps.eventName;*/
 			//if user edits record, change form action to edit the record
 			document.getElementById("recordForm").action = "editRecord";			
 		}
@@ -144,7 +142,7 @@
 		document.getElementById('endDate').innerHTML = '';
 		document.getElementById('startTime').value='';
 		document.getElementById('endTime').value = '';
-		document.getElementById('currentEvent').innerHTML = "";
+		//document.getElementById('currentEvent').innerHTML = "";
 		document.getElementById('recordFieldset').disabled = true;
 		
 		//hide the submit and reset buttons, and the form.
@@ -212,11 +210,17 @@
  * Returns: a String representing the hours and minutes in hh:mm format. 
  */
 	function calculateTime(hours, minutes){
-		if(hours < 10){
-			hours = "0" + hours;
-		}
-		if (minutes === 0){
+		if(hours === null && minutes === null){
+			hours = "00";
 			minutes = "00";
+		}
+		else {
+			if(hours < 10){
+				hours = "0" + hours;
+			}
+			if (minutes === 0){
+				minutes = "00";
+			}
 		}
 		return hours + ":" + minutes;
 	}

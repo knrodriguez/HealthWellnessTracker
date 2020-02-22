@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.HealthWellnessTracker.models.ErrorCode;
 import com.HealthWellnessTracker.models.Login;
+import com.HealthWellnessTracker.models.StatusCode;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.LoginService;
-import com.HealthWellnessTracker.services.LoginService.LoginError;
 import com.HealthWellnessTracker.services.UserProfileService;
 
 @Controller
@@ -36,9 +36,9 @@ public class AccountController {
 		} else {
 			session.setAttribute("connectedUser", connectedUser);
 		}
-		System.out.println("user's name on account controller: " + connectedUser.getName());
 		return connectedUser;
 	}
+
 //-----------------------------------Login-----------------------------------------
 	@RequestMapping(value= {"/login"}, method = RequestMethod.GET)
 	public String showLoginForm(@ModelAttribute("inputLogin") Login inputLogin) {
@@ -50,7 +50,7 @@ public class AccountController {
 			@SessionAttribute("connectedUser") UserProfile connectedUser, HttpServletRequest request, HttpSession session) {
 		Login tempLogin = loginService.logOn(inputLogin);	
 		if(tempLogin == null) {
-			return new ModelAndView("login","message",ErrorCode.INCORRECT_LOGIN_CREDENTIALS.toString());
+			return new ModelAndView("login","alertCode",StatusCode.INCORRECT_LOGIN_CREDENTIALS);
 		} else {
 			connectedUser = userProfileService.findUserByUserId(tempLogin.getUserId());
 			session = request.getSession();
@@ -60,9 +60,9 @@ public class AccountController {
 	}
 	
 //-----------------------------------Logout----------------------------------------------
-	//MUST CHANGE TO USER!!!!!!!!!!!!!!!!!!!!!!!
 	@RequestMapping("/logout")
-	public String logout (@ModelAttribute("connectedUser") UserProfile connectedUser, SessionStatus session) {
+	public String logout (@ModelAttribute("connectedUser") UserProfile connectedUser, 
+			SessionStatus session) {
 		connectedUser = new UserProfile();
 		session.setComplete();
 		return "redirect:/";
@@ -99,17 +99,16 @@ public class AccountController {
 	}
 	
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public ModelAndView submitSignupForm(
-			@ModelAttribute("newLogin") Login newLogin,
-			@RequestParam("password2") String password2) {
-		LoginError loginError = loginService.createLogin(newLogin, password2);
-		if (loginError != null) {
-			return new ModelAndView("/homepage","message","ERROR " + loginError.getCode() + ": " + loginError.getDescription());			
-		}
-		else {
+	public ModelAndView submitSignupForm(@ModelAttribute("newLogin") Login newLogin,
+		@RequestParam("password2") String password2, RedirectAttributes redirectAttributes) {
+		
+		StatusCode loginError = loginService.createLogin(newLogin, password2);
+		if (loginError.getCode() < 2000) {
+			return new ModelAndView("/signup","alertCode",loginError);			
+		} else {
+			redirectAttributes.addFlashAttribute("alertCode",loginError);
 			return new ModelAndView("redirect:/login");	
 		}
 	}
 	
-	
-}
+}//end of class

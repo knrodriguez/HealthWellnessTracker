@@ -1,13 +1,11 @@
 package com.HealthWellnessTracker.controllers;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.HealthWellnessTracker.models.Event;
 import com.HealthWellnessTracker.models.Record;
@@ -53,7 +52,7 @@ public class EventRecordController {
 		listEventCategory.add("Habit");
 		listEventCategory.add("Symptom");
 		listEventCategory.add("Illness");
-		List<Event> userEvents = eventService.findEventByUser(connectedUser);
+		List<Event> userEvents = eventService.findEventsByUser(connectedUser);
 		mav.addObject("userEvents", userEvents);
 		mav.addObject("listEventCategory", listEventCategory);
 		return mav;
@@ -61,8 +60,9 @@ public class EventRecordController {
 	
 	@RequestMapping(value = "/myEvents", method = RequestMethod.POST)
 	public String submitNewEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newEvent") @Valid Event newEvent) {
-		String message = eventService.createEvent(newEvent, connectedUser);		
+			@ModelAttribute("newEvent") @Valid Event newEvent, RedirectAttributes redirectAttributes) {
+		String message = eventService.createEvent(newEvent, connectedUser);
+		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:myEvents";
 	}
 	
@@ -119,7 +119,7 @@ public class EventRecordController {
 	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
 	public ModelAndView showMyCalendar(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("record") Record record) {
-		List<Event> eventList = eventService.findEventByUser(connectedUser);
+		List<Event> eventList = eventService.findEventsByUser(connectedUser);
 		String recordsJSON = recordService.generateJSON(connectedUser);
 		ModelAndView calendarMAV = new ModelAndView("myCalendar");
 		calendarMAV.addObject("eventList",eventList)

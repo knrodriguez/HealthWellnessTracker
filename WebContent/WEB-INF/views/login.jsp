@@ -45,27 +45,30 @@ body {
 				<img src="<c:url value = "/images/logo.png"/>">
 			</h2>
 			<div class="error" role="alert">
-				<c:if test="${message != null}">
-					<div class="alert alert-danger col-md-10">
-						<c:out value="${message}" />
-					</div>
-				</c:if>
+				<c:if test="${alertCode != null}">
+					<!-- StatusCodes with code of 2000+ are success codes -->
+					<c:set value="${alertCode.getCode() < 2000 ? 'alert-danger' : 'alert-success'}" 
+						var="alertStyle" />
+						<div class="alert ${alertStyle} col-md-10">
+							<c:out value="${alertCode.toString()}" />
+						</div>
+					</c:if>
 			</div>
 			<div class="form-group">
-				<form:input class="form-control col-md-10" id="login" path="username"
-					placeholder="Username" />
+				<form:input class="form-control col-md-10" id="login"
+					path="username" placeholder="Username" />
 			</div>
 			<div class="form-group">
-				<form:input class="form-control col-md-10" id="login" type="password"
-					path="password" placeholder="Password" />
+				<form:input class="form-control col-md-10" id="login"
+					type="password" path="password" placeholder="Password" />
 			</div>
 			<div class="form-group">
-				<input id='btn-login' class=" btn btn-primary active"
-					type="submit" value="Login">
+				<input id='btn-login' class=" btn btn-primary active" type="submit"
+					value="Login">
 			</div>
 		</form:form>
-		<a href="forgotLogin">Forgot Username or Password?</a><br>
-		<a href="signup">Create An Account</a>
+		<a href="forgotLogin">Forgot Username or Password?</a><br> <a
+			href="signup">Create An Account</a>
 	</div>
 </body>
 </html>

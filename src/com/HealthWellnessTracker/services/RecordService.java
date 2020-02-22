@@ -51,17 +51,22 @@ public class RecordService {
 		List<Record> recordList = recordDAO.getRecordsByUserId(user);
 		JSONArray jsonArr = new JSONArray();
 		ObjectMapper objMapper = new ObjectMapper();
+		JSONObject jsonObj = null;
+		boolean allDay;
 		if(recordList.size() >= 0) {
 			for(Record record: recordList) {
-				JSONObject jsonObj = new JSONObject();
+				jsonObj = new JSONObject();
+				allDay = isAllDay(record);
 				jsonObj.put("id", record.getRecordId());
 				jsonObj.put("title", record.getRecordName());
-				jsonObj.put("start", record.getStartDate()+"T"+record.getStartTime());
-				jsonObj.put("end", record.getEndDate()+"T"+record.getEndTime());
+				jsonObj.put("start", 
+					(allDay ? record.getStartDate() : getDateTime(record, true)));
+				jsonObj.put("end", 
+					(allDay ? record.getEndDate() : getDateTime(record, false)));
 				jsonObj.put("eventName", record.getEvent().getEventName());
 				jsonObj.put("eventId", record.getEvent().getEventId());
 				jsonObj.put("notes", record.getRecordNotes());
-				jsonObj.put("allDay", isAllDay(record));
+				jsonObj.put("allDay", allDay);
 				jsonObj.put("recordStartTime", record.getStartTime());
 				jsonObj.put("recordEndTime", record.getEndTime());
 				jsonArr.put(jsonObj);
@@ -71,7 +76,6 @@ public class RecordService {
 				json = objMapper.writeValueAsString(jsonArr.toString());
 			} catch (JsonProcessingException e) {e.printStackTrace();}
 		}
-		System.out.println(json);
 		return json;
 	}
 	
@@ -86,10 +90,29 @@ public class RecordService {
 	}
 	
 	public boolean isAllDay(Record record) {
-		if(record.getStartTime() == null && record.getEndTime() == null 
-				&& record.getStartDate().equals(record.getEndDate())) {
-			return true;
-		} else return false;
+		try {
+			if(record.getStartTime() == null && record.getEndTime() == null 
+				&& record.getStartDate().equals(record.getEndDate()))
+				return true;
+		} catch(NullPointerException e) {e.printStackTrace();}
+		return false;		
+	}
+
+/*
+ * Composes DateTime String used by Full Calendar's Event object to show event's date and time for start and end.
+ * Parameters: record - model of calendar record, 
+ * 			   start - true returns the record's start date and time, false returns the record's end date and time.
+ * Returns: String of the amalgamated date and time separated by a "T".
+ * Throws: NullPointerException - if the specified element is null 
+ */
+	public String getDateTime(Record record, boolean start) {
+		String dateTime = "";
+		try {
+			if(start) {
+				dateTime = record.getStartDate() + "T" + record.getStartTime();
+			} else dateTime = record.getEndDate() + "T" + record.getEndTime();
+		} catch(NullPointerException e) {e.printStackTrace();}		
+		return dateTime;
 	}
 	
 }

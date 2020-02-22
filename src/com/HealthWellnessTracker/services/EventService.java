@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.HealthWellnessTracker.DAOs.EventDAO;
 import com.HealthWellnessTracker.models.Event;
+import com.HealthWellnessTracker.models.StatusCode;
 import com.HealthWellnessTracker.models.UserProfile;
 
 public class EventService {
@@ -14,13 +15,13 @@ public class EventService {
 		List<Event> eventList = eventDAO.getEventsByUserId(user);
 		for(Event event: eventList) {
 			if(event.getEventName().equals(newEvent.getEventName())) {
-				return "Unable to Create Event: Event with that name already exists.";
+				return StatusCode.DUPLICATE_EVENT_NAME.toString();
 			}
 		}
 		newEvent.setUserProfile(user);
 		boolean success = eventDAO.insertEvent(newEvent);
 		if(!success) return "Unable to Create Event :( Transaction did not persist.";
-		else return "Event Created! :)";
+		else return StatusCode.EVENT_CREATED.toString() + newEvent.getEventName() + ".";
 	}
 	
 	public String editEvent(Event updatedEvent) {
@@ -35,8 +36,9 @@ public class EventService {
 		else return " Failed to Delete. :(";
 	}
 	
-	public List<Event> findEventByUser(UserProfile user) {
+	public List<Event> findEventsByUser(UserProfile user) {
 		 List<Event> foundEvent = eventDAO.getEventsByUserId(user);
+		//foundEvent.sort(c);
 		 return foundEvent;
 	}
 	

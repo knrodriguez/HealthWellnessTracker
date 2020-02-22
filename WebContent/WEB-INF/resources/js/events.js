@@ -24,18 +24,13 @@ function editMyEventsTable(){
 		$("#eventIdToDelete").val(id);
 		$("#confirmationModal").modal("show");
 	});
-	$("#editNewEvent").click(function(e) {
+	$("#saveNewEvent").click(function(e) {
 		e.preventDefault();
-		showNewSaveCancelIcons();
-		$("#saveNewEvent").click(function(e) {
-			e.preventDefault();
-			$("#newEventForm").submit();
-		});
-		$("#cancelNewEvent").click(function(e) {
-			e.preventDefault();
-			$("#newEventForm")[0].reset();
-			showNewEventEditDeleteIcons();
-		});
+		$("#newEventForm").submit();
+	});
+	$("#cancelNewEvent").click(function(e) {
+		e.preventDefault();
+		$("#newEventForm")[0].reset();
 	});
 }
 
@@ -48,26 +43,10 @@ function showEditDeleteIcons(id) {
 	$(".row" + id).find("*").prop("disabled", true);
 }
 
-function showNewEventEditDeleteIcons() {
-	$("#editNewEvent").show();
-	$("#deleteNewEvent").show();
-	$("#saveNewEvent").hide();
-	$("#cancelNewEvent").hide();
-	$(".newRow").find("*").prop("disabled", true);	
-}
-
 function showSaveCancelIcons(id) {
 	$(".row" + id).find("*").prop("disabled", false);
 	$("#editEvent" + id).hide();
 	$("#deleteEvent" + id).hide();
 	$("#saveEvent" + id).show();
 	$("#cancelEditEvent" + id).show();
-}
-
-function showNewSaveCancelIcons(){
-	$(".newRow").find("*").prop("disabled", false);
-	$("#editNewEvent").hide();
-	$("#deleteNewEvent").hide();
-	$("#saveNewEvent").show();
-	$("#cancelNewEvent").show();
 }
