@@ -25,6 +25,7 @@
 
 	function displayForm(info, clickType) {
 		var reopen = true;
+		document.getElementById('recordForm').classList.remove('was-validated');
 		
 		if(currentForm.isOpen()) {
 			closeForm(currentForm.getTypeOfClick());
@@ -60,9 +61,9 @@
 			document.getElementById("startDate").valueAsDate = new Date(info.date);
 			document.getElementById("endDate").valueAsDate = new Date(info.date);
 			//Event dropdown will be blank
-			//document.getElementById("eventId").selectedIndex = -1;
+			$('.selectpicker').selectpicker('refresh');
 			//set form action to create new record
-			document.getElementById("recordForm").action = "submitNewRecordForm";
+			document.getElementById("recordForm").action = "createRecord";
 		}
 		else {
 			//workaround to show events with the same date
@@ -90,8 +91,7 @@
 			document.getElementById('endTime').value = info.event.extendedProps.recordEndTime;
 			document.getElementById('endDate').valueAsDate = endDate;
 			document.getElementById('recordNotes').value = info.event.extendedProps.notes;
-			/*			document.getElementById('currentEvent').value = info.event.extendedProps.eventId;
-			document.getElementById('currentEvent').innerHTML = info.event.extendedProps.eventName;*/
+			$('.selectpicker').selectpicker('val',info.event.extendedProps.eventId);
 			//if user edits record, change form action to edit the record
 			document.getElementById("recordForm").action = "editRecord";			
 		}
@@ -107,6 +107,7 @@
 			document.getElementById('recordFieldset').disabled = false;
 			document.getElementById('editRecord').style.visibility = 'hidden';
 			document.getElementById('deleteRecord').style.visibility = 'hidden';
+			$('.selectpicker').selectpicker('val',0);
 			//show submit and reset buttons
 			document.getElementById('submitEditedRecord').style.display = 'block';
 			document.getElementById('resetEditedRecord').style.display = 'block';
@@ -129,30 +130,30 @@
  * Parameters: clickType - String representing whether a date or event was clicked.
  */	
 	function closeForm(clickType){
-		if(clickType === "eventClick"){
-			//hide the edit and delete record icons, and remove the recordId element
+		if(currentForm.getTypeOfClick() === "eventClick"){
 			document.getElementById("editRecord").style.visibility = "hidden";
 			document.getElementById("deleteRecord").style.visibility = "hidden";
 			document.getElementById("recordIdEl").remove();
 		}
-		
+
 		//reset/clear all form fields
 		document.getElementById("recordForm").reset();
 		document.getElementById('startDate').innerHTML='';
 		document.getElementById('endDate').innerHTML = '';
 		document.getElementById('startTime').value='';
 		document.getElementById('endTime').value = '';
-		//document.getElementById('currentEvent').innerHTML = "";
 		document.getElementById('recordFieldset').disabled = true;
 		
 		//hide the submit and reset buttons, and the form.
 		document.getElementById('submitEditedRecord').style.display = 'none';
 		document.getElementById('resetEditedRecord').style.display = 'none';
 		document.getElementById("recordContainer").style.visibility = 'hidden'; 
-		
+		$('.selectpicker').selectpicker('refresh');
 		//set the current form's status 
 		currentForm.setOpen(false);
-		currentForm.setTypeOfClick(clickType);
+		if(clickType !== "closeButton"){
+			currentForm.setTypeOfClick(clickType);
+		}				
 	};
 
 /*

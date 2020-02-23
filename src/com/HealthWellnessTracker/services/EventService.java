@@ -11,29 +11,47 @@ public class EventService {
 
 	private EventDAO eventDAO = new EventDAO();
 	
-	public String createEvent(Event newEvent, UserProfile user) {
-		List<Event> eventList = eventDAO.getEventsByUserId(user);
+	public StatusCode createEvent(Event newEvent, UserProfile user) {
+		StatusCode statusCode;
+		newEvent.setUserProfile(user);
+		if(eventExists(newEvent)) 
+			statusCode = StatusCode.DUPLICATE_EVENT_NAME;
+		else {
+			boolean error = eventDAO.insertEvent(newEvent);
+			if(error) 
+				statusCode = StatusCode.PERSIST_EVENT_FAILED;
+			else statusCode = StatusCode.EVENT_CREATED_SUCCESS;
+		}	
+		return statusCode;
+	}
+	
+	public boolean eventExists(Event newEvent) {
+		List<Event> eventList = eventDAO.getEventsByUserId(newEvent.getUserProfile());
 		for(Event event: eventList) {
 			if(event.getEventName().equals(newEvent.getEventName())) {
-				return StatusCode.DUPLICATE_EVENT_NAME.toString();
+				return true;
 			}
 		}
-		newEvent.setUserProfile(user);
-		boolean success = eventDAO.insertEvent(newEvent);
-		if(!success) return "Unable to Create Event :( Transaction did not persist.";
-		else return StatusCode.EVENT_CREATED.toString() + newEvent.getEventName() + ".";
+		return false;
 	}
 	
-	public String editEvent(Event updatedEvent) {
-		int numEventsUpdated = eventDAO.updateEvent(updatedEvent);
-		if(numEventsUpdated == 1) return updatedEvent.getEventName() + " Updated! :)";
-		else return updatedEvent.getEventName() + " Failed to Update. :(";
+	public StatusCode editEvent(Event updatedEvent, UserProfile user) {
+		StatusCode statusCode;
+		updatedEvent.setUserProfile(user);
+		if(eventExists(updatedEvent)) 
+			statusCode = StatusCode.DUPLICATE_EVENT_NAME;
+		else {
+			int numEventsUpdated = eventDAO.updateEvent(updatedEvent);
+			if(numEventsUpdated == 1) statusCode = StatusCode.EDIT_EVENT_SUCCESS;
+			else statusCode = StatusCode.EDIT_EVENT_FAILED;
+		}	
+		return statusCode;
 	}
 	
-	public String deleteEvent(long deletedEventId) {
+	public StatusCode deleteEvent(long deletedEventId) {
 		int numEventsDeleted = eventDAO.deleteEvent(deletedEventId);
-		if(numEventsDeleted == 1) return "Delete successful.";
-		else return " Failed to Delete. :(";
+		if(numEventsDeleted == 1) return StatusCode.DELETE_EVENT_SUCCESS;
+		else return StatusCode.DELETE_EVENT_FAILED;
 	}
 	
 	public List<Event> findEventsByUser(UserProfile user) {

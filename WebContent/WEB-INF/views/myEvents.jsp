@@ -6,13 +6,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>My Events | Health Wellness Tracker</title>
+<title>My Events</title>
 <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
 	rel='stylesheet'>
 <link
 	href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
 	rel='stylesheet' />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
 	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 	crossorigin="anonymous"></script>
@@ -20,6 +21,10 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="js/events.js"></script>
 <style>
+body {
+	background-color: #f8f9fa !important;
+}
+
 #allUserEvents {
 	padding: 1%;
 	left: 0;
@@ -59,13 +64,17 @@ select.dropdown:disabled {
 </head>
 <body>
 
-	<jsp:include page="header.jsp" />
+	<jsp:include page="loggedInHeader.jsp" />
 	<div id="allUserEvents" class="table-responsive">
 		<h2>My Events</h2>
 		<div class="error" role="alert">
-			<c:if test="${message != null}">
-				<div class="alert alert-danger col-md-10">
-					<c:out value="${message}" />
+			<c:if test="${alertCode != null}">
+				<!-- StatusCodes with code of 2000+ are success codes -->
+				<c:set
+					value="${alertCode.getCode() < 2000 ? 'alert-danger' : 'alert-success'}"
+					var="alertStyle" />
+				<div class="alert ${alertStyle} col-auto">
+					<c:out value="${alertCode.toString()}" />
 				</div>
 			</c:if>
 		</div>
@@ -167,5 +176,9 @@ select.dropdown:disabled {
 	</div>
 
 	<jsp:include page="footer.jsp" />
+
+	<script>
+		$('#pageHeader').html(document.title);
+	</script>
 </body>
 </html>

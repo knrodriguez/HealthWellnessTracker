@@ -105,6 +105,7 @@ public class UserProfileDAO implements DAOInterface<UserProfile> {
 		return deletedUserProfiles;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<UserProfile> getAllUserProfiles(){
 		List<UserProfile> allProfiles = null;
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);

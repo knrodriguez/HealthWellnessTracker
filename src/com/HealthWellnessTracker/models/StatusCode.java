@@ -9,10 +9,14 @@ public enum StatusCode {
 	INCORRECT_LOGIN_CREDENTIALS(1004, "Incorrect e-mail and/or password."),
 	DUPLICATE_EVENT_NAME(1005, "Unable to Add Event: Event with that name already exists."),
 	PERSIST_EVENT_FAILED(1006, "Unable to Add Event. Please try again later."),
+	DELETE_EVENT_FAILED(1007, "Unable to Delete Event. Please try again later."),
+	EDIT_EVENT_FAILED(1008, "Unable to Edit Event. Please review your changes and try again later."),
 	SUCCESS(2000),
-	LOGIN_CREATED(2001, "Your account has been created successfully."),
-	EVENT_CREATED(2002, "Added Event ");
-	
+	LOGIN_CREATED_SUCCESS(2001, "Your account has been created successfully."),
+	EVENT_CREATED_SUCCESS(2006, "Added Event successfuly."),
+	DELETE_EVENT_SUCCESS(2007, "Event has been deleted successfully."),
+	EDIT_EVENT_SUCCESS(2008, "Event has been edited successfully.");
+
 	int code;
 	String message;
 	

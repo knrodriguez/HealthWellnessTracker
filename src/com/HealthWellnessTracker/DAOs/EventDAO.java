@@ -9,7 +9,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import com.HealthWellnessTracker.models.Event;
-import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 
 public class EventDAO implements DAOInterface<Event>{
@@ -33,9 +32,10 @@ public class EventDAO implements DAOInterface<Event>{
 			em.getTransaction().begin();
 			em.persist(newEvent);
 			em.getTransaction().commit();
-			flag = true;
+			
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
+			flag = true;
 		}
 		em.close();
 		emf.close();
@@ -52,13 +52,15 @@ public class EventDAO implements DAOInterface<Event>{
 		return foundEvent;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Event> getEventsByUserId(UserProfile userProfile) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		List<Event> eventList = null;
 		try {
 			//em.getTransaction().begin();
-			Query query = em.createQuery("SELECT e from Event e WHERE e.userProfile = :userProfile");
+			Query query = em.createQuery("SELECT e from Event e WHERE e.userProfile = :userProfile " 
+					+ "ORDER BY e.eventName ASC");
 			query.setParameter("userProfile", userProfile);
 			eventList = query.getResultList();
 		} catch(PersistenceException e) {
@@ -69,6 +71,7 @@ public class EventDAO implements DAOInterface<Event>{
 		return eventList;		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Event> getAllEvents(){
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();

@@ -7,9 +7,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Create User Profile</title>
+<title>My Profile</title>
 <style>
-
+body {
+	background-color: #f8f9fa !important;
+}
 #profileContainer {
 	flex: 1 0 auto;
 	margin: 1%;
@@ -27,9 +29,19 @@
 </style>
 </head>
 <body>
-	<jsp:include page="header.jsp" />
+	<jsp:include page="loggedInHeader.jsp" />
 	<div id="profileContainer">
-		<h2>User Profile</h2>
+		<h2>${connectedUser.getUserLogin().getUsername()}'s Profile</h2>
+		<div class="error" role="alert">
+				<c:if test="${alertCode != null}">
+					<!-- StatusCodes with code of 2000+ are success codes -->
+					<c:set value="${alertCode.getCode() < 2000 ? 'alert-danger' : 'alert-success'}" 
+						var="alertStyle" />
+						<div class="alert ${alertStyle} col-md-10">
+							<c:out value="${alertCode.toString()}" />
+						</div>
+					</c:if>
+			</div>
 		<form:form action="editUserProfile" modelAttribute="userProfile"
 			method="POST">
 			<div class="form-group col-md-4">
@@ -61,5 +73,8 @@
 		</form:form>
 	</div>
 	<jsp:include page="footer.jsp" />
+	<script>
+		$('#pageHeader').html(document.title);
+	</script>
 </body>
 </html>

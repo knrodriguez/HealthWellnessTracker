@@ -96,6 +96,7 @@ public class LoginDAO implements DAOInterface<Login>{
 		else return 0;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Login> getAllLogins(){
 		List<Login> allLogins = null;
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);

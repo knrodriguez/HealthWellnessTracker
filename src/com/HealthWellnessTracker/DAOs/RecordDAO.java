@@ -8,7 +8,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.Record;
 import com.HealthWellnessTracker.models.UserProfile;
 
@@ -55,6 +54,7 @@ public class RecordDAO implements DAOInterface<Record>{
 		return record;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Record> getRecordsByUserId(UserProfile userProfile) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
@@ -82,6 +82,7 @@ public class RecordDAO implements DAOInterface<Record>{
 					+ "r.recordName = :recordName,"
 					+ "r.startTime = :startTime,"
 					+ "r.endTime = :endTime,"
+					+ "r.event = :event,"
 					+ "r.recordNotes = :recordNotes "
 					+ "WHERE r.recordId = :recordId");
 			query.setParameter("startDate", updatedRecord.getStartDate())
@@ -89,6 +90,7 @@ public class RecordDAO implements DAOInterface<Record>{
 				 .setParameter("recordName", updatedRecord.getRecordName())
 				 .setParameter("startTime", updatedRecord.getStartTime())
 				 .setParameter("endTime", updatedRecord.getEndTime())
+				 .setParameter("event", updatedRecord.getEvent())
 				 .setParameter("recordNotes", updatedRecord.getRecordNotes())
 				 .setParameter("recordId", updatedRecord.getRecordId());
 			numUpdatedRecords = query.executeUpdate();
@@ -119,6 +121,7 @@ public class RecordDAO implements DAOInterface<Record>{
 		return numDeletedRecords;
 	}	
 	
+	@SuppressWarnings("unchecked")
 	public List<Record> getAllRecords(){
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();

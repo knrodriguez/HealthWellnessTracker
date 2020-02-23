@@ -18,6 +18,8 @@ public class RecordService {
 	
 	public boolean createRecord(Record record) {
 		boolean flag = false;
+		if(record.getRecordName().isEmpty()) 
+			record.setRecordName(record.getEvent().getEventName());
 		flag = recordDAO.insertRecord(record);
 		return flag;
 	}

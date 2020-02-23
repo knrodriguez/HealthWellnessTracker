@@ -32,22 +32,30 @@ body {
 .footer {
 	flex-shrink: 0;
 	padding: 1rem;
-	background-color: #efefef;
+	background-color: #00456d !important;
 	text-align: center;
+}
+
+.link-style {
+	color: #e8eef1 !important;
+}
+
+.navbar-brand {
+	color: #ffffff;
+	text-shadow: black;
 }
 </style>
 </head>
 <body>
-	<footer> <nav class="navbar navbar-light bg-light footer">
-	<a class="navbar-brand" href="#">Health &amp; Wellness Tracker</a>
+	<footer> <nav class="navbar footer">
+	<span class="navbar-brand">Health &amp; Wellness Tracker</span>
 	<ul class="nav justify-content-end">
-		<li class="nav-item"><a class="nav-link active" href="#">FAQ</a>
+		<li class="nav-item"><a class="nav-link link-style" href="#">FAQ</a>
 		</li>
-		<li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-		<li class="nav-item"><a class="nav-link" href="#">Privacy
+		<li class="nav-item"><a class="nav-link link-style" href="#">About Us</a></li>
+		<li class="nav-item"><a class="nav-link link-style" href="#">Privacy
 				Policy</a></li>
-		<li class="nav-item"><a class="nav-link" href="#"
-			tabindex="-1" aria-disabled="false">Contact Us</a></li>
+		<li class="nav-item"><a class="nav-link link-style" href="#">Contact Us</a></li>
 	</ul>
 	</nav> </footer>
 </body>

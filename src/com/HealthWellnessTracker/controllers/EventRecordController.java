@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.HealthWellnessTracker.models.Event;
 import com.HealthWellnessTracker.models.Record;
+import com.HealthWellnessTracker.models.StatusCode;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.EventService;
 import com.HealthWellnessTracker.services.RecordService;
@@ -61,24 +62,25 @@ public class EventRecordController {
 	@RequestMapping(value = "/myEvents", method = RequestMethod.POST)
 	public String submitNewEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newEvent") @Valid Event newEvent, RedirectAttributes redirectAttributes) {
-		String message = eventService.createEvent(newEvent, connectedUser);
-		redirectAttributes.addFlashAttribute("message", message);
+		StatusCode alertCode = eventService.createEvent(newEvent, connectedUser);
+		redirectAttributes.addFlashAttribute("alertCode", alertCode);
 		return "redirect:myEvents";
 	}
 	
 	@RequestMapping(value = "/editEvent", method = RequestMethod.POST)
 	public String editEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("editedEvent") Event editedEvent, @ModelAttribute("newEvent") Event newEvent) {
-		String message = eventService.editEvent(editedEvent);
-		System.out.println(message);
+			@ModelAttribute("editedEvent") Event editedEvent, @ModelAttribute("newEvent") Event newEvent,
+			RedirectAttributes redirectAttributes) {
+		StatusCode alertCode = eventService.editEvent(editedEvent, connectedUser);
+		redirectAttributes.addFlashAttribute("alertCode", alertCode);
 		return "redirect:/myEvents";
 	}
 	
 	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 	public String deleteEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@RequestParam("eventId") String eventId) {
-		String message = eventService.deleteEvent(Long.parseLong(eventId));
-		System.out.println(message);
+			@RequestParam("eventId") String eventId, RedirectAttributes redirectAttributes) {
+		StatusCode alertCode = eventService.deleteEvent(Long.parseLong(eventId));
+		redirectAttributes.addFlashAttribute("alertCode", alertCode);
 		return "redirect:/myEvents";
 	}
 //------------------------------------Records------------------------------------------------
@@ -89,6 +91,7 @@ public class EventRecordController {
 			@RequestParam("eventId") long eventId,
 			@RequestParam("timeStarts") String startTime,
 			@RequestParam("timeEnds") String endTime) {
+		System.out.println("!@!@!@#!@#!@#@! EventID : " + eventId + " !@!@#!@#@#@#$#@$@#$@#$@#$@#");
 		updatedRecord = recordService.addTime(updatedRecord, startTime, endTime);
 		updatedRecord.setRecordId(recordId);
 		updatedRecord.setEvent(eventService.findEventByEventId(eventId));
@@ -103,7 +106,7 @@ public class EventRecordController {
 		return "redirect:/myCalendar";
 	}
 	
-	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
+	@RequestMapping(value = "/createRecord", method = RequestMethod.POST)
 	public String submitNewRecordForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("record") Record newRecord,
 			@RequestParam("eventId") long eventId,

@@ -23,7 +23,7 @@ public class LoginService {
 		else {
 			boolean error = loginDAO.insertLogin(newLogin);	
 			if(error) returnCode = StatusCode.LOGIN_ERROR;
-			else returnCode = StatusCode.LOGIN_CREATED;
+			else returnCode = StatusCode.LOGIN_CREATED_SUCCESS;
 		}
 		return returnCode;		
 	}

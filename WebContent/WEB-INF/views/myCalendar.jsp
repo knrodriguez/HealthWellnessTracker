@@ -28,6 +28,7 @@ html, body {
 	overflow: visible; /* scrollbars */
 	height: 100%;
 	width: 100%;
+	background-color: #f8f9fa !important;
 }
 
 #calendar-container {
@@ -52,12 +53,6 @@ html, body {
 	vertical-align: middle;
 }
 
-.close .deleteRecord {
-	font-size: 2em;
-	outline: none;
-	border-style: none;
-}
-
 .recordForm {
 	border-style: 0px;
 }
@@ -77,11 +72,6 @@ html, body {
 	transform: translate(0);
 }
 
-/*works for input, not for class or id*/
-div.icon-container a, i, button {
-	margin: 10%;
-}
-
 .form-control {
 	border: 0px;
 	box-shadow: 0px;
@@ -97,13 +87,11 @@ div.icon-container a, i, button {
 	border-top-style: none;
 	border-bottom-style: solid;
 	border-bottom-width: 2px;
-	/* 	border-left-style: none;
-	border-right-style:none; */
 	border-width: 1px;
 }
 
 .fc-day-grid * .fc-day {
-	/* border-top-style: solid; */
+	border-top-style: solid;
 	border-bottom-style: solid;
 	border-left-style: solid;
 	border-right-style: solid;
@@ -111,96 +99,28 @@ div.icon-container a, i, button {
 }
 
 .fc-day-grid * td:first-child, .fc-day-grid * td:last-child {
-	background-color: #f8f9fa;
+	background-color: #edf2f3;
 }
 
 .fc-axis ~ td {
 	border-left-style: solid;
 	border-right-style: solid;
 }
+
+.close-button, #deleteRecord, #editRecord {
+	color: gray !important;
+}
+
+.close-button:hover, #deleteRecord:hover, #editRecord:hover {
+	color: #dee2e6 !important;
+}
 </style>
-<script src='fullcalendar/core/main.js'></script>
-<script src='fullcalendar/daygrid/main.js'></script>
-<script src='fullcalendar/timegrid/main.js'></script>
-<script src='fullcalendar/interaction/main.js'></script>
-<script src='fullcalendar/bootstrap/main.js'></script>
-<script src='fullcalendar/list/main.js'></script>
-<script src='js/records.js'></script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-	crossorigin="anonymous"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script>
-<script type="text/javascript">
- $(document).ready(function() {  
-	 
-	 $("#editRecord").click(function(event){
-		 event.preventDefault();
-		$('#recordFieldset').prop("disabled", false);
-		$("#submitEditedRecord").show();
-		$("#resetEditedRecord").show();
-	 });
-	 $("#submitEditedRecord").click(function(e) {
-		 var form = $("#recordForm");
-		 if (form[0].checkValidity() === false){
-			 e.preventDefault();
-			 e.stopPropagation();
-		 }
-		 form.addClass('was-validated');
-		 $("#eventId").select2();
-
-		 
-	 });
- });
-</script>
-<script> 
-
-	document.addEventListener('DOMContentLoaded', function() {
-		//create JS variable for HTML Calendar element
-		var calendarEl = document.getElementById('calendar');
-		//create JS variable of loaded Calendar module
-		var calendar = new FullCalendar.Calendar(calendarEl, {
-			height: 'parent',
-			contentHeight: 0.8*window.innerHeight,
-			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid', 'list'],
-			//themeSystem: 'bootstrap',
-			selectable : true,
-			editable : true,
-			handleWindowResize: true,
-			fixedWeekCount: false,
-			eventLimit: true,
-			header : {
-				left : '',
-				center: 'title',
-				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-			},
-			dateClick : function(info) {
-				displayForm(info, "dateClick");
-			},
-			eventClick : function(info) {
-				displayForm(info, "eventClick");
-			},
-			eventTimeFormat: {
-				hour:'2-digit',
-				minute: '2-digit',
-				hour12: true
-			}
-		});
-		var calendarEvents = JSON.parse(${recordList});
-		calendar.addEventSource(calendarEvents);
-		//render Calendar
-		calendar.render();
-	});
-	
+<script>
 </script>
 </head>
 <body>
 
-	<jsp:include page="header.jsp" />
+	<jsp:include page="loggedInHeader.jsp" />
 
 	<div id='calendar-container'>
 		<div id='calendar'></div>
@@ -208,25 +128,22 @@ div.icon-container a, i, button {
 
 	<div id='recordContainer'
 		class="shadow p-3 mb-5 bg-white rounded border border-0">
-		<div class="d-flex flex-row justify-content-end">
+		<div class="d-flex flex-row justify-content-end pb-3">
 			<a class="p-2" href="#" id="editRecord" title="Edit"> <i
-				class="fas fa-pencil-alt" style='color: gray;'></i></a> <a
-				href="#confirmationModal" class="p-2" data-toggle="modal"
-				id="deleteRecord"> <i class="far fa-trash-alt fa-lg"
-				style="color: gray;"></i></a>
-			<button type="button" class="close p-2" aria-label="Close"
-				onclick="closeForm('recordContainer')">
-				<span aria-hidden="true">&times;</span>
+				class="fas fa-pencil-alt fa-lg"></i></a> <a href="#confirmationModal"
+				class="p-2" data-toggle="modal" id="deleteRecord" title="Delete">
+				<i class="far fa-trash-alt fa-lg"></i>
+			</a>
+			<button type="button" class="btn p-2 close-button" title="Close"
+				onclick="closeForm('closeButton')">
+				<i class="fas fa-times fa-lg"></i>
 			</button>
 		</div>
 		<form:form id="recordForm" class="recordForm" modelAttribute="record">
 			<fieldset id="recordFieldset" disabled="disabled">
 				<div class="form-group">
 					<form:input id="recordTitle" class="form-control form-control-lg"
-						path="recordName" type="text" value="" placeholder="New Record"
-						required="true" />
-					<div class="valid-feedback"></div>
-					<div class="invalid-feedback">Please include record name.</div>
+						path="recordName" type="text" value="" placeholder="New Record" />
 				</div>
 				<div class="form-group row">
 					<label class="col-sm-1 col-form-label col-form-label-sm">Start:&nbsp;&nbsp;</label>
@@ -253,13 +170,15 @@ div.icon-container a, i, button {
 				<div class="form-group row dropdown">
 					<label class="col-sm-2 col-form-label">Event:&nbsp;</label>
 					<div class="col-sm-10">
-						<select id="eventId" class="eventSelectClass selectpicker form-control"
-							 data-dropup-auto="false" data-live-search="true" data-size="5" name="eventId" 
-							 required="true">
-								<c:forEach items="${eventList}" var="eventOption">
-									<option value="${eventOption.eventId}" title="${eventOption.eventName}"
+						<select id="eventId"
+							class="eventSelectClass selectpicker form-control"
+							data-dropup-auto="false" data-live-search="true" data-size="5"
+							name="eventId" required="true">
+							<option value="0" disabled="disabled">Choose one of the following...</option>
+							<c:forEach items="${eventList}" var="eventOption">
+								<option value="${eventOption.eventId}"
 									data-subtext="${eventOption.eventCategory}">${eventOption.eventName}</option>
-								</c:forEach>
+							</c:forEach>
 						</select>
 					</div>
 				</div>
@@ -319,9 +238,80 @@ div.icon-container a, i, button {
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
 		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	<script src='fullcalendar/core/main.js'></script>
+	<script src='fullcalendar/daygrid/main.js'></script>
+	<script src='fullcalendar/timegrid/main.js'></script>
+	<script src='fullcalendar/interaction/main.js'></script>
+	<script src='fullcalendar/bootstrap/main.js'></script>
+	<script src='fullcalendar/list/main.js'></script>
+	<script src='js/records.js'></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 		crossorigin="anonymous"></script>
+ 	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script>
+	<script> 
+	
+	$(document).ready(function() {  
+		 
+		$('#pageHeader').html(document.title);
+		 $("#editRecord").click(function(event){
+			 event.preventDefault();
+			$('#recordFieldset').prop("disabled", false);
+			$("#submitEditedRecord").show();
+			$("#resetEditedRecord").show();
+		 });
+		 $("#submitEditedRecord").click(function(e) {
+			 var form = $("#recordForm");
+			 if (form[0].checkValidity() === false){
+				 e.preventDefault();
+				 e.stopPropagation();
+			 }
+			 form.addClass('was-validated');
+		 });
+	 });
+	
+	document.addEventListener('DOMContentLoaded', function() {
+		//create JS variable for HTML Calendar element
+		var calendarEl = document.getElementById('calendar');
+		//create JS variable of loaded Calendar module
+		var calendar = new FullCalendar.Calendar(calendarEl, {
+			height: 'parent',
+			contentHeight: 0.8*window.innerHeight,
+			plugins : ['interaction', 'dayGrid', 'timeGrid', 'list'],
+			selectable : true,
+			editable : true,
+			handleWindowResize: true,
+			fixedWeekCount: false,
+			eventLimit: true,
+			header : {
+				left : '',
+				center: 'title',
+				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+			},
+			dateClick : function(info) {	
+				displayForm(info, "dateClick");
+			},
+			eventClick : function(info) {
+				displayForm(info, "eventClick");
+			},
+			eventTimeFormat: {
+				hour:'2-digit',
+				minute: '2-digit',
+				hour12: true
+			},
+			eventColor: '#aaddf8'
+		});
+		var calendarEvents = JSON.parse(${recordList});
+		calendar.addEventSource(calendarEvents);
+		//render Calendar
+		calendar.render();
+	});
+	
+	</script>
 </body>
 </html>

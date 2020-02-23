@@ -5,23 +5,27 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Header</title>
-<link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
-	rel='stylesheet'>
+<title>Logged In Header</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-	crossorigin="anonymous"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
+<style>
+.header {
+	background-color: #bad3e4;
+}	
+.link {
+	color: #495057 !important;
+	text-shadow: white;
+}
+.link:hover {
+	color: #868e96 !important;
+}
+</style>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light"> <a
-		class="navbar-brand" href="#">HWT</a>
+	<nav class="navbar navbar-expand-lg navbar-light header"> <span
+		class="navbar-brand" id="pageHeader"></span>
 	<button class="navbar-toggler" type="button" data-toggle="collapse"
 		data-target="#navbarSupportedContent"
 		aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -31,17 +35,19 @@
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-			<li class="nav-item m-auto"><a class="nav-link" href="viewUserProfile">Profile
+			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="viewUserProfile">Profile
 			</a></li>
-			<li class="nav-item m-auto"><a class="nav-link" href="myEvents">Events
+			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="myEvents">Events
 			</a></li>
-			<li class="nav-item m-auto"><a class="nav-link" href="myCalendar">Calendar</a>
+			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="myCalendar">Calendar</a>
 			</li>
-			<li class="nav-item m-auto"><a class="nav-link" href="logout">Logout</a></li>
+			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="logout">Logout</a></li>	
 		</ul>
 	</div>
+	<span class="d-flex navbar-brand mr-auto p-2">Health &amp; Wellness Tracker</span>	
 	</nav>
 
-
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>
