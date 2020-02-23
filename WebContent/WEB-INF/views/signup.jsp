@@ -11,11 +11,6 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-	crossorigin="anonymous"></script>
-
 <style>
 html, body {
 	height: 100%;
@@ -160,7 +155,7 @@ body {
 			<div class="col-md-3 answers pl-0">
 				<div id="scroll-spy" data-spy="scroll"
 					data-target="#create-account-faq" data-offset="0">
-					<h4 id="item-1">This seems... short.</h4>
+					<h4 id="item-1">This seems short...</h4>
 					<p>It is! And that is the beauty of it! There are so many
 						websites you have accounts for. Creating another one tends to be a
 						pain. Usually they ask for your name, your e-mail address,
@@ -203,6 +198,9 @@ body {
 					<p>Whatever you feel comfortable doing. Whether its providing
 						your name, e-mail address, or nothing at all. It is your decision,
 						and we respect it.</p>
+					<p>If you decide you feel comfortable sharing your e-mail address with us,
+					you can do so by editing your profile. You can edit your profile by clicking 
+					the "Profile" link in the navigation header after you have logged in.</p>
 					<br>
 					<p>Thank you for using Health & Wellness Tracker.</p>
 					<br>
@@ -217,8 +215,10 @@ body {
 		</div>
 	</div>
 	<jsp:include page="footer.jsp" />
-	<script>
-		$('#pageNameHeader').html(document.title);
-	</script>
+
+	<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+	crossorigin="anonymous"></script>
 </body>
 </html>
