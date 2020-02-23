@@ -11,12 +11,21 @@ import javax.persistence.Query;
 import com.HealthWellnessTracker.models.Record;
 import com.HealthWellnessTracker.models.UserProfile;
 
-public class RecordDAO {
+public class RecordDAO implements DAOInterface<Record>{
 
-	private final String appFactory = "HealthWellnessTrackerFactory";
-
+	@Override
+	public boolean insert(Record newObj) {return insertRecord(newObj);}
+	@Override
+	public Record find(long id) {return getRecordByRecordId(id);}
+	@Override
+	public int update(Record updatedObj) {return updateRecord(updatedObj);}
+	@Override
+	public int delete(long id) {return deleteRecord(id);}	
+	@Override
+	public List<Record> getAll() {return getAllRecords();}
+	
 	public boolean insertRecord(Record record) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		boolean error = false;
 		try{
@@ -34,7 +43,7 @@ public class RecordDAO {
 	}
 	
 	public Record getRecordByRecordId(long recordId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		Record record = null;
 		try {
@@ -45,8 +54,9 @@ public class RecordDAO {
 		return record;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Record> getRecordsByUserId(UserProfile userProfile) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		List<Record> recordList = null;
 		try {
@@ -62,7 +72,7 @@ public class RecordDAO {
 	}
 	
 	public int updateRecord(Record updatedRecord) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int numUpdatedRecords = 0;
 		try {
@@ -72,6 +82,7 @@ public class RecordDAO {
 					+ "r.recordName = :recordName,"
 					+ "r.startTime = :startTime,"
 					+ "r.endTime = :endTime,"
+					+ "r.event = :event,"
 					+ "r.recordNotes = :recordNotes "
 					+ "WHERE r.recordId = :recordId");
 			query.setParameter("startDate", updatedRecord.getStartDate())
@@ -79,8 +90,9 @@ public class RecordDAO {
 				 .setParameter("recordName", updatedRecord.getRecordName())
 				 .setParameter("startTime", updatedRecord.getStartTime())
 				 .setParameter("endTime", updatedRecord.getEndTime())
+				 .setParameter("event", updatedRecord.getEvent())
 				 .setParameter("recordNotes", updatedRecord.getRecordNotes())
-				 .setParameter("recordId", updatedRecord.getRecordID());
+				 .setParameter("recordId", updatedRecord.getRecordId());
 			numUpdatedRecords = query.executeUpdate();
 			em.getTransaction().commit();
 		} catch(PersistenceException e) {
@@ -91,8 +103,8 @@ public class RecordDAO {
 		return numUpdatedRecords;
 	}
 	
-	public int deleteRecordByRecordId(long recordId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+	public int deleteRecord(long recordId) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int numDeletedRecords = 0;
 		try {
@@ -109,4 +121,15 @@ public class RecordDAO {
 		return numDeletedRecords;
 	}	
 	
+	@SuppressWarnings("unchecked")
+	public List<Record> getAllRecords(){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
+		EntityManager em = emf.createEntityManager();
+		List<Record> allRecords = null;
+		try {
+			Query query = em.createQuery("SELECT r FROM Record r");
+			allRecords = query.getResultList();
+		} catch(PersistenceException e) {e.printStackTrace();}
+		return allRecords;
+	}
 }

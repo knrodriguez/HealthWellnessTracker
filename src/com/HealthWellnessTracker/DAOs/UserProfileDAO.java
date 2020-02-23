@@ -8,14 +8,24 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import com.HealthWellnessTracker.models.Login;
 import com.HealthWellnessTracker.models.UserProfile;
 
-public class UserProfileDAO {
+public class UserProfileDAO implements DAOInterface<UserProfile> {
 
-	private final String appFactory = "HealthWellnessTrackerFactory";
+	@Override
+	public boolean insert(UserProfile newObj) {return insertUserProfile(newObj);}
+	@Override
+	public UserProfile find(long id) {return getUserProfileByUserId(id);}
+	@Override
+	public int update(UserProfile updatedObj) {return updateUserProfile(updatedObj);}
+	@Override
+	public int delete(long id) {return deleteUserProfile(id);}	
+	@Override
+	public List<UserProfile> getAll() {return getAllUserProfiles();}
 	
 	public boolean insertUserProfile(UserProfile user) {	
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		boolean flag = false;
 		try {
@@ -33,7 +43,7 @@ public class UserProfileDAO {
 	}
 		
 	public UserProfile getUserProfileByUserId(long userId){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		UserProfile foundUser = null;
 		try {
@@ -47,7 +57,7 @@ public class UserProfileDAO {
 	}
 	
 	public int updateUserProfile(UserProfile userProfile) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int updatedUserProfiles = 0;
 		try {
@@ -76,14 +86,15 @@ public class UserProfileDAO {
 	}
 	
 	public int deleteUserProfile(long userProfileId) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(appFactory);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
 		EntityManager em = emf.createEntityManager();
 		int deletedUserProfiles = 0;
 		try {
 			em.getTransaction().begin();
+			Login userLogin = em.find(Login.class, userProfileId);
 			Query query = em.createQuery("DELETE FROM UserProfile up"
-					+ "WHERE up.userId = :userId");
-			query.setParameter("userId",userProfileId);
+					+ " WHERE up.userLogin = :userLogin");
+			query.setParameter("userLogin",userLogin);
 			deletedUserProfiles = query.executeUpdate();
 			em.getTransaction().commit();
 		}catch(PersistenceException e) {
@@ -92,5 +103,18 @@ public class UserProfileDAO {
 		em.close();
 		emf.close();
 		return deletedUserProfiles;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<UserProfile> getAllUserProfiles(){
+		List<UserProfile> allProfiles = null;
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(APP_FACTORY);
+		EntityManager em = emf.createEntityManager();
+		try {
+			Query query = em.createQuery("SELECT up FROM UserProfile up");
+			allProfiles = query.getResultList();
+		}catch(PersistenceException e) {e.printStackTrace();}
+		
+		return allProfiles;
 	}
 }

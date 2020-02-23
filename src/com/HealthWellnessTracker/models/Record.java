@@ -47,9 +47,6 @@ public class Record implements Serializable{
 	@Column (name = "RecordName", nullable = false)
 	private String recordName;
 	
-	@Column
-	private long recordTypeId;
-	
 	@Column (name = "RecordNotes", nullable = true)
 	private String recordNotes;
 	
@@ -57,11 +54,11 @@ public class Record implements Serializable{
 		super();
 	}
 
-	public long getRecordID() {
+	public long getRecordId() {
 		return recordId;
 	}
 
-	public void setRecordID(long recordID) {
+	public void setRecordId(long recordID) {
 		this.recordId = recordID;
 	}
 
@@ -121,14 +118,6 @@ public class Record implements Serializable{
 		this.recordName = recordName;
 	}
 
-	public long getRecordTypeID() {
-		return recordTypeId;
-	}
-
-	public void setRecordTypeID(long recordTypeID) {
-		this.recordTypeId = recordTypeID;
-	}
-
 	public String getRecordNotes() {
 		return recordNotes;
 	}
@@ -140,9 +129,25 @@ public class Record implements Serializable{
 	@Override
 	public String toString() {
 		return "UserRecord [recordID=" + recordId + ", userProfile=" + userProfile + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordTypeID=" + recordTypeId
-				+ ", recordNotes=" + recordNotes + "]";
+				+ ", endDate=" + endDate + ", recordName=" + recordName + ", recordNotes=" + recordNotes + "]";
 	}
 
+	@Override
+	public boolean equals(Object record) {
+		if(record instanceof Record) {
+			Record otherRecord = (Record) record;
+			boolean sameId = this.recordId == otherRecord.recordId;
+			boolean sameName = this.recordName.equals(otherRecord.recordName);
+			boolean sameNotes = this.recordNotes.equals(otherRecord.recordNotes);
+			boolean sameUser = this.userProfile.equals(otherRecord.userProfile);
+			boolean sameStartDate = this.startDate == otherRecord.startDate;
+			boolean sameEndDate = this.endDate == otherRecord.endDate;
+			boolean sameStartTime = this.startTime == otherRecord.startTime;
+			boolean sameEndTime = this.endTime == otherRecord.endTime;
+			if(sameId && sameName && sameNotes && sameUser && sameStartDate && sameEndDate && sameStartTime && sameEndTime)
+				return true;
+		}
+		return false;
+	}
 	
 }

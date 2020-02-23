@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 
 
 @Entity
@@ -23,7 +23,7 @@ public class UserProfile implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@OneToOne
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@PrimaryKeyJoinColumn(name = "UserId")
 	private Login userLogin;
 	
@@ -39,7 +39,7 @@ public class UserProfile implements Serializable{
 	
 	@Basic
 	@Column(name = "Age", nullable = true)
-	private byte age;
+	private int age;
 	
 	@Basic
 	@Column (name = "Birthdate", nullable = true)
@@ -49,7 +49,6 @@ public class UserProfile implements Serializable{
 	@Column (name = "Country", nullable = true)
 	private String country;
 	
-	@Email(message = "Email address has invaid format.")
 	@Column (name = "EmailAddress", nullable = true)
 	private String emailAddress;
 
@@ -77,6 +76,14 @@ public class UserProfile implements Serializable{
 		this.eventList = eventList;
 	}
 
+	public List<Record> getRecordList() {
+		return recordList;
+	}
+
+	public void setRecordList(List<Record> recordList) {
+		this.recordList = recordList;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -85,12 +92,12 @@ public class UserProfile implements Serializable{
 		this.name = name;
 	}
 
-	public byte getAge() {
+	public int getAge() {
 		return age;
 	}
 
-	public void setAge(byte age) {
-		this.age = age;
+	public void setAge(int i) {
+		this.age = i;
 	}
 
 	public Date getBirthdate() {
@@ -122,6 +129,18 @@ public class UserProfile implements Serializable{
 		return "UserProfile [userLogin=" + userLogin + ", eventList=" + eventList + 
 				", recordList=" + recordList + ", name=" + name + ", age=" + age + ", birthdate=" + birthdate + 
 				", country=" + country + ", emailAddress=" + emailAddress + "]";
+	}
+	
+	@Override
+	public boolean equals(Object userProfile) {
+		if(userProfile instanceof UserProfile) {
+			UserProfile otherProfile = (UserProfile) userProfile;
+			//since all fields in UserProfile can be null, 
+			//only compare the primary key userId from Login userLogin
+			boolean sameId = this.userLogin.getUserId() == otherProfile.userLogin.getUserId();
+			if(sameId) return true;
+		}
+		return false;
 	}
 	
 }

@@ -3,6 +3,8 @@ package com.HealthWellnessTracker.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.HealthWellnessTracker.models.Event;
 import com.HealthWellnessTracker.models.Record;
+import com.HealthWellnessTracker.models.StatusCode;
 import com.HealthWellnessTracker.models.UserProfile;
 import com.HealthWellnessTracker.services.EventService;
 import com.HealthWellnessTracker.services.RecordService;
@@ -40,7 +44,7 @@ public class EventRecordController {
 	}*/
 	
 //-----------------------------------New Event----------------------------------------------	
-	@RequestMapping(value = "/newEvent", method = RequestMethod.GET)
+	@RequestMapping(value = "/myEvents", method = RequestMethod.GET)
 	public ModelAndView showNewEventForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@ModelAttribute("newEvent") Event newEvent, 
 			@ModelAttribute("editedEvent") Event editedEvent) {
@@ -49,85 +53,80 @@ public class EventRecordController {
 		listEventCategory.add("Habit");
 		listEventCategory.add("Symptom");
 		listEventCategory.add("Illness");
-		List<Event> userEvents = eventService.findEventByUser(connectedUser);
+		List<Event> userEvents = eventService.findEventsByUser(connectedUser);
 		mav.addObject("userEvents", userEvents);
 		mav.addObject("listEventCategory", listEventCategory);
 		return mav;
 	}
 	
-	@RequestMapping(value = "/newEvent", method = RequestMethod.POST)
+	@RequestMapping(value = "/myEvents", method = RequestMethod.POST)
 	public String submitNewEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newEvent") Event newEvent) {
-		String message = eventService.createEvent(newEvent, connectedUser);		
-		return "redirect:myCalendar";
+			@ModelAttribute("newEvent") @Valid Event newEvent, RedirectAttributes redirectAttributes) {
+		StatusCode alertCode = eventService.createEvent(newEvent, connectedUser);
+		redirectAttributes.addFlashAttribute("alertCode", alertCode);
+		return "redirect:myEvents";
 	}
 	
 	@RequestMapping(value = "/editEvent", method = RequestMethod.POST)
 	public String editEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("editedEvent") Event editedEvent, @ModelAttribute("newEvent") Event newEvent) {
-		String message = eventService.editEvent(editedEvent);
-		System.out.println(message);
-		return "redirect:/newEvent";
+			@ModelAttribute("editedEvent") Event editedEvent, @ModelAttribute("newEvent") Event newEvent,
+			RedirectAttributes redirectAttributes) {
+		StatusCode alertCode = eventService.editEvent(editedEvent, connectedUser);
+		redirectAttributes.addFlashAttribute("alertCode", alertCode);
+		return "redirect:/myEvents";
 	}
 	
 	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)
 	public String deleteEvent(@ModelAttribute("connectedUser") UserProfile connectedUser,
-			@RequestParam("eventId") String eventId) {
-		Event event = new Event();
-		event.setEventId(Long.parseLong(eventId));
-		String message = eventService.deleteEvent(event);
-		System.out.println(message);
-		return "redirect:/newEvent";
+			@RequestParam("eventId") String eventId, RedirectAttributes redirectAttributes) {
+		StatusCode alertCode = eventService.deleteEvent(Long.parseLong(eventId));
+		redirectAttributes.addFlashAttribute("alertCode", alertCode);
+		return "redirect:/myEvents";
 	}
 //------------------------------------Records------------------------------------------------
 	@RequestMapping(value = "/editRecord", method=RequestMethod.POST)
 	public String editRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("updatedRecord") Record updatedRecord,
+			@ModelAttribute("record") Record updatedRecord,
 			@RequestParam ("recordId") long recordId, 
-			@RequestParam("editedEventId") long eventId) {
-		System.out.println("at controller, recordNotes= " + updatedRecord.getRecordNotes());
-		updatedRecord.setRecordID(recordId);
-		Event newEvent = eventService.findEventByEventId(eventId);
-		updatedRecord.setEvent(newEvent);
+			@RequestParam("eventId") long eventId,
+			@RequestParam("timeStarts") String startTime,
+			@RequestParam("timeEnds") String endTime) {
+		System.out.println("!@!@!@#!@#!@#@! EventID : " + eventId + " !@!@#!@#@#@#$#@$@#$@#$@#$@#");
+		updatedRecord = recordService.addTime(updatedRecord, startTime, endTime);
+		updatedRecord.setRecordId(recordId);
+		updatedRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.editRecord(updatedRecord);
-		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
-		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");
 		return "redirect:/myCalendar";
 	}
 	
 	@RequestMapping(value = "/deleteRecord", method=RequestMethod.POST)
 	public String deleteRecord(@SessionAttribute("connectedUser") UserProfile connectedUser,
 			@RequestParam("recordId") String recordId) {
-		boolean error = recordService.deleteRecordByRecordId(Long.parseLong(recordId));
-		if(!error) System.out.println("!!!!!--------- no error--------!!!!!!!");
-		else System.out.println("!!!!!--------- ERROR --------!!!!!!!");
+		boolean error = recordService.removeRecord(Long.parseLong(recordId));
 		return "redirect:/myCalendar";
 	}
 	
-	@RequestMapping(value = "/submitNewRecordForm", method = RequestMethod.POST)
+	@RequestMapping(value = "/createRecord", method = RequestMethod.POST)
 	public String submitNewRecordForm(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newRecord") Record newRecord,
-			@RequestParam("eventSelected") long eventId) {
-		newRecord.setStartTime(null);
-		newRecord.setEndTime(null);
+			@ModelAttribute("record") Record newRecord,
+			@RequestParam("eventId") long eventId,
+			@RequestParam("timeStarts") String startTime,
+			@RequestParam("timeEnds") String endTime) {
+		newRecord = recordService.addTime(newRecord, startTime, endTime);
 		newRecord.setUserProfile(connectedUser);
 		newRecord.setEvent(eventService.findEventByEventId(eventId));
 		boolean error = recordService.createRecord(newRecord);
-		if(error) {
-			System.out.println("ERROR: could not create new record");
-		}
 		return "redirect:myCalendar";
 	}
 //---------------------------------Show Calendar--------------------------------------------
 	@RequestMapping(value = "/myCalendar", method = RequestMethod.GET)
 	public ModelAndView showMyCalendar(@SessionAttribute("connectedUser") UserProfile connectedUser,
-			@ModelAttribute("newRecord") Record newRecord, 
-			@ModelAttribute("updatedRecord") Record updatedRecord) {
-		List<Event> eventList = eventService.findEventByUser(connectedUser);
+			@ModelAttribute("record") Record record) {
+		List<Event> eventList = eventService.findEventsByUser(connectedUser);
 		String recordsJSON = recordService.generateJSON(connectedUser);
 		ModelAndView calendarMAV = new ModelAndView("myCalendar");
-		calendarMAV.addObject("eventList",eventList);
-		calendarMAV.addObject("recordList", recordsJSON);
+		calendarMAV.addObject("eventList",eventList)
+				   .addObject("recordList", recordsJSON);
 		return calendarMAV;
 	}
 }

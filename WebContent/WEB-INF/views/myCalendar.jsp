@@ -7,23 +7,28 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
 <title>My Calendar</title>
 <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'
 	rel='stylesheet'>
-<link
-	href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
-	rel='stylesheet' />
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
 
 <link href='fullcalendar/bootstrap/main.css' rel='stylesheet' />
 <link href='fullcalendar/core/main.css' rel='stylesheet' />
 <link href='fullcalendar/daygrid/main.css' rel='stylesheet' />
 <link href='fullcalendar/timegrid/main.css' rel='stylesheet' />
 <link href='fullcalendar/list/main.css' rel='stylesheet' />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 <style>
 html, body {
 	overflow: visible; /* scrollbars */
 	height: 100%;
 	width: 100%;
+	background-color: #f8f9fa !important;
 }
 
 #calendar-container {
@@ -39,15 +44,6 @@ html, body {
 	margin-bottom: 1%;
 }
 
-#header-container {
-	position: relative;
-	margin-right: 10%;
-	top: 0; //
-	bottom: -100px;
-	text-align: center;
-	height: 10%;
-}
-
 .fc-center {
 	position: relative;
 	padding-left: 10%;
@@ -57,42 +53,8 @@ html, body {
 	vertical-align: middle;
 }
 
-.fc-toolbar .fc-left:before .fc-left:after {
-	float: inherit;
-	content: "test";
-}
-
-/* .newRecord {
-	margin: 0.5%;
-} */
-.close .deleteRecord {
-	font-size: 2em;
-	outline: none;
-	border-style: none;
-}
-
-.close:focus .deleteRecord:focus {
-	outline: none;
-	border-style: none;
-}
-
-#newRecordFormContainer {
-	position: fixed;
-	visibility: hidden;
-	display: block;
-	z-index: 1000; /*overlay in front of calendar*/
-	border-style: solid;
-	border-width: thin;
-	height: auto;
-	width: auto;
-	background-color: white;
-	top: 0;
-	left: 0;
-	transform: translate(0);
-}
-
-.recordForm:hover {
-	
+.recordForm {
+	border-style: 0px;
 }
 
 #recordContainer {
@@ -103,195 +65,140 @@ html, body {
 	border-style: solid;
 	border-width: thin;
 	height: auto;
-	width: auto%;
+	width: 400px;
 	background-color: white;
 	top: 0;
 	left: 0;
 	transform: translate(0);
 }
 
-/*works for input, not for class or id*/
-input {
-	border-color: transparent;
+.form-control {
+	border: 0px;
+	box-shadow: 0px;
 }
 
-input:focus, input:active, input:hover {
-	background-color: #EEEEEE;
+.fc th {
+	border: 0;
+	padding-right: 5px;
+	text-align: right;
 }
 
-div.icon-container a, i, button {
-	margin: 10%;
+.fc td {
+	border-top-style: none;
+	border-bottom-style: solid;
+	border-bottom-width: 2px;
+	border-width: 1px;
+}
+
+.fc-day-grid * .fc-day {
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-style: solid;
+	border-width: 1px;
+}
+
+.fc-day-grid * td:first-child, .fc-day-grid * td:last-child {
+	background-color: #edf2f3;
+}
+
+.fc-axis ~ td {
+	border-left-style: solid;
+	border-right-style: solid;
+}
+
+.close-button, #deleteRecord, #editRecord {
+	color: gray !important;
+}
+
+.close-button:hover, #deleteRecord:hover, #editRecord:hover {
+	color: #dee2e6 !important;
 }
 </style>
-<script src='fullcalendar/core/main.js'></script>
-<script src='fullcalendar/daygrid/main.js'></script>
-<script src='fullcalendar/timegrid/main.js'></script>
-<script src='fullcalendar/interaction/main.js'></script>
-<script src='fullcalendar/bootstrap/main.js'></script>
-<script src='fullcalendar/list/main.js'></script>
-<script src='js/records.js'></script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-	crossorigin="anonymous"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script type="text/javascript">
- $(document).ready(function() {  
-	 $("#editRecord").click(function(event){
-		 event.preventDefault();
-		$('#recordFieldset').prop("disabled", false);
-		$("#submitEditedRecord").show();
-		$("#resetEditedRecord").show();
-	});
- });
-</script>
-<script> 
-
-	document.addEventListener('DOMContentLoaded', function() {
-		//create JS variable for HTML Calendar element
-		var calendarEl = document.getElementById('calendar');
-		//create JS variable of loaded Calendar module
-		var calendar = new FullCalendar.Calendar(calendarEl, {
-			height: 'parent',
-			contentHeight: 0.8*window.innerHeight,
-			plugins : [ 'bootstrap','interaction', 'dayGrid', 'timeGrid', 'list'],
-			themeSystem: 'bootstrap',
-			selectable : true,
-			editable : true,
-			handleWindowResize: true,
-			fixedWeekCount: false,
-			eventLimit: true,
-			header : {
-				left : '',
-				center: 'title',
-				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-			},
-			dateClick : function(info) {
-				displayForm("newRecordFormContainer", info);
-			},
-			eventClick : function(info) {
-				displayForm("recordContainer", info);	
-			}
-		});
-		var calendarEvents = JSON.parse(${recordList});
-		calendar.addEventSource(calendarEvents);
-		//render Calendar
-		calendar.render();
-	});
-	
+<script>
 </script>
 </head>
 <body>
 
-	<jsp:include page="header.jsp" />
-
-	<div id='newRecordFormContainer'
-		class="newRecord shadow p-3 mb-5 bg-white rounded">
-		<form:form id='newRecordForm' action="submitNewRecordForm"
-			method="POST" modelAttribute="newRecord">
-			<table class='newRecord shadow-sm p-3 mb-5 bg-white rounded'>
-				<tr>
-					<td></td>
-					<td>
-						<button type="button" class="close" aria-label="Close"
-							onclick="closeForm('newRecordFormContainer')">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</td>
-					<!-- <img src="<c:url value="/images/" />"> -->
-				</tr>
-				<tr>
-					<td colspan=2 style='font-size: 1.25em;'><form:input
-							required="required" id="formInput" path="recordName"
-							placeholder="New Event" /></td>
-				</tr>
-				<tr>
-					<td>Start: <form:input type="date" id="startDate"
-							path="startDate" />
-					</td>
-					<%-- 					<td><form:input type="time" id="startTime" path="startTime" /> 
-					</td>--%>
-				</tr>
-				<tr>
-					<td>End: <form:input type="date" id="endDate" path="endDate" />
-					</td>
-					<%-- 					<td><form:input type="time" id="endTime" path="endTime" /></td> --%>
-				</tr>
-				<tr>
-					<td colspan=2>Event: <select id="event" name="eventSelected">
-							<c:forEach items="${eventList}" var="event">
-								<option value="${event.eventId}">${event.eventName}</option>
-							</c:forEach>
-					</select>
-					</td>
-				</tr>
-				<tr>
-					<td colspan=2>Notes:&nbsp;<form:input id="textinput"
-							path="recordNotes" />
-					</td>
-				</tr>
-				<tr>
-					<td><input type="submit" id="submit-button" value="Submit">
-						<input type="reset" id="closeNewRecordForm" value="Reset">
-					</td>
-				</tr>
-			</table>
-		</form:form>
-	</div>
+	<jsp:include page="loggedInHeader.jsp" />
 
 	<div id='calendar-container'>
 		<div id='calendar'></div>
 	</div>
 
-	<div id='recordContainer' class="shadow p-3 mb-5 bg-white rounded">
-		<div class="d-flex flex-row justify-content-end">
-			<a class="p-2" href="#" id="editRecord"> <i
-				class="fas fa-pencil-alt" style='color: gray;'></i></a> <a
-				href="#confirmationModal" class="p-2" data-toggle="modal"
-				id="deleteRecord"> <i class="far fa-trash-alt fa-lg"
-				style="color: gray;"></i></a>
-			<button type="button" class="close p-2" aria-label="Close"
-				onclick="closeForm('recordContainer')">
-				<span aria-hidden="true">&times;</span>
+	<div id='recordContainer'
+		class="shadow p-3 mb-5 bg-white rounded border border-0">
+		<div class="d-flex flex-row justify-content-end pb-3">
+			<a class="p-2" href="#" id="editRecord" title="Edit"> <i
+				class="fas fa-pencil-alt fa-lg"></i></a> <a href="#confirmationModal"
+				class="p-2" data-toggle="modal" id="deleteRecord" title="Delete">
+				<i class="far fa-trash-alt fa-lg"></i>
+			</a>
+			<button type="button" class="btn p-2 close-button" title="Close"
+				onclick="closeForm('closeButton')">
+				<i class="fas fa-times fa-lg"></i>
 			</button>
 		</div>
-		<form:form action="editRecord" id="recordForm" class="recordForm"
-			modelAttribute="updatedRecord">
+		<form:form id="recordForm" class="recordForm" modelAttribute="record">
 			<fieldset id="recordFieldset" disabled="disabled">
-				<table>
-					<tr>
-						<td><form:input id="eventTitle" path="recordName" type="text"
-								value="" /></td>
-					</tr>
-					<tr>
-						<td>Start:&nbsp;<form:input id='eventStart' path="startDate"
-								type='date' value="" /></td>
-					</tr>
-					<tr>
-						<td>End:&nbsp;<form:input id='eventEnd' path="endDate"
-								type='date' value="" /></td>
-					</tr>
-					<tr>
-						<td>Event:&nbsp;
-							<select id="editingEvent" name="editedEventId">
-								<option id="currentEvent" value="" selected="selected" ></option>
-								<optgroup label = "All">
-								<c:forEach items="${eventList}" var="eventOption">
-									<option value="${eventOption.eventId}">${eventOption.eventName}</option>
-								</c:forEach>
-								</optgroup>
-							</select>
-					</tr>
-					<tr>
-						<td>Notes:&nbsp;<form:input id='eventNotes'
-								path="recordNotes" type='text' value="" /></td>
-					</tr>
-				</table>
-				<input type="hidden" name="recordId" id="recordIdEdit" value="" />
-				<button id="submitEditedRecord" type="submit"
-					class="btn btn-primary" style="display: none;">Submit</button>
-				<button id="resetEditedRecord" type="reset" class="btn btn-danger"
-					style="display: none;">Reset</button>
+				<div class="form-group">
+					<form:input id="recordTitle" class="form-control form-control-lg"
+						path="recordName" type="text" value="" placeholder="New Record" />
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-1 col-form-label col-form-label-sm">Start:&nbsp;&nbsp;</label>
+					<div class="col-sm-6">
+						<form:input id='startDate' class="form-control form-control-sm"
+							path="startDate" type='date' value="" required="true" />
+					</div>
+					<div class="col-sm-5">
+						<input id="startTime" class="form-control form-control-sm"
+							name="timeStarts" type="time">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-1 col-form-label col-form-label-sm">End:&nbsp;&nbsp;</label>
+					<div class="col-sm-6">
+						<form:input id='endDate' class="form-control form-control-sm"
+							path="endDate" type='date' value="" required="true" />
+					</div>
+					<div class="col-sm-5">
+						<input id="endTime" class="form-control form-control-sm"
+							name="timeEnds" type="time">
+					</div>
+				</div>
+				<div class="form-group row dropdown">
+					<label class="col-sm-2 col-form-label">Event:&nbsp;</label>
+					<div class="col-sm-10">
+						<select id="eventId"
+							class="eventSelectClass selectpicker form-control"
+							data-dropup-auto="false" data-live-search="true" data-size="5"
+							name="eventId" required="true">
+							<option value="0" disabled="disabled">Choose one of the following...</option>
+							<c:forEach items="${eventList}" var="eventOption">
+								<option value="${eventOption.eventId}"
+									data-subtext="${eventOption.eventCategory}">${eventOption.eventName}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label">Notes:&nbsp;</label>
+					<div class="col-sm-10">
+						<form:input id='recordNotes' class="form-control"
+							path="recordNotes" type='text' value="" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col">
+						<button id="submitEditedRecord" type="submit"
+							class="btn btn-primary" style="display: none;">Submit</button>
+					</div>
+					<div class="col">
+						<button id="resetEditedRecord" type="reset" class="btn btn-danger"
+							style="display: none;">Reset</button>
+					</div>
+				</div>
 			</fieldset>
 		</form:form>
 	</div>
@@ -324,5 +231,86 @@ div.icon-container a, i, button {
 		</div>
 	</div>
 
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src='fullcalendar/core/main.js'></script>
+	<script src='fullcalendar/daygrid/main.js'></script>
+	<script src='fullcalendar/timegrid/main.js'></script>
+	<script src='fullcalendar/interaction/main.js'></script>
+	<script src='fullcalendar/bootstrap/main.js'></script>
+	<script src='fullcalendar/list/main.js'></script>
+	<script src='js/records.js'></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+		crossorigin="anonymous"></script>
+ 	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script>
+	<script> 
+	
+	$(document).ready(function() {  
+		 
+		 $("#editRecord").click(function(event){
+			 event.preventDefault();
+			$('#recordFieldset').prop("disabled", false);
+			$("#submitEditedRecord").show();
+			$("#resetEditedRecord").show();
+		 });
+		 $("#submitEditedRecord").click(function(e) {
+			 var form = $("#recordForm");
+			 if (form[0].checkValidity() === false){
+				 e.preventDefault();
+				 e.stopPropagation();
+			 }
+			 form.addClass('was-validated');
+		 });
+	 });
+	
+	document.addEventListener('DOMContentLoaded', function() {
+		//create JS variable for HTML Calendar element
+		var calendarEl = document.getElementById('calendar');
+		//create JS variable of loaded Calendar module
+		var calendar = new FullCalendar.Calendar(calendarEl, {
+			height: 'parent',
+			contentHeight: 0.8*window.innerHeight,
+			plugins : ['interaction', 'dayGrid', 'timeGrid', 'list'],
+			selectable : true,
+			editable : true,
+			handleWindowResize: true,
+			fixedWeekCount: false,
+			eventLimit: true,
+			header : {
+				left : '',
+				center: 'title',
+				right : ' prev,next today dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+			},
+			dateClick : function(info) {	
+				displayForm(info, "dateClick");
+			},
+			eventClick : function(info) {
+				displayForm(info, "eventClick");
+			},
+			eventTimeFormat: {
+				hour:'2-digit',
+				minute: '2-digit',
+				hour12: true
+			},
+			eventColor: '#aaddf8'
+		});
+		var calendarEvents = JSON.parse(${recordList});
+		calendar.addEventSource(calendarEvents);
+		//render Calendar
+		calendar.render();
+	});
+	
+	</script>
 </body>
 </html>

@@ -118,14 +118,13 @@ hr.fc-divider {
 
 .fc th,
 .fc td {
-  border-style: solid;
-  border-width: 1px;
   padding: 0;
   vertical-align: top;
 }
 
+
 .fc td.fc-today {
-  border-style: double;
+ /* border-style: double;*/ /*KIRSTIE EDITED THIS*/
   /* overcome neighboring borders */
 }
 
@@ -141,12 +140,12 @@ a[data-goto]:hover {
 
 /* Fake Table Rows
 --------------------------------------------------------------------------------------------------*/
-.fc .fc-row {
+/*.fc .fc-row {
   /* extra precedence to overcome themes forcing a 1px border */
   /* no visible border by default. but make available if need be (scrollbar width compensation) */
   border-style: solid;
   border-width: 0;
-}
+}*/
 
 .fc-row table {
   /* don't put left/right border on anything within a fake row.

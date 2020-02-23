@@ -20,41 +20,43 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <style>
-html {
+html, body {
 	height: 100%;
-	box-sizing: border-box;
-	position: relative;
 }
 
 body {
-	position: relative;
-	padding-bottom: 6rem;
-	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .footer {
-	position: relative;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	flex-shrink: 0;
 	padding: 1rem;
-	background-color: #efefef;
+	background-color: #00456d !important;
 	text-align: center;
+}
+
+.link-style {
+	color: #e8eef1 !important;
+}
+
+.navbar-brand {
+	color: #ffffff;
+	text-shadow: black;
 }
 </style>
 </head>
 <body>
-	<nav class="navbar navbar-light bg-light footer"> <a
-		class="navbar-brand" href="#">Fixed bottom</a>
+	<footer> <nav class="navbar footer">
+	<span class="navbar-brand">Health &amp; Wellness Tracker</span>
 	<ul class="nav justify-content-end">
-		<li class="nav-item"><a class="nav-link active" href="#">FAQ</a>
+		<li class="nav-item"><a class="nav-link link-style" href="#">FAQ</a>
 		</li>
-		<li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-		<li class="nav-item"><a class="nav-link" href="#">Privacy
+		<li class="nav-item"><a class="nav-link link-style" href="#">About Us</a></li>
+		<li class="nav-item"><a class="nav-link link-style" href="#">Privacy
 				Policy</a></li>
-		<li class="nav-item"><a class="nav-link disabled" href="#"
-			tabindex="-1" aria-disabled="false">Contact Us</a></li>
+		<li class="nav-item"><a class="nav-link link-style" href="#">Contact Us</a></li>
 	</ul>
-	</nav>
+	</nav> </footer>
 </body>
 </html>

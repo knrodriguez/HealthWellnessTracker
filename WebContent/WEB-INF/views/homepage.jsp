@@ -6,6 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="author" content="Kirstie Rodriguez">
 <meta name="description"
 	content="Health Wellness Tracker gives users the ability to input and monitor their habits, symptoms, 
@@ -22,11 +23,25 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale = 1">
-<title>Health Wellness Tracker</title>
+<title>Welcome!</title>
 <style>
+html, body {
+	height: 100%;
+}
+
 body {
 	background-image: url('<c:url value="/images/background.jpg"/>');
 	background-size: cover;
+	display: flex;
+	flex-direction: column;
+}
+
+#bodyContainer {
+	flex: 1 0 auto;
+}
+
+footer {
+	flex-shrink: 0;
 }
 
 /* #logo-image {
@@ -35,29 +50,19 @@ body {
 	margin-right:auto;
 	width: 30%;
 } */
-
 </style>
 </head>
 <body>
-	<!-- Get rid of underline in links is from CSS -->
-	<nav class="navbar navbar-light bg-light"> <a
-		class="navbar-brand ml-auto" href="login">Login</a> </nav>
-
-	<div id="logo-image" class="text-center">
-		<img src="<c:url value="/images/logo.png"/>" style="margin: 200" />
+	<jsp:include page="generalHeader.jsp"/>
+	<div id="bodyContainer">
+		<!-- Get rid of underline in links is from CSS -->
+		<div id="logo-image" class="text-center">
+			<img src="<c:url value="/images/logo.png"/>" style="margin: 200" />
+		</div>
 	</div>
 
-	<nav class="navbar fixed-bottom navbar-light bg-light"> <a
-		class="navbar-brand" href="#">Fixed bottom</a>
-	<ul class="nav justify-content-end">
-		<li class="nav-item"><a class="nav-link active" href="#">FAQ</a>
-		</li>
-		<li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-		<li class="nav-item"><a class="nav-link" href="#">Privacy
-				Policy</a></li>
-		<li class="nav-item"><a class="nav-link disabled" href="#"
-			tabindex="-1" aria-disabled="false">Contact Us</a></li>
-	</ul>
-	</nav>
+	<footer> <jsp:include page="footer.jsp" /> </footer>
+
+
 </body>
 </html>

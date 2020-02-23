@@ -7,18 +7,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Create User Profile</title>
+<title>My Profile</title>
 <style>
-html {
-	height: 100%;
-	box-sizing: border-box;
-	position: relative;
-}
-
 body {
-	position: relative;
-	padding-bottom: 6rem;
-	height: 100%;
+	background-color: #f8f9fa !important;
+}
+#profileContainer {
+	flex: 1 0 auto;
+	margin: 1%;
 }
 
 .footer {
@@ -33,44 +29,50 @@ body {
 </style>
 </head>
 <body>
-	<jsp:include page="header.jsp" />
-	<h2>User Profile</h2>
-	<br>
-	<form:form action="editUserProfile" modelAttribute="userProfile"
-		method="POST">
-		<table>
-			<tr>
-				<td>Name:</td>
-				<td><form:input type="text" path="name"
-						value="${connectedUser.getName()}" /></td>
-			</tr>
-			<tr>
-				<td>Birthdate:</td>
-				<td><form:input type="date" path="birthdate"
-						value="${connectedUser.getBirthdate()}" /></td>
-			</tr>
-			<tr>
-				<td>Age:</td>
-				<td><form:input type="text" path="age"
-						value="${connectedUser.getAge()}" /></td>
-			</tr>
-			<tr>
-				<td>Country:</td>
-				<td><form:input type="text" path="country"
-						value="${connectedUser.getCountry()}" /></td>
-			</tr>
-			<tr>
-				<td>Email Address:</td>
-				<td><form:input type="email" path="emailAddress"
-						value="${connectedUser.getEmailAddress()}" /></td>
-			</tr>
-			<tr>
-				<td><input type="submit" value="Submit" /></td>
-			</tr>
-		</table>
-	</form:form>
-
+	<jsp:include page="loggedInHeader.jsp" />
+	<div id="profileContainer">
+		<h2>${connectedUser.getUserLogin().getUsername()}'s Profile</h2>
+		<div class="error" role="alert">
+				<c:if test="${alertCode != null}">
+					<!-- StatusCodes with code of 2000+ are success codes -->
+					<c:set value="${alertCode.getCode() < 2000 ? 'alert-danger' : 'alert-success'}" 
+						var="alertStyle" />
+						<div class="alert ${alertStyle} col-md-10">
+							<c:out value="${alertCode.toString()}" />
+						</div>
+					</c:if>
+			</div>
+		<form:form action="editUserProfile" modelAttribute="userProfile"
+			method="POST">
+			<div class="form-group col-md-4">
+				<label for="name">Name:</label>
+				<form:input type="text" class="form-control" 
+				path="name" value="${connectedUser.getName()}" />
+			</div>
+			<div class="form-group col-md-4">
+				<label for="birthdate">Birthdate:</label>
+				<form:input type="date" class="form-control"
+					path="birthdate" value="${connectedUser.getBirthdate()}" />
+			</div>
+			<div class="form-group col-md-4">
+				<label for="age">Age:</label>
+				<form:input type="text" class="form-control"
+					path="age" value="${connectedUser.getAge()}" />
+			</div>
+			<div class="form-group col-md-4">
+				<label for="country">Country:</label>
+				<form:input type="text" class="form-control"
+					path="country" value="${connectedUser.getCountry()}" />
+			</div>
+			<div class="form-group col-md-4">
+				<label for="emailAddress">Email Address:</label>
+				<form:input type="email" class="form-control"
+					path="emailAddress" value="${connectedUser.getEmailAddress()}" />
+			</div>
+			<button type="submit" class="btn btn-primary" style='margin-left:2%;'>Submit</button>
+		</form:form>
+	</div>
+	<jsp:include page="footer.jsp" />
 
 </body>
-<jsp:include page="footer.jsp" />
 </html>
