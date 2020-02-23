@@ -13,16 +13,14 @@
 .navbar-style{
 	background-color: #dee2e6 !important;
 }
-.navbar-item-style {
-	padding: 10px;
-}
+
 </style>
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-style">
+		<nav class="navbar navbar-style p-3">
 			<h4 class="mr-auto navbar-item-style" id="pageNameHeader"></h4>
-			<a class="navbar-item ml-auto navbar-item-style" href="login"><h4>Login</h4></a>
+			<a class="navbar-item ml-auto navbar-item-style" href="login"><h5>Login</h5></a>
 		</nav>
 	</header>
 	

@@ -73,8 +73,6 @@ body {
 		</form:form>
 	</div>
 	<jsp:include page="footer.jsp" />
-	<script>
-		$('#pageHeader').html(document.title);
-	</script>
+
 </body>
 </html>

@@ -13,11 +13,13 @@
 <style>
 .header {
 	background-color: #bad3e4;
-}	
+}
+
 .link {
 	color: #495057 !important;
 	text-shadow: white;
 }
+
 .link:hover {
 	color: #868e96 !important;
 }
@@ -35,19 +37,26 @@
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="viewUserProfile">Profile
-			</a></li>
-			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="myEvents">Events
-			</a></li>
-			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="myCalendar">Calendar</a>
-			</li>
-			<li class="nav-item ml-auto align-self-center"><a class="nav-link link" href="logout">Logout</a></li>	
+			<li class="nav-item ml-auto align-self-center"><a
+				class="nav-link link" href="viewUserProfile">Profile </a></li>
+			<li class="nav-item ml-auto align-self-center"><a
+				class="nav-link link" href="myEvents">Events </a></li>
+			<li class="nav-item ml-auto align-self-center"><a
+				class="nav-link link" href="myCalendar">Calendar</a></li>
+			<li class="nav-item ml-auto align-self-center"><a
+				class="nav-link link" href="logout">Logout</a></li>
 		</ul>
 	</div>
-	<span class="d-flex navbar-brand mr-auto p-2">Health &amp; Wellness Tracker</span>	
-	</nav>
+	<span class="d-flex navbar-brand mr-auto p-2">Health &amp;
+		Wellness Tracker</span> </nav>
 
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+		crossorigin="anonymous"></script>
+	<script>
+		$('#pageHeader').html(document.title);
+	</script>
 </body>
 </html>

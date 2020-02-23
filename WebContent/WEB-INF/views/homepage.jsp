@@ -23,7 +23,7 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale = 1">
-<title>Health Wellness Tracker</title>
+<title>Welcome!</title>
 <style>
 html, body {
 	height: 100%;
@@ -53,10 +53,9 @@ footer {
 </style>
 </head>
 <body>
+	<jsp:include page="generalHeader.jsp"/>
 	<div id="bodyContainer">
 		<!-- Get rid of underline in links is from CSS -->
-		<header> <nav class="navbar navbar-light bg-light"> <a
-			class="navbar-item ml-auto" href="login">Login</a> </nav> </header>
 		<div id="logo-image" class="text-center">
 			<img src="<c:url value="/images/logo.png"/>" style="margin: 200" />
 		</div>

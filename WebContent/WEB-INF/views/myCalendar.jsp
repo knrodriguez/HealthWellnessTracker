@@ -258,7 +258,6 @@ html, body {
 	
 	$(document).ready(function() {  
 		 
-		$('#pageHeader').html(document.title);
 		 $("#editRecord").click(function(event){
 			 event.preventDefault();
 			$('#recordFieldset').prop("disabled", false);
