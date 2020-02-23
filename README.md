@@ -5,16 +5,25 @@ Health & Wellness Tracker is a web application dedicated to giving users the abi
 ## Getting Started
 ### Overview
 
-The Health & Wellness Tracker web app will display in a calendar format all user records inputted and saved. After creating an account, a user can create Events that describe their habits, illnesses, or symptoms. After an Event is created, the user can then track the Event in a calendar format as a record. Each record will contain the date the Event occured, with the option to provide the start and end times and/or a name for each record. Once submitted, the record will display on the user's calendar, as well as the record's details when the record is clicked.  
+The Health & Wellness Tracker web app will display in a calendar format all user records inputted and saved. After creating an account, a user can create Events that describe their habits, illnesses, or symptoms. After an Event is created, the user can then track the Event in a calendar format as a record. Each record will contain the date the Event occurred, with the option to provide the start and end times and/or a name for each record. Once submitted, the record will display on the user's calendar, as well as the record's details when the record is clicked.  
 
 ### Requirements
 
-Java Virtual Machine
+* [OpenJDK](https://openjdk.java.net/install/index.html) - Java Development Kit (JDK)
+* [MariaDB](https://downloads.mariadb.org/mariadb/10.4.12/) - SQL Database Server
+* [Apache TomCat](https://tomcat.apache.org/download-90.cgi) - Java Web Server
 
 ### Installation
 
 1. Download this repo.
-2. After downloading all tools listed above, open your SQL client application and enter the following query:
+
+2. In the command prompt, enter the following , changing the words with square brackets to their corresponding values:
+
+   ```mysql
+   mysql -u [username] -p -e "CREATE DATABASE IF NOT EXISTS `hwt`"
+   ```
+
+   Alternatively, if you have it downloaded, you can open your SQL client application and enter the following query:
 
 ```SQL
 CREATE DATABASE IF NOT EXISTS `hwt` /*!40100 DEFAULT CHARACTER SET utf8*/;
