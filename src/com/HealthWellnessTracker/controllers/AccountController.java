@@ -39,6 +39,11 @@ public class AccountController {
 		return connectedUser;
 	}
 
+	@RequestMapping(value = {"","/","/homepage"}, method = RequestMethod.GET)
+	public String showHomepage() {
+		return "homepage";
+	}
+	
 //-----------------------------------Login-----------------------------------------
 	@RequestMapping(value= {"/login"}, method = RequestMethod.GET)
 	public String showLoginForm(@ModelAttribute("inputLogin") Login inputLogin) {
@@ -73,23 +78,20 @@ public class AccountController {
 	@RequestMapping(value = "/viewUserProfile", method = RequestMethod.GET)
 	public String showUserProfile(@ModelAttribute("userProfile") UserProfile userProfile,
 			@SessionAttribute("connectedUser") UserProfile connectedUser) {
-		System.out.println(connectedUser.getName());
 		return "userProfile";
 	}
 	
 	@RequestMapping(value = "/editUserProfile", method = RequestMethod.POST)
-	public ModelAndView saveUserProfile(@ModelAttribute("userProfile") UserProfile userProfile,
-			@SessionAttribute("connectedUser") UserProfile connectedUser) {
+	public String saveUserProfile(@ModelAttribute("userProfile") UserProfile userProfile,
+			@SessionAttribute("connectedUser") UserProfile connectedUser,
+			RedirectAttributes redirectAttribute) {
 		userProfile.setUserLogin(connectedUser.getUserLogin());
-		int numProfilesUpdated = userProfileService.editUserProfile(userProfile);
-		if(numProfilesUpdated == 1) {
-			connectedUser = userProfileService.findUserByUserId(connectedUser.getUserLogin().getUserId());
-			return new ModelAndView("redirect:myCalendar", "connectedUser", connectedUser);
-		}	
-		else {
-			System.out.println("Cannot update profile ERROR! " + numProfilesUpdated);
-			return new ModelAndView("userProfile");
-		}		
+		StatusCode alertCode = userProfileService.editUserProfile(userProfile);
+		connectedUser = userProfileService.findUserByUserId(connectedUser.getUserLogin().getUserId());
+		redirectAttribute.addFlashAttribute("alertCode", alertCode);
+		redirectAttribute.addFlashAttribute("connectedUser", connectedUser);
+		//return new ModelAndView("redirect:/viewUserProfile", "connectedUser", connectedUser);		
+		return "redirect:/viewUserProfile";
 	}
 	
 //-----------------------------------Sign Up-----------------------------------------

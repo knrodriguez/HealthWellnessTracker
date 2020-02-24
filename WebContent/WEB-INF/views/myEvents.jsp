@@ -50,11 +50,6 @@ select.dropdown:disabled {
 	display: none;
 }
 </style>
-<script type="text/javascript">
-	$(document).ready(function() {
-		editMyEventsTable();
-	});
-</script>
 </head>
 <body>
 
@@ -177,5 +172,10 @@ select.dropdown:disabled {
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	<script src="js/events.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		editMyEventsTable();
+	});
+</script>
 </body>
 </html>

@@ -25,10 +25,10 @@ The Health & Wellness Tracker web app will display in a calendar format all user
 
    Alternatively, if you have it downloaded, you can open your SQL client application and enter the following query:
 
-```SQL
-CREATE DATABASE IF NOT EXISTS `hwt` /*!40100 DEFAULT CHARACTER SET utf8*/;
-USE `hwt`;
-```
+	```SQL
+	CREATE DATABASE IF NOT EXISTS `hwt` /*!40100 DEFAULT CHARACTER SET 		utf8*/;
+	USE `hwt`;
+	```
 
 2. Run the Health & Wellness Tracker web app. The database will populate with tables and their corresponding columns.
 3. If you would like to populate the tables with sample data, download and run [hwt_inserts.sql](https://github.com/KirstieRodriguez/HealthWellnessTracker/SQL/hwt_inserts.sql) query in your SQL client application. There you will find a sample accounts, each with profile, event, and record information. 

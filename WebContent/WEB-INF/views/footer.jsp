@@ -50,12 +50,12 @@ body {
 	<footer> <nav class="navbar footer">
 	<span class="navbar-brand">Health &amp; Wellness Tracker</span>
 	<ul class="nav justify-content-end">
-		<li class="nav-item"><a class="nav-link link-style" href="#">FAQ</a>
+		<li class="nav-item"><a class="nav-link link-style" href="faq">FAQ</a>
 		</li>
-		<li class="nav-item"><a class="nav-link link-style" href="#">About Us</a></li>
-		<li class="nav-item"><a class="nav-link link-style" href="#">Privacy
+		<li class="nav-item"><a class="nav-link link-style" href="about-us">About Us</a></li>
+		<li class="nav-item"><a class="nav-link link-style" href="privacy-policy">Privacy
 				Policy</a></li>
-		<li class="nav-item"><a class="nav-link link-style" href="#">Contact Us</a></li>
+		<li class="nav-item"><a class="nav-link link-style" href="contact-us">Contact Us</a></li>
 	</ul>
 	</nav> </footer>
 </body>

@@ -2,6 +2,7 @@ package com.HealthWellnessTracker.services;
 
 
 import com.HealthWellnessTracker.DAOs.UserProfileDAO;
+import com.HealthWellnessTracker.models.StatusCode;
 import com.HealthWellnessTracker.models.UserProfile;
 
 public class UserProfileService {
@@ -13,8 +14,10 @@ public class UserProfileService {
 		return userProfileDAO.insertUserProfile(userProfile);
 	}
 	
-	public int editUserProfile(UserProfile userProfile) {
-		return userProfileDAO.updateUserProfile(userProfile);
+	public StatusCode editUserProfile(UserProfile userProfile) {
+		int numProfilesUpdated = userProfileDAO.updateUserProfile(userProfile);
+		if(numProfilesUpdated == 1) return StatusCode.UPDATE_PROFILE_SUCCESS;
+		else return StatusCode.UPDATE_PROFILE_FAILED;
 	}
 	
 	public UserProfile findUserByUserId(long userId) {

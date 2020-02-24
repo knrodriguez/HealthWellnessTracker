@@ -15,6 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
+
 
 @Entity
 @Table (name = "profiles")
@@ -25,6 +27,7 @@ public class UserProfile implements Serializable{
 	@Id
 	@OneToOne(cascade = CascadeType.REMOVE)
 	@PrimaryKeyJoinColumn(name = "UserId")
+	@CascadeOnDelete
 	private Login userLogin;
 	
 	@OneToMany(mappedBy = "userProfile")

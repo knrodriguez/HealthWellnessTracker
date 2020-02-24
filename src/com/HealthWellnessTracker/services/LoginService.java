@@ -10,7 +10,6 @@ public class LoginService {
 	
 	static final LoginDAO loginDAO = new LoginDAO();
 	
-	//create new login
 	public StatusCode createLogin(Login login, String password2) {
 		Login newLogin = new Login(login.getUsername(), login.getPassword());
 		StatusCode returnCode = null;
@@ -28,7 +27,6 @@ public class LoginService {
 		return returnCode;		
 	}
 	
-	//log onto account
 	public Login logOn(Login inputLogin) {
 		Login loginFromDatabase = loginDAO.getLoginByUsername(inputLogin.getUsername());
 		if(loginFromDatabase != null && loginFromDatabase.getPassword().equals(inputLogin.getPassword()))		
@@ -36,13 +34,11 @@ public class LoginService {
 		return null;
 	}
 
-	//change username INCOMPLETE
 	public StatusCode changeUsername(String username, String password) {
 		StatusCode error = null;
 		return error;
 	}
 	
-	//change password INCOMPLETE
 	public StatusCode changePassword(String username, String password) {
 		StatusCode error = null;
 		//LoginDAO loginDAO = new LoginDAO();
@@ -50,8 +46,17 @@ public class LoginService {
 		return error;
 	}
 	
-	//forgot password INCOMPLETE
-	//delete account INCOMPLETE
+	public StatusCode editLogin(Login updatedLogin) {
+		int numLoginsUpdated = loginDAO.updateLogin(updatedLogin);
+		if(numLoginsUpdated == 1) return StatusCode.EDIT_LOGIN_SUCCESS;
+		else return StatusCode.EDIT_LOGIN_FAILED;
+	}
+	
+	public StatusCode deleteLogin(long userId) {
+		int numDeleteLogins = loginDAO.deleteLogin(userId);
+		if(numDeleteLogins == 1) return StatusCode.DELETE_LOGIN_SUCCESS;
+		else return StatusCode.DELETE_LOGIN_FAILED;
+	}	
 	
 	//find account	
 	public Login findAccount(String username) {
