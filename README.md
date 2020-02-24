@@ -26,7 +26,7 @@ The Health & Wellness Tracker web app will display in a calendar format all user
    Alternatively, if you have it downloaded, you can open your SQL client application and enter the following query:
 
 	```SQL
-	CREATE DATABASE IF NOT EXISTS `hwt` /*!40100 DEFAULT CHARACTER SET 		utf8*/;
+	CREATE DATABASE IF NOT EXISTS `hwt` /*!40100 DEFAULT CHARACTER SET utf8*/;
 	USE `hwt`;
 	```
 
