@@ -39,6 +39,11 @@ public class AccountController {
 		return connectedUser;
 	}
 
+	@RequestMapping(value = {"","/","/homepage"}, method = RequestMethod.GET)
+	public String showHomepage() {
+		return "homepage";
+	}
+	
 //-----------------------------------Login-----------------------------------------
 	@RequestMapping(value= {"/login"}, method = RequestMethod.GET)
 	public String showLoginForm(@ModelAttribute("inputLogin") Login inputLogin) {
