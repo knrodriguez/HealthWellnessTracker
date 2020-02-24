@@ -91,7 +91,6 @@ public class EventRecordController {
 			@RequestParam("eventId") long eventId,
 			@RequestParam("timeStarts") String startTime,
 			@RequestParam("timeEnds") String endTime) {
-		System.out.println("!@!@!@#!@#!@#@! EventID : " + eventId + " !@!@#!@#@#@#$#@$@#$@#$@#$@#");
 		updatedRecord = recordService.addTime(updatedRecord, startTime, endTime);
 		updatedRecord.setRecordId(recordId);
 		updatedRecord.setEvent(eventService.findEventByEventId(eventId));

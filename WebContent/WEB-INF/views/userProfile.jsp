@@ -56,8 +56,8 @@ body {
 			</div>
 			<div class="form-group col-md-4">
 				<label for="age">Age:</label>
-				<form:input type="text" class="form-control"
-					path="age" value="${connectedUser.getAge()}" />
+				<form:input type="number" class="form-control"
+					path="age" value="${connectedUser.getAge()}" required="true" min="0" max="120"/>
 			</div>
 			<div class="form-group col-md-4">
 				<label for="country">Country:</label>
